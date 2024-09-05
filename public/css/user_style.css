@@ -1,0 +1,870 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    font-family: "Montserrat", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    background-color: transparent;
+    padding: 60px 80px 10px 80px;
+}
+
+.navbar-scrolled {
+    background-color: white;
+    padding: 20px 50px 25px 50px;
+}
+/* .navbar-scrolled .navbar-img {
+  width: 150px;
+} */
+.navbar-img {
+    width: 200px;
+    transition: ease-in-out 0.2s;
+}
+.navbar-nav {
+    margin-bottom: -50px;
+}
+.nav-link {
+    text-transform: uppercase;
+    font-weight: 700;
+    color: black;
+    margin: 0px 20px;
+    font-size: 15px;
+}
+.navbar-nav .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+.navbars-icons {
+    margin-bottom: -50px;
+}
+.navbars-icons a {
+    color: black;
+    font-size: 20px;
+    margin: 0px 10px;
+    font-size: 15px;
+}
+
+/* Home Carousel */
+.carousel-1 {
+    width: 100%;
+    left: 0;
+    top: 0;
+    padding: 300px 100px 0px 100px;
+    position: absolute;
+    width: 60%;
+}
+.carousel-1 h5 {
+    font-size: 8vh;
+    text-transform: uppercase;
+    color: black;
+    font-weight: 700;
+    line-height: 1.1;
+}
+.carousel-1 h6 {
+    font-size: 18px;
+    color: black;
+    font-weight: 400;
+}
+.carousel-1 p {
+    font-size: 15px;
+    color: black;
+    font-weight: 400;
+    width: 60%;
+}
+.carousel-1 button {
+    background-color: transparent;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 13px;
+    padding: 5px 20px;
+    /* border: 1px solid black; */
+    transition: ease-in-out 0.2s;
+    border: 1px solid black;
+}
+.carousel-1 button:hover {
+    border: 1px solid black;
+    color: white;
+}
+.carousel-2 {
+    width: 100%;
+    left: 0;
+    top: 0;
+    padding: 0px 00px 0px 0px;
+    position: absolute;
+    width: 60%;
+}
+.carousel-2 h5 {
+    font-size: 8vh;
+    text-transform: uppercase;
+    color: black;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+/* Home Services */
+.home-service {
+    min-height: 100vh;
+    margin: 0px 150px;
+}
+
+.home-service .title {
+    font-weight: 700;
+    margin: 50px 0px 40px 0px;
+    font-size: 25px;
+}
+.home-service .box-img {
+    width: 100%;
+    height: 70%;
+    margin: auto;
+    object-fit: cover;
+    object-position: bottom center;
+    text-align: center;
+}
+.home-service-box {
+    display: flex;
+    flex-direction: row;
+}
+.home-service-box .box {
+    width: 30%;
+    margin: 0px 70px;
+}
+.home-service-box .name {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 25px;
+}
+.home-service-box .yellow-mark {
+    width: 40px;
+    margin-left: 7px;
+    margin-top: -3px;
+}
+.home-service-box .name2 {
+    font-weight: 400;
+    font-size: 17px;
+    text-transform: uppercase;
+}
+.home-service-box .description {
+    font-weight: 400;
+    font-size: 17px;
+    margin-top: -5px;
+    width: 90%;
+}
+
+.home-service-box .price-tag {
+    width: 20px;
+    margin-top: -5px;
+}
+.home-service-box .price {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.home-service-box button {
+    background-color: transparent;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 2px solid #fcb040;
+    margin-top: 15px;
+    transition: ease-in-out 0.2s;
+}
+.home-service-box button:hover {
+    background-color: #fcb040;
+}
+.home-service .viewmore button {
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 7px;
+    padding: 10px 10px;
+    margin-top: 70px;
+    color: white;
+    background-color: #171d2c;
+    border: 1px solid #171d2c;
+    transition: ease-in-out 0.2s;
+}
+.home-service .viewmore button:hover {
+    background-color: transparent;
+    border: 2px solid #171d2c;
+    color: #171d2c;
+}
+
+/* Home news and events */
+.home-news {
+    background-image: url("../Image/Newsbg.png");
+    max-height: 80vh;
+    min-height: 80vh;
+    object-fit: contain;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.home-news .title {
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 700;
+    padding: 50px 0px;
+}
+
+.home-news .news-box {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+.home-news .news-box {
+    margin: 0px 120px;
+}
+.home-news .news-box .box {
+    width: 25%;
+    margin: 0px 30px;
+}
+.home-news .news-box .event-img {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.home-news .news-box .date {
+    color: white;
+    margin-top: 20px;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+.home-news .news-box h1 {
+    font-size: 28px;
+    color: white;
+    font-weight: 700;
+}
+.home-news .news-box .date i {
+    margin-right: 10px;
+}
+.home-news .news-box .desc {
+    color: white;
+    font-size: 15px;
+    text-align: justify;
+}
+.home-news .news-box a {
+    color: white;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* Home about */
+
+.home-about {
+    background-image: url("../Image/aboutbg.png");
+    object-fit: cover;
+    background-repeat: no-repeat;
+}
+.home-about .about-flex {
+    display: flex;
+    flex-direction: row;
+    padding: 100px 200px;
+}
+.home-about .about-flex .left,
+.home-about .about-flex .right {
+    width: 50%;
+}
+.home-about .about-flex .year-img {
+    width: 70%;
+}
+.home-about .about-flex .desc {
+    font-size: 25px;
+    margin-top: 20px;
+    text-align: justify;
+}
+.home-about .about-flex .right {
+    padding-top: 50px;
+}
+.home-about .about-flex .right div {
+    margin: 50px 0px 50px 70px;
+    vertical-align: middle;
+}
+.home-about .about-flex .right img {
+    width: 70px;
+}
+.home-about .about-flex .right h6 {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 30px;
+    margin-top: 30px;
+    font-size: 20px;
+}
+/* Home whye choose us */
+.home-choose {
+    background-image: url("../Image/home-bg.png");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 50vh;
+    max-height: 50vh;
+    padding: 20px 150px;
+}
+.home-choose .d-flex {
+    margin: 20px 0px;
+}
+.home-choose h1 {
+    color: white;
+    font-weight: 700;
+    margin: 20px 0px 30px 120px;
+
+    text-transform: uppercase;
+}
+.home-choose img {
+    width: 40px;
+    height: 40px;
+}
+.home-choose p {
+    margin-left: 40px;
+    width: 30%;
+    text-align: center;
+    color: white;
+    font-size: 13px;
+}
+
+/* Home contact */
+.home-contact {
+    max-height: 50vh;
+    background-image: url("../Image/contactusbg.png");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+    padding-top: 40px;
+    z-index: -5;
+}
+.home-contact .row {
+    margin: 0px 350px;
+    opacity: 2;
+    justify-content: space-between;
+    padding-bottom: 30px;
+}
+
+.home-contact .col-4 {
+    padding: 20px;
+}
+
+.home-contact .form-control {
+    border: 1px solid black;
+    font-weight: 600;
+    border-radius: 5px;
+    margin-top: -28px;
+    font-size: 10px;
+    margin-bottom: 0px;
+    padding-left: 30px;
+}
+.home-contact .form-control::placeholder {
+    color: black;
+}
+.home-contact label {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+.home-contact button {
+    background-color: transparent;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 3px 30px;
+    font-size: 12px;
+    margin-top: 20px;
+    font-weight: 600;
+    transition: ease-in-out 0.2s;
+}
+.home-contact button:hover {
+    background-color: #171d2c;
+    color: white;
+}
+.home-contact .maps {
+    color: #aa2025;
+    margin-right: 20px;
+    font-size: 20px;
+}
+.home-contact .socialmedia {
+    margin-top: 50px;
+}
+.home-contact .fb,
+.home-contact .whatsup,
+.home-contact .email {
+    color: #171d2c;
+    margin-right: 20px;
+    font-size: 20px;
+}
+.home-contact .address {
+    font-size: 13px;
+    font-weight: 500;
+}
+.home-contact .social {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: -2px;
+}
+/*  Footer */
+
+footer {
+    background-color: #171d2c;
+    min-height: 50px;
+}
+
+footer .reserve {
+    font-size: 12px;
+    color: white;
+    font-weight: 700;
+    margin-left: 50px;
+}
+footer .content a {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+}
+footer .content {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 18px;
+}
+footer .line {
+    color: white;
+    margin: -2px 5px 0px 5px;
+    font-size: 13px;
+}
+
+@media screen and (max-width: 500px) {
+    .home-service {
+        min-height: 100vh;
+        margin: 0px 20px;
+    }
+    .home-service .title {
+        margin: 20px 0px 10px 0px;
+        font-size: 15px;
+    }
+
+    .home-service .box-img {
+        height: 100%;
+        width: 50%;
+        text-align: center;
+    }
+    .home-service-box {
+        flex-direction: column-reverse;
+    }
+    .home-service-box .box {
+        width: 100%;
+        margin: 20px 0px;
+        text-align: center;
+    }
+    .home-service-box .name {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .home-service-box .yellow-mark {
+        display: none;
+    }
+    .home-service-box .name2 {
+        font-size: 12px;
+    }
+    .home-service-box .description {
+        font-size: 12px;
+        margin-top: -5px;
+        width: 100%;
+    }
+    .home-service-box .price-tag {
+        width: 15px;
+        margin-top: -5px;
+    }
+    .home-service-box .price {
+        font-weight: 700;
+        font-size: 13px;
+        margin-top: -5px;
+    }
+
+    .home-service-box button {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 9px;
+        margin-top: 10px;
+    }
+    .home-service-box button:hover {
+        background-color: #fcb040;
+    }
+    .home-service .viewmore button {
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-top: 70px;
+        font-size: 13px;
+        transition: ease-in-out 0.2s;
+        margin-bottom: 50px;
+    }
+
+    .home-news {
+        max-height: 80vh;
+        min-height: 80vh;
+        object-fit: contain;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+    .home-news .title {
+        font-size: 20px;
+        font-weight: 700;
+        padding: 50px 0px 0px 0px;
+    }
+
+    .home-news .news-box {
+        display: flex;
+        justify-content: space-evenly;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 1rem;
+    }
+    .home-news .news-box {
+        margin: 40px 0px;
+    }
+    .home-news .news-box .box {
+        min-width: 90%;
+        flex: 0 0 auto;
+        margin: 0px 20px;
+        text-align: center;
+    }
+    .home-news .news-box .event-img {
+        width: 70%;
+        margin: auto;
+        text-align: center;
+    }
+    .home-news .news-box .date {
+        color: white;
+        margin-top: 12px;
+        text-transform: uppercase;
+        font-size: 10px;
+    }
+    .home-news .news-box h1 {
+        font-size: 18px;
+        color: white;
+        font-weight: 700;
+    }
+    .home-news .news-box .date i {
+        margin-right: 10px;
+    }
+    .home-news .news-box .desc {
+        color: white;
+        font-size: 12px;
+        padding: 0px 20px;
+        text-align: justify;
+    }
+    .home-news .news-box a {
+        color: white;
+        text-decoration: underline;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .home-about {
+        background-image: url("Image/aboutbg.png");
+        object-fit: contain;
+        background-repeat: no-repeat;
+    }
+    .home-about .about-flex {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 20px;
+    }
+    .home-about .about-flex .left,
+    .home-about .about-flex .right {
+        width: 100%;
+    }
+    .home-about .about-flex .left {
+        text-align: center;
+        padding: 50px 30px 0px 30px;
+    }
+    .home-about .about-flex .year-img {
+        width: 100%;
+    }
+    .home-about .about-flex .desc {
+        font-size: 15px;
+        margin-top: 30px;
+        text-align: justify;
+    }
+    .home-about .about-flex .right {
+        padding-top: 10px;
+        padding: 10px 30px 0px 30px;
+        text-align: center;
+    }
+    .home-about .about-flex .right .d-flex {
+        display: flex;
+        flex-direction: column;
+    }
+    .home-about .about-flex .right div {
+        margin: 20px 0px 20px 0px;
+        vertical-align: middle;
+    }
+    .home-about .about-flex .right img {
+        width: 50px;
+        margin: auto;
+    }
+    .home-about .about-flex .right h6 {
+        margin-left: 0px;
+        margin-top: 20px;
+        font-size: 13px;
+    }
+
+    .home-choose {
+        background-image: url("Image/home-bg.png");
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: cover;
+        background-attachment: fixed;
+        min-height: 100vh;
+        max-height: 500vh;
+        padding: 20px 10px;
+    }
+    .home-choose .d-flex {
+        margin: 20px 0px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .home-choose h1 {
+        margin: 30px 0px 0px 0px;
+        text-align: center;
+    }
+    .home-choose img {
+        width: 40px;
+        height: 40px;
+        margin: auto;
+    }
+    .home-choose p {
+        margin-top: 20px;
+        margin-left: 0px;
+        width: 100%;
+        padding: 0px 40px;
+        text-align: center;
+        color: white;
+        font-size: 13px;
+    }
+
+    .home-contact {
+        max-height: 1000vh;
+        background-image: url("Image/contactusbg.png");
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: cover;
+        padding-top: 20px;
+        z-index: -5;
+    }
+    .home-contact .row {
+        margin: 0px 0px;
+        opacity: 2;
+        justify-content: space-between;
+        padding-bottom: 30px;
+        flex-direction: column;
+    }
+
+    .home-contact .col-4 {
+        padding: 10px 20px;
+    }
+    .home-contact form {
+        padding: 0px 20px;
+    }
+    .home-contact .form-control {
+        border: 1px solid black;
+        font-weight: 600;
+        border-radius: 5px;
+        margin-top: -24px;
+        font-size: 7px;
+        margin-bottom: 0px;
+        padding-left: 30px;
+    }
+    .home-contact .form-control::placeholder {
+        color: black;
+    }
+    .home-contact label {
+        margin-top: 20px;
+        margin-left: 10px;
+        font-size: 15px;
+    }
+    .home-contact button {
+        border-radius: 5px;
+        padding: 3px 30px;
+        font-size: 9px;
+        margin-top: 20px;
+        font-weight: 600;
+
+        transition: ease-in-out 0.2s;
+    }
+    .home-contact button:hover {
+        background-color: #171d2c;
+        color: white;
+    }
+    .home-contact iframe {
+        padding: 20px;
+    }
+    .home-contact .maps {
+        color: #aa2025;
+        margin-right: 20px;
+        font-size: 20px;
+    }
+    .home-contact .socialmedia {
+        margin-top: 10px;
+    }
+    .home-contact .medias {
+        padding: 0px 20px;
+    }
+    .home-contact .fb,
+    .home-contact .whatsup,
+    .home-contact .email {
+        color: #171d2c;
+        margin-right: 20px;
+        font-size: 15px;
+    }
+    .home-contact .email {
+        margin-left: -1px;
+    }
+    .home-contact .address {
+        font-size: 9px;
+        font-weight: 500;
+    }
+    .home-contact .social {
+        font-size: 9px;
+        font-weight: 700;
+        margin-top: -1px;
+    }
+
+    footer .reserve {
+        font-size: 6px;
+        margin-left: 30px;
+    }
+    footer .content a {
+        font-size: 6px;
+    }
+    footer .content {
+        padding-top: 20px;
+    }
+    footer .line {
+        color: white;
+        margin: -2px 2px 0px 2px;
+        font-size: 6px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1030;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        background-color: transparent;
+        padding: 10px 10px 10px 10px;
+    }
+    .navbar-scrolled {
+        background-color: white;
+        padding: 10px 10px 10px 10px;
+    }
+    .navbar-img {
+        width: 100px;
+        transition: ease-in-out 0.2s;
+    }
+    .navbars-icons {
+        display: none;
+    }
+    .offcanvas {
+        background-color: #171d2c;
+        color: white;
+    }
+    .nav-link {
+        color: white;
+        margin: 5px 20px;
+        font-size: 13px;
+    }
+    /* .home-service {
+        min-height: 100vh;
+        margin: 0px 20px;
+    }
+    .home-service .title {
+        margin: 20px 0px 10px 0px;
+        font-size: 15px;
+    }
+
+    .home-service {
+        min-height: 100vh;
+        margin: 0px 20px;
+    }
+    .home-service .title {
+        margin: 30px 0px 20px 0px;
+        font-size: 20px;
+    }
+
+    .home-service .box-img {
+        height: 100%;
+        width: 40%;
+        text-align: center;
+    }
+    .home-service-box {
+        flex-direction: row;
+        flex-wrap: wrap;
+        display: flex;
+    }
+    .home-service-box .box {
+        width: 30%;
+        min-width: 20%;
+        margin: 10px 0px;
+        text-align: center;
+    }
+    .home-service-box .name {
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .home-service-box .yellow-mark {
+        display: none;
+    }
+    .home-service-box .name2 {
+        font-size: 12px;
+    }
+    .home-service-box .description {
+        font-size: 12px;
+        margin-top: -5px;
+        width: 100%;
+    }
+    .home-service-box .price-tag {
+        width: 15px;
+        margin-top: -5px;
+    }
+    .home-service-box .price {
+        font-weight: 700;
+        font-size: 13px;
+        margin-top: -5px;
+    }
+
+    .home-service-box button {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 9px;
+        margin-top: 10px;
+    }
+    .home-service-box button:hover {
+        background-color: #fcb040;
+    }
+    .home-service .viewmore button {
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-top: 70px;
+        font-size: 13px;
+        transition: ease-in-out 0.2s;
+        margin-bottom: 50px;
+    } */
+}
