@@ -160,7 +160,7 @@
                                 Sign in
                             </h1>
                             <p class="text-base font-bold leading-normal text-white-dark">
-                                Enter your email and password to login
+                                Enter your email and password to login dito
                             </p>
                         </div>
                         <form class="space-y-5 dark:text-white" method="POST" action="{{ route('login') }}">
