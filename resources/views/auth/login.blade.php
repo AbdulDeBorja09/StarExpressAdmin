@@ -247,7 +247,7 @@
                         </div>
                     </div>
                     <p class="absolute bottom-6 w-full text-center dark:text-white">
-                        © <span id="footer-year">2024</span>. Abdul Dev All Rights
+                        © <span id="footer-year">2024</span>. Abdul Dev All Rightsadasdasd
                         Reserved.
                     </p>
                 </div>
