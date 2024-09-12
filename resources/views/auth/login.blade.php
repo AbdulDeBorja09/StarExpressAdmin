@@ -75,13 +75,7 @@
             </div>
         </div>
     </div>
-</div>
-
-
-
---}}
-
-
+</div>--}}
 
 <div class="main-container min-h-screen text-black dark:text-white-dark">
     <!-- start main content section -->
