@@ -19,6 +19,6 @@ class UserAccess
             return $next($request);
         }
 
-        return response()->view('welcome');
+        return response()->view('home');
     }
 }

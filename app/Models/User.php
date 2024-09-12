@@ -17,6 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'stars';
     protected $fillable = [
         'name',
         'email',
@@ -48,7 +49,7 @@ class User extends Authenticatable
     protected function type(): Attribute
     {
         return new Attribute(
-            get: fn($value) =>  ["user", "admin"][$value],
+            get: fn($value) =>  ["admin", "employee"][$value],
         );
     }
 }

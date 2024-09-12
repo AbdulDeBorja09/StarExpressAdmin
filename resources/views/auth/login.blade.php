@@ -75,36 +75,43 @@
             </div>
         </div>
     </div>
-</div>--}}
+</div>
+
+
+
+--}}
+
+
 
 <div class="main-container min-h-screen text-black dark:text-white-dark">
     <!-- start main content section -->
-    <div>
+    <div x-data="auth">
         <div class="absolute inset-0">
-            <img src="/images/auth/bg-gradient.png" alt="image" class="h-full w-full object-cover" />
+            <img src="{{asset('/images/auth/bg-gradient.png')}}" alt="image" class="h-full w-full object-cover">
         </div>
         <div
             class="relative flex min-h-screen items-center justify-center bg-[url(../images/auth/map.png)] bg-cover bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
-            <img src="/images/auth/coming-soon-object1.png" alt="image"
-                class="absolute left-0 top-1/2 h-full max-h-[893px] -translate-y-1/2" />
-            <img src="/images/auth/coming-soon-object2.png" alt="image"
-                class="absolute left-24 top-0 h-40 md:left-[30%]" />
-            <img src="/images/auth/coming-soon-object3.png" alt="image" class="absolute right-0 top-0 h-[300px]" />
-            <img src="/images/auth/polygon-object.svg" alt="image" class="absolute bottom-0 end-[28%]" />
+            <img src="{{asset('/images/auth/coming-soon-object1.png')}}" alt="image"
+                class="absolute left-0 top-1/2 h-full max-h-[893px] -translate-y-1/2">
+            <img src="{{asset('/images/auth/coming-soon-object2.png')}}" alt="image"
+                class="absolute left-24 top-0 h-40 md:left-[30%]">
+            <img src="{{asset('/images/auth/coming-soon-object3.png')}}" alt="image"
+                class="absolute right-0 top-0 h-[300px]">
+            <img src="{{asset('/images/auth/polygon-object.svg')}}" alt="image" class="absolute bottom-0 end-[28%]">
             <div
                 class="relative flex w-full max-w-[1502px] flex-col justify-between overflow-hidden rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 lg:min-h-[758px] lg:flex-row lg:gap-10 xl:gap-0">
                 <div
-                    class="relative hidden w-full items-center justify-center bg-[linear-gradient(225deg,rgba(239,18,98,1)_0%,rgba(67,97,238,1)_100%)] p-5 lg:inline-flex lg:max-w-[835px] xl:-ms-32 ltr:xl:skew-x-[14deg] rtl:xl:skew-x-[-14deg]">
+                    class="relative hidden w-full items-center justify-center bg-[linear-gradient(225deg,rgba(239,18,98,1)_0%,rgba(67,97,238,1)_100%)] p-5 lg:inline-flex lg:max-w-[835px] xl:-ms-28 ltr:xl:skew-x-[14deg] rtl:xl:skew-x-[-14deg]">
                     <div
                         class="absolute inset-y-0 w-8 from-primary/10 via-transparent to-transparent ltr:-right-10 ltr:bg-gradient-to-r rtl:-left-10 rtl:bg-gradient-to-l xl:w-16 ltr:xl:-right-20 rtl:xl:-left-20">
                     </div>
                     <div class="ltr:xl:-skew-x-[14deg] rtl:xl:skew-x-[14deg]">
-                        <a href="index.html" class="block w-48 lg:w-72 ms-10">
-                            <img src="/images/auth/logo-white.png" alt="Logo" class="w-full" />
-                        </a>
-                        <div class="mt-24 hidden w-full max-w-[430px] lg:block">
-                            <img src="/images/auth/login.svg" alt="Cover Image" class="w-full" />
-                        </div>
+
+                        {{-- <img src="{{asset('/images/star/Logo2.png')}}" alt="Logo" class="w-full"> --}}
+
+                        {{-- <div class="mt-24 hidden w-full max-w-[430px] lg:block">
+                            <img src="assets/images/auth/register.svg" alt="Cover Image" class="w-full">
+                        </div> --}}
                     </div>
                 </div>
                 <div
@@ -112,15 +119,15 @@
                     <div
                         class="flex w-full max-w-[440px] items-center gap-2 lg:absolute lg:end-6 lg:top-6 lg:max-w-full">
                         <a href="index.html" class="block w-8 lg:hidden">
-                            <img src="/images/logo.png" alt="Logo" class="w-full" />
+                            <img src="assets/images/logo.png" alt="Logo" class="w-full">
                         </a>
                         <div class="dropdown ms-auto w-max" x-data="dropdown" @click.outside="open = false">
                             <a href="javascript:;"
                                 class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
                                 :class="{'!border-primary !text-primary' : open}" @click="toggle">
                                 <div>
-                                    <img :src="`/images/flags/${$store.app.locale.toUpperCase()}.svg`" alt="image"
-                                        class="h-5 w-5 rounded-full object-cover" />
+                                    <img :src="`assets/images/flags/${$store.app.locale.toUpperCase()}.svg`" alt="image"
+                                        class="h-5 w-5 rounded-full object-cover">
                                 </div>
                                 <div x-text="$store.app.locale" class="text-base font-bold uppercase"></div>
                                 <span class="shrink-0" :class="{'rotate-180' : open}">
@@ -140,7 +147,8 @@
                                             @click="$store.app.toggleLocale(item.value),toggle()"
                                             :class="{'bg-primary/10 text-primary' : $store.app.locale == item.value}">
                                             <img class="h-5 w-5 rounded-full object-cover"
-                                                :src="`/images/flags/${item.value.toUpperCase()}.svg`" alt="image" />
+                                                :src="`assets/images/flags/${item.value.toUpperCase()}.svg`"
+                                                alt="image">
                                             <span class="ltr:ml-3 rtl:mr-3" x-text="item.key"></span>
                                         </a>
                                     </li>
@@ -150,23 +158,19 @@
                     </div>
                     <div class="w-full max-w-[440px] lg:mt-16">
                         <div class="mb-10">
-                            <h1 class="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">
-                                Sign in
+                            <h1 class="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign IN
                             </h1>
-                            <p class="text-base font-bold leading-normal text-white-dark">
-                                Enter your email and password to login dito
-                            </p>
+                            <p class="text-base font-bold leading-normal text-white-dark">Enter your email and password
+                                to login</p>
                         </div>
-                        <form class="space-y-5 dark:text-white" method="POST" action="{{ route('login') }}">
+                        <form method="POST" action="{{ route('login') }}" class="space-y-5 dark:text-white">
                             @csrf
-                            @method('POST')
                             <div>
                                 <label for="Email">Email</label>
                                 <div class="relative text-white-dark">
-                                    <input id="Email" type="email" placeholder="Enter Email"
+                                    <input name="email" id="Email" type="email" placeholder="Enter Email"
                                         class="form-input ps-10 placeholder:text-white-dark  @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email') }}" required autocomplete="email"
-                                        autofocus />
+                                        name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                                     <span class="absolute start-4 top-1/2 -translate-y-1/2">
                                         <svg width="18" height="18" viewbox="0 0 18 18" fill="none">
                                             <path opacity="0.5"
@@ -177,10 +181,9 @@
                                                 fill="currentColor"></path>
                                         </svg>
                                     </span>
-
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                        *{{ $message }}
                                     </span>
                                     @enderror
                                 </div>
@@ -188,9 +191,8 @@
                             <div>
                                 <label for="Password">Password</label>
                                 <div class="relative text-white-dark">
-                                    <input id="Password" type="password" placeholder="Enter Password"
-                                        class="form-input ps-10 placeholder:text-white-dark  @error('password') is-invalid @enderror"
-                                        name="password" required autocomplete="current-password" />
+                                    <input name="password" id="Password" type="password" placeholder="Enter Password"
+                                        class="form-input ps-10 placeholder:text-white-dark @error('password') is-invalid @enderror">
                                     <span class="absolute start-4 top-1/2 -translate-y-1/2">
                                         <svg width="18" height="18" viewbox="0 0 18 18" fill="none">
                                             <path opacity="0.5"
@@ -219,30 +221,28 @@
                             </div>
                             <div>
                                 <label class="flex cursor-pointer items-center">
-                                    <input type="checkbox" class="form-checkbox bg-white dark:bg-black" name="remember"
-                                        id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                    <span class="text-white-dark">Remember Me</span>
+                                    <input name="remember" type="checkbox" class="form-checkbox bg-white dark:bg-black">
+                                    <span class="text-white-dark">Remember me</span>
                                 </label>
                             </div>
                             <button type="submit"
                                 class="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                Sign in
+                                Sign Up
                             </button>
                         </form>
 
-                        <div class="text-center dark:text-white" style="margin-top: 20px">
-
-                            {{-- @if (session('show_reset_password'))
-                            <a class="uppercase text-primary underline transition hover:text-black dark:hover:text-white"
-                                href="{{ route('password.request') }}">
-                                {{ __('Reset Password') }}
-                            </a>
-                            @endif --}}
+                        <div class="relative my-7 text-center md:mb-9 mt-5">
+                            <span
+                                class="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
+                        </div>
+                        <div class="text-center dark:text-white">
+                            <a href="auth-cover-login.html"
+                                class="uppercase text-primary underline transition hover:text-black dark:hover:text-white">Forgot
+                                Password</a>
                         </div>
                     </div>
                     <p class="absolute bottom-6 w-full text-center dark:text-white">
-                        © <span id="footer-year">2024</span>. Abdul Dev All Rightsadasdasd
-                        Reserved.
+                        © <span id="footer-year">2022</span>. Star Express All Rights Reserved.
                     </p>
                 </div>
             </div>

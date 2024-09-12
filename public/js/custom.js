@@ -118,7 +118,7 @@
 
         // main - custom functions
         Alpine.data("main", (value) => ({}));
-        
+
         // DarkMode Theme
         Alpine.store("app", {
             // theme
