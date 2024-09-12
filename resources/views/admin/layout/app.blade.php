@@ -15,13 +15,13 @@
     <link href="css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     {{-- main css --}}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{assets('/css/style.css')}}">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{assets('/css/perfect-scrollbar.min.css')}}">
-    <link defer="" rel="stylesheet" type="text/css" media="screen" href="{{assets('/css/animate.css')}}">
-    <script src="{{assets('/js/perfect-scrollbar.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/popper.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/tippy-bundle.umd.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/sweetalert.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/style.css')}}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/perfect-scrollbar.min.css')}}">
+    <link defer="" rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/animate.css')}}">
+    <script src="{{asset('/js/perfect-scrollbar.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/popper.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/tippy-bundle.umd.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/sweetalert.min.js')}}"></script>
 
 </head>
 
@@ -79,13 +79,13 @@
             @include('admin.layout.footer')
         </div>
     </div>
-    <script src="{{assets('/js/alpine-collaspe.min.js')}}"></script>
-    <script src="{{assets('/js/alpine-persist.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/alpine-ui.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/alpine-focus.min.js')}}"></script>
-    <script defer="" src="{{assets('/js/alpine.min.js')}}"></script>
-    <script src="{{assets('/js/custom.js')}}"></script>
-    <script defer="" src="{{assets('/js/apexcharts.js')}}"></script>
+    <script src="{{asset('/js/alpine-collaspe.min.js')}}"></script>
+    <script src="{{asset('/js/alpine-persist.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/alpine-ui.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/alpine-focus.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/alpine.min.js')}}"></script>
+    <script src="{{asset('/js/custom.js')}}"></script>
+    <script defer="" src="{{asset('/js/apexcharts.js')}}"></script>
 
 </body>
 

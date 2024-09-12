@@ -11,12 +11,12 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::middleware(['auth', 'user-access:user'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/homeasdasd', [HomeController::class, 'index'])->name('home');
 });
 
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/admin/Employees', [AdminController::class, 'allEmployees'])->name('admin.allEmployees');
     Route::get('/admin/Employees/add', [AdminController::class, 'addEmployees'])->name('admin.addEmployees');
     Route::get('/admin/Department/add', [AdminController::class, 'addDepartment'])->name('admin.addDepartment');
-    Route::get('/admin/home', [AdminController::class, 'adminHome'])->name('admin.home');
+    Route::get('/home', [AdminController::class, 'adminHome'])->name('admin.home');
 });
