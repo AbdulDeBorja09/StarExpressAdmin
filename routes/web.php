@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 
-Route::get('/admin', function () {
+Route::get('/', function () {
     return view('auth.login');
 });
 
