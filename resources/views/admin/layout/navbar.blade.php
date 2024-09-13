@@ -28,7 +28,7 @@
             <div class="hidden ltr:mr-2 rtl:ml-2 sm:block">
                 <ul class="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
                     <li>
-                        <a href="apps-calendar.html"
+                        <a href=""
                             class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60">
                             <svg width="20" height="20" viewbox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="apps-todolist.html"
+                        <a href=""
                             class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60">
                             <svg width="20" height="20" viewbox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="apps-chat.html"
+                        <a href=""
                             class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60">
                             <svg width="20" height="20" viewbox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -374,7 +374,7 @@
                             </div>
                         </li>
                         <li>
-                            <a href="users-profile.html" class="dark:hover:text-white" @click="toggle">
+                            <a href="" class="dark:hover:text-white" @click="toggle">
                                 <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18" height="18"
                                     viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5">
@@ -386,7 +386,7 @@
                                 Profile</a>
                         </li>
                         <li>
-                            <a href="apps-mailbox.html" class="dark:hover:text-white" @click="toggle">
+                            <a href="" class="dark:hover:text-white" @click="toggle">
                                 <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18" height="18"
                                     viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path opacity="0.5"
@@ -400,7 +400,7 @@
                                 Inbox</a>
                         </li>
                         <li>
-                            <a href="auth-boxed-lockscreen.html" class="dark:hover:text-white" @click="toggle">
+                            <a href="" class="dark:hover:text-white" @click="toggle">
                                 <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18" height="18"
                                     viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path

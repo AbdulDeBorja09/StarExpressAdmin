@@ -119,7 +119,7 @@
                     <div
                         class="flex w-full max-w-[440px] items-center gap-2 lg:absolute lg:end-6 lg:top-6 lg:max-w-full">
                         <a href="index.html" class="block w-8 lg:hidden">
-                            <img src="assets/images/logo.png" alt="Logo" class="w-full">
+                            <img src="{{asset('/images/star/Logo2.png')}}" alt="Logo" class="w-full">
                         </a>
                         <div class="dropdown ms-auto w-max" x-data="dropdown" @click.outside="open = false">
                             <a href="javascript:;"
@@ -142,12 +142,12 @@
                             <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
                                 class="top-11 grid w-[280px] grid-cols-2 gap-y-2 !px-2 font-semibold text-dark ltr:-right-14 rtl:-left-14 dark:text-white-dark dark:text-white-light/90 sm:ltr:-right-2 sm:rtl:-left-2">
                                 <template x-for="item in languages">
-                                    <li>
+                                    <li class="">
                                         <a href="javascript:;" class="hover:text-primary"
                                             @click="$store.app.toggleLocale(item.value),toggle()"
                                             :class="{'bg-primary/10 text-primary' : $store.app.locale == item.value}">
                                             <img class="h-5 w-5 rounded-full object-cover"
-                                                :src="`assets/images/flags/${item.value.toUpperCase()}.svg`"
+                                                :src="{{ asset('`/images/flags/${item.value.toUpperCase()}.svg`') }}"
                                                 alt="image">
                                             <span class="ltr:ml-3 rtl:mr-3" x-text="item.key"></span>
                                         </a>
@@ -250,5 +250,24 @@
     </div>
     <!-- end main content section -->
 </div>
+<script>
+    // main section
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('auth', () => ({
+            languages: [
+                {
+                    id: 1,
+                    key: 'Philippines',
+                    value: 'PH',
+                },
+                {
+                    id: 2,
+                    key: 'China',
+                    value: 'CH',
+                }
+            ],
+        }));
+    });
 
+</script>
 @endsection

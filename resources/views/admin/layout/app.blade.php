@@ -79,6 +79,7 @@
             @include('admin.layout.footer')
         </div>
     </div>
+    
     <script src="{{asset('/js/alpine-collaspe.min.js')}}"></script>
     <script src="{{asset('/js/alpine-persist.min.js')}}"></script>
     <script defer="" src="{{asset('/js/alpine-ui.min.js')}}"></script>
