@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use App\Models\Management;
 
 class LoginController extends Controller
 {
@@ -24,6 +24,14 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    public function showLoginForm()
+    {
+
+        $countries = Management::select('country')
+            ->orderBy('country', 'asc')
+            ->groupBy('country')->get();
+        return view('auth.login',  compact('countries'));
+    }
 
     /**
      * Where to redirect users after login.
@@ -49,20 +57,32 @@ class LoginController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
+            'country' => 'required',
         ]);
 
-        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
-            $user = Auth::User();
-            Session::put('avatar', $user->avatar);
-            if (auth()->user()->type == 'employee') {
-                return redirect()->route('home');
-            } else if (auth()->user()->type == 'admin') {
-                return redirect()->route('admin.home');
+        if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+            $user = Auth::user();
+            if ($user->country === $input['country']) {
+                if ($user->status === 'active') {
+                    Session::put('avatar', $user->avatar);
+                    if ($user->type === 'employee') {
+                        return redirect()->route('home');
+                    } elseif ($user->type === 'admin') {
+                        return redirect()->route('admin.home');
+                    }
+                } elseif ($user->status === 'suspended') {
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors(['suspended' => 'Your account is suspended.']);
+                }
+            } else {
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['country' => 'You are not authorized to log in from your country.']);
             }
         } else {
-            return redirect()->back();
+            return redirect()->back()->withErrors(['login-error' => 'Invalid email or password.']);
         }
     }
+
     protected function authenticated(Request $request, $user)
     {
         session()->forget('login_attempts');

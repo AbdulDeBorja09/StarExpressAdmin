@@ -17,11 +17,24 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public $timestamps = true;
     protected $table = 'stars';
     protected $fillable = [
+        'type',
+        'employee_id',
         'name',
         'email',
         'password',
+        'gender',
+        'address',
+        'contact',
+        'country',
+        'branch',
+        'status',
+        'hired',
+        'avatar',
+
+
     ];
 
     /**
@@ -45,11 +58,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-    protected function type(): Attribute
-    {
-        return new Attribute(
-            get: fn($value) =>  ["admin", "employee"][$value],
-        );
     }
 }

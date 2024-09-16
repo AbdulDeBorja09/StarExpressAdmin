@@ -4,7 +4,7 @@
             <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                 <a href="index.html" class="main-logo flex shrink-0 items-center">
                     @if (session('avatar') !== null)
-                    <img class="ml-[5px] w-8 flex-none" src="{{ session('avatar') }}" alt="User Avatar">
+                    <img class="ml-[5px] w-8 flex-none" src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
                     @else
                     <img class="ml-[5px] w-8 flex-none" src="/images/avatar.png" alt="image">
                     @endif
@@ -277,7 +277,7 @@
                                         <div class="relative h-12 w-12">
                                             @if (session('avatar') !== null)
                                             <img class="h-12 w-12 rounded-full object-cover"
-                                                src="{{ session('avatar') }}" alt="User Avatar">
+                                                src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
                                             @else
                                             <img class="h-12 w-12 rounded-full object-cover" src="/images/avatar.png"
                                                 alt="image">
@@ -344,7 +344,7 @@
                         <span>
                             @if (session('avatar') !== null)
                             <img class="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
-                                src="{{ session('avatar') }}" alt="User Avatar">
+                                src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
                             @else
                             <img class="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
                                 src="/images/avatar.png" alt="image">
@@ -357,8 +357,8 @@
                             <div class="flex items-center px-4 py-4">
                                 <div class="flex-none">
                                     @if (session('avatar') !== null)
-                                    <img class="h-10 w-10 rounded-md object-cover" src="{{ session('avatar') }}"
-                                        alt="User Avatar">
+                                    <img class="h-10 w-10 rounded-md object-cover"
+                                        src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
                                     @else
                                     <img class="h-10 w-10 rounded-md object-cover" src="/images/avatar.png" alt="image">
                                     @endif

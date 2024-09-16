@@ -5,14 +5,14 @@
             <div class="flex items-center justify-between px-4 py-3">
                 <a href="index.html" class="main-logo flex shrink-0 items-center">
                     @if (session('avatar') !== null)
-                    <img class="ml-[5px] w-8 flex-none" src="{{ session('avatar') }}" alt="User Avatar">
+                    <img class="ml-[5px] w-8 flex-none" src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
                     @else
                     <img class="ml-[5px] w-8 flex-none" src="/images/avatar.png" alt="image">
                     @endif
 
                     <span
-                        class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">Abdul
-                        Dev
+                        class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">
+                        {{Auth::user()->type}}
                     </span>
                 </a>
                 <a href="javascript:;"
@@ -67,7 +67,7 @@
                             </svg>
 
                             <span
-                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Employees</span>
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Management</span>
                         </div>
                         <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'Employee'}">
                             <svg width="16" height="16" viewbox="0 0 24 24" fill="none"
@@ -80,14 +80,14 @@
                     @if(Auth::user()->type === 'admin')
                     <ul x-show="activeDropdown === 'Employee'" class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{route('admin.allEmployees')}}" class="active">All Employees</a>
+                            <a href="{{ route('admin.managment') }}" class="{{ Route::currentRouteName() == 'admin.managment' ? 'active' : '' }}">Branches</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.addEmployees')}}">Add Emplyoees</a>
+                            <a href="{{ route('admin.allEmployees') }}" class="{{ Route::currentRouteName() == 'admin.allEmployees' ? 'active' : '' }}">Employees</a>
                         </li>
-                        <li>
-                            <a href="{{route('admin.addDepartment')}}">Add Department</a>
-                        </li>
+                        {{-- <li>
+                            <a href="{{ route('admin.addDepartment') }}" class="{{ Route::currentRouteName() == 'admin.addDepartment' ? 'active' : '' }}">Add Department</a>
+                        </li> --}}
                     </ul>
                     @endif
                 </li>

@@ -32,7 +32,7 @@
         @click="$store.app.toggleSidebar()"></div>
 
     <!-- screen loader -->
-    {{-- <div
+    <div
         class="screen_loader animate__animated fixed inset-0 z-[60] grid place-content-center bg-[#fafafa] dark:bg-[#060818]">
         <svg width="64" height="64" viewbox="0 0 135 135" xmlns="http://www.w3.org/2000/svg" fill="#4361ee">
             <path
@@ -46,7 +46,7 @@
                     repeatcount="indefinite"></animatetransform>
             </path>
         </svg>
-    </div> --}}
+    </div>
 
     <!-- scroll to top button -->
     <div class="fixed bottom-6 z-50 ltr:right-6 rtl:left-6" x-data="scrollToTop">
@@ -70,16 +70,16 @@
 
 
     <div class="main-container min-h-screen text-black dark:text-white-dark" :class="[$store.app.navbar]">
-        @include('admin.layout.sidebar')
+        @include('layout.sidebar')
         <div class="main-content flex min-h-screen flex-col">
-            @include('admin.layout.navbar')
+            @include('layout.navbar')
             <main>
                 @yield('content')
             </main>
-            @include('admin.layout.footer')
+            @include('layout.footer')
         </div>
     </div>
-    
+
     <script src="{{asset('/js/alpine-collaspe.min.js')}}"></script>
     <script src="{{asset('/js/alpine-persist.min.js')}}"></script>
     <script defer="" src="{{asset('/js/alpine-ui.min.js')}}"></script>

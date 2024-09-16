@@ -121,7 +121,7 @@
                         <a href="index.html" class="block w-8 lg:hidden">
                             <img src="{{asset('/images/star/Logo2.png')}}" alt="Logo" class="w-full">
                         </a>
-                        <div class="dropdown ms-auto w-max" x-data="dropdown" @click.outside="open = false">
+                        {{-- <div class="dropdown ms-auto w-max" x-data="dropdown" @click.outside="open = false">
                             <a href="javascript:;"
                                 class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
                                 :class="{'!border-primary !text-primary' : open}" @click="toggle">
@@ -139,22 +139,14 @@
                                     </svg>
                                 </span>
                             </a>
+                            @foreach($countries as $country)
                             <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
                                 class="top-11 grid w-[280px] grid-cols-2 gap-y-2 !px-2 font-semibold text-dark ltr:-right-14 rtl:-left-14 dark:text-white-dark dark:text-white-light/90 sm:ltr:-right-2 sm:rtl:-left-2">
-                                <template x-for="item in languages">
-                                    <li class="">
-                                        <a href="javascript:;" class="hover:text-primary"
-                                            @click="$store.app.toggleLocale(item.value),toggle()"
-                                            :class="{'bg-primary/10 text-primary' : $store.app.locale == item.value}">
-                                            <img class="h-5 w-5 rounded-full object-cover"
-                                                :src="{{ asset('`/images/flags/${item.value.toUpperCase()}.svg`') }}"
-                                                alt="image">
-                                            <span class="ltr:ml-3 rtl:mr-3" x-text="item.key"></span>
-                                        </a>
-                                    </li>
-                                </template>
+                                <option value="{{ $country->id }}">{{ $country->country }}</option>
+
                             </ul>
-                        </div>
+                            @endforeach
+                        </div> --}}
                     </div>
                     <div class="w-full max-w-[440px] lg:mt-16">
                         <div class="mb-10">
@@ -165,6 +157,34 @@
                         </div>
                         <form method="POST" action="{{ route('login') }}" class="space-y-5 dark:text-white">
                             @csrf
+                            <div>
+
+                                <label for="Email">Country</label>
+                                <div class="relative text-white-dark">
+                                    <select class="form-input ps-10 " name="country" required autocomplete="" autofocus
+                                        style="text-transform: capitalize">
+                                        @foreach($countries as $country)
+                                        <option value="{{ $country->country }}">{{ $country->country }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="absolute start-4 top-1/2 -translate-y-1/2">
+                                        <svg width="18" height="18" viewbox="0 0 18 18" fill="none">
+                                            <path opacity="0.5"
+                                                d="M10.65 2.25H7.35C4.23873 2.25 2.6831 2.25 1.71655 3.23851C0.75 4.22703 0.75 5.81802 0.75 9C0.75 12.182 0.75 13.773 1.71655 14.7615C2.6831 15.75 4.23873 15.75 7.35 15.75H10.65C13.7613 15.75 15.3169 15.75 16.2835 14.7615C17.25 13.773 17.25 12.182 17.25 9C17.25 5.81802 17.25 4.22703 16.2835 3.23851C15.3169 2.25 13.7613 2.25 10.65 2.25Z"
+                                                fill="currentColor"></path>
+                                            <path
+                                                d="M14.3465 6.02574C14.609 5.80698 14.6445 5.41681 14.4257 5.15429C14.207 4.89177 13.8168 4.8563 13.5543 5.07507L11.7732 6.55931C11.0035 7.20072 10.4691 7.6446 10.018 7.93476C9.58125 8.21564 9.28509 8.30993 9.00041 8.30993C8.71572 8.30993 8.41956 8.21564 7.98284 7.93476C7.53168 7.6446 6.9973 7.20072 6.22761 6.55931L4.44652 5.07507C4.184 4.8563 3.79384 4.89177 3.57507 5.15429C3.3563 5.41681 3.39177 5.80698 3.65429 6.02574L5.4664 7.53583C6.19764 8.14522 6.79033 8.63914 7.31343 8.97558C7.85834 9.32604 8.38902 9.54743 9.00041 9.54743C9.6118 9.54743 10.1425 9.32604 10.6874 8.97558C11.2105 8.63914 11.8032 8.14522 12.5344 7.53582L14.3465 6.02574Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                    </span>
+
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        *{{ $message }}
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div>
                                 <label for="Email">Email</label>
                                 <div class="relative text-white-dark">
@@ -250,7 +270,7 @@
     </div>
     <!-- end main content section -->
 </div>
-<script>
+{{-- <script>
     // main section
     document.addEventListener('alpine:init', () => {
         Alpine.data('auth', () => ({
@@ -269,5 +289,5 @@
         }));
     });
 
-</script>
+</script> --}}
 @endsection
