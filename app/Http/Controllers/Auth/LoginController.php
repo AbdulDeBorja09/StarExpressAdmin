@@ -26,7 +26,7 @@ class LoginController extends Controller
     use AuthenticatesUsers;
     public function showLoginForm()
     {
-
+        
         $countries = Management::select('country')
             ->orderBy('country', 'asc')
             ->groupBy('country')->get();
@@ -38,7 +38,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -65,10 +65,13 @@ class LoginController extends Controller
             if ($user->country === $input['country']) {
                 if ($user->status === 'active') {
                     Session::put('avatar', $user->avatar);
-                    if ($user->type === 'employee') {
-                        return redirect()->route('home');
+                    if ($user->type === 'accountant') {
+                        return redirect()->route('accountant.home');
                     } elseif ($user->type === 'admin') {
                         return redirect()->route('admin.home');
+                    } else {
+                        Auth::logout();
+                        return redirect()->route('login')->withErrors(['unauthorized' => 'Unauthorized user type.']);
                     }
                 } elseif ($user->status === 'suspended') {
                     Auth::logout();
@@ -79,7 +82,7 @@ class LoginController extends Controller
                 return redirect()->route('login')->withErrors(['country' => 'You are not authorized to log in from your country.']);
             }
         } else {
-            return redirect()->back()->withErrors(['login-error' => 'Invalid email or password.']);
+            return redirect()->route('login');
         }
     }
 

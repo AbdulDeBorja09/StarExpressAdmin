@@ -27,8 +27,19 @@
                     </svg>
                 </a>
             </div>
+
             <ul class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold"
                 x-data="{ activeDropdown: 'dashboard' }">
+                @if(Auth::user()->type === 'admin')
+                <h2
+                    class="-mx-4 mb-1 flex items-center bg-white-light/30 px-7 py-3 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                    <svg class="hidden h-5 w-4 flex-none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="1.5"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Admin</span>
+                </h2>
+
                 <li class="nav-item">
                     <a href="{{route('admin.home')}}" class="group">
                         <div class="flex items-center">
@@ -53,6 +64,7 @@
                         </div>
                     </a>
                 </li>
+
                 <li class="menu nav-item">
                     <button type="button" class="nav-link group"
                         @click="activeDropdown === 'Employee' ? activeDropdown = null : activeDropdown = 'Employee'">
@@ -77,22 +89,75 @@
                             </svg>
                         </div>
                     </button>
-                    @if(Auth::user()->type === 'admin')
+
                     <ul x-show="activeDropdown === 'Employee'" class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{ route('admin.managment') }}" class="{{ Route::currentRouteName() == 'admin.managment' ? 'active' : '' }}">Branches</a>
+                            <a href="{{ route('admin.Services') }}"
+                                class="{{ Route::currentRouteName() == 'admin.Services' ? 'active' : '' }}">Services</a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.allEmployees') }}" class="{{ Route::currentRouteName() == 'admin.allEmployees' ? 'active' : '' }}">Employees</a>
+                            <a href="{{ route('admin.managment') }}"
+                                class="{{ Route::currentRouteName() == 'admin.managment' ? 'active' : '' }}">Branches</a>
                         </li>
-                        {{-- <li>
-                            <a href="{{ route('admin.addDepartment') }}" class="{{ Route::currentRouteName() == 'admin.addDepartment' ? 'active' : '' }}">Add Department</a>
-                        </li> --}}
+
+                        <li>
+                            <a href="{{ route('admin.allEmployees') }}"
+                                class="{{ Route::currentRouteName() == 'admin.allEmployees' ? 'active' : '' }}">Employees</a>
+                        </li>
                     </ul>
-                    @endif
                 </li>
+                @endif
+                @if(Auth::user()->type === 'admin')
+                <h2
+                    class="-mx-4 mb-1 flex items-center bg-white-light/30 px-7 py-3 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                    <svg class="hidden h-5 w-4 flex-none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="1.5"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Service Manager</span>
+                </h2>
+                @endif
+                @if(Auth::user()->type === 'admin' || Auth::user()->type === 'servicemanager')
+                <li class="menu nav-item">
+                    <button type="button" class="nav-link group" :class="{'active' : activeDropdown === 'components'}"
+                        @click="activeDropdown === 'components' ? activeDropdown = null : activeDropdown = 'components'">
+                        <div class="flex items-center">
+                            <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewbox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z"
+                                    fill="currentColor"></path>
+                                <path opacity="0.7"
+                                    d="M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z"
+                                    fill="currentColor"></path>
+                                <path opacity="0.5"
+                                    d="M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                            <span
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Cargo
+                                Services</span>
+                        </div>
+                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'components'}">
+                            <svg width="16" height="16" viewbox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <ul x-cloak="" x-show="activeDropdown === 'components'" x-collapse=""
+                        class="sub-menu text-gray-500">
+                        <li>
+                            <a href="components-tabs.html">Service Price</a>
+                        </li>
+                        <li>
+                            <a href="components-tabs.html">Locations</a>
+                        </li>
 
-
+                    </ul>
+                </li>
+                @endif
                 {{-- <li class="nav-item">
                     <ul>
                         <li class="nav-item">
@@ -347,14 +412,7 @@
                         </li>
                     </ul>
                 </li> --}}
-                {{-- <h2
-                    class="-mx-4 mb-1 flex items-center bg-white-light/30 px-7 py-3 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
-                    <svg class="hidden h-5 w-4 flex-none" viewbox="0 0 24 24" stroke="currentColor" stroke-width="1.5"
-                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>TABLES AND FORMS</span>
-                </h2> --}}
+
             </ul>
         </div>
     </nav>

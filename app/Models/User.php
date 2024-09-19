@@ -33,6 +33,7 @@ class User extends Authenticatable
         'status',
         'hired',
         'avatar',
+        'active',
 
 
     ];
