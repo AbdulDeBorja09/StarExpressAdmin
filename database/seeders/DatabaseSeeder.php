@@ -47,9 +47,6 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        Management::factory()->create([
-            'country' => 'china',
-
-        ]);
+        
     }
 }

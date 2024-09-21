@@ -160,7 +160,7 @@ class ManagementController extends Controller
                 return redirect()->back()->withErrors(['error' => $e->getMessage()]);
             }
         } else {
-            return redirect()->back()->withErrors(['confirm-password' => 'Service Already Exists.']);
+            return redirect()->back()->withErrors(['service' => 'Service Already Exists.']);
         }
     }
 
@@ -176,11 +176,17 @@ class ManagementController extends Controller
     }
     public function services(): View
     {
+        $countries = Management::select('country')
+            ->orderBy('country', 'asc')
+            ->get()
+            ->groupBy('country');
         $services = CargoService::get();
-        return view('admin.services',  compact('services'));
+        return view('admin.services',  compact('services', 'countries'));
     }
     public function allEmployees(): View
     {
-        return view('admin.displayemployee');
+
+        $employees = User::get();
+        return view('admin.displayemployee', compact('employees'));
     }
 }

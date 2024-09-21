@@ -15,6 +15,7 @@
     <link href="css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     {{-- main css --}}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/customcss.css')}}">
     <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/style.css')}}">
     <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/perfect-scrollbar.min.css')}}">
     <link defer="" rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/animate.css')}}">

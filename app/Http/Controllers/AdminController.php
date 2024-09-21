@@ -19,4 +19,11 @@ class AdminController extends Controller
     {
         return view('dashboard.accountant');
     }
+
+    public function servicemanagerHome(): View
+    {
+        return view('dashboard.servicemanager');
+    }
+
+    
 }
