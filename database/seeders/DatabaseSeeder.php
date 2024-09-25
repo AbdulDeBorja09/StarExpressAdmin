@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->createMany([
             [
+                'branch_id' => 1,
                 'type' => 'admin',
                 'employee_id' => '1231231231',
                 'name' => 'Admin User',
@@ -25,13 +26,12 @@ class DatabaseSeeder extends Seeder
                 'address' => 'Admin Address',
                 'contact' => '1234567890',
                 'status' => 'active',
-                'country' => 'china',
-                'branch' => 'macau',
                 'email' => 'admin@com',
                 'hired' => '08/09/04',
                 'password' => bcrypt('Password'),
             ],
             [
+                'branch_id' => 1,
                 'type' => 'accountant',
                 'employee_id' => '9876543210',
                 'name' => 'Accountant User',
@@ -39,14 +39,10 @@ class DatabaseSeeder extends Seeder
                 'address' => 'Accountant Address',
                 'contact' => '0987654321',
                 'status' => 'active',
-                'country' => 'china',
-                'branch' => 'macau',
                 'email' => 'accountant@com',
                 'hired' => '10/11/05',
                 'password' => bcrypt('Password'),
             ],
         ]);
-
-        
     }
 }

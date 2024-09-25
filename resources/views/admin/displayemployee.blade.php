@@ -93,7 +93,9 @@
                             </td>
                             <td>{{ $item->employee_id }}</td>
                             <td>{{ $item->email }}</td>
-                            <td style="text-transform: capitalize">{{ $item->country }}, {{ $item->branch }}</td>
+                            <td style="text-transform: capitalize">
+                                {{ $item->branch->country }}, {{ $item->branch->branch }}
+                            </td>
                             <td>
                                 @if($item->status === "active")
                                 <span class="badge badge-outline-success">{{ $item->status }}</span>

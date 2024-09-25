@@ -89,21 +89,24 @@
                             <div class="text-lg font-semibold">Employee Account</div>
                             <div class="mt-4 flex items-center">
                                 <label for="branch" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Branch</label>
-                                <select id="branch" name="branch" class="form-select flex-1"
+                                <select id="branch" name="branch_id" class="form-select flex-1"
                                     style="text-transform: capitalize">
-                                    @foreach ($countriesBranches as $display)
-                                    <option value="{{ $display }}">{{ $display }}</option>
+                                    @foreach ($branch as $item)
+                                    <option value="{{ $item->id }}">{{ $item->country }}, {{ $item->branch }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            {{-- <div class="mt-4 flex items-center">
-                                <label for="position" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Position</label>
-                                <select id="position" name="position" class="form-select flex-1">
-                                    <option value="">Select a position</option>
+                            <div class="mt-4 flex items-center">
+                                <label for="type" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Position</label>
+                                <select id="type" name="type" class="form-select flex-1"
+                                    style="text-transform: capitalize">
+                                    <option value="hr">Human Resources</option>
+                                    <option value="servicemanager">Service Manager</option>
+                                    <option value="accountant">Accountant</option>
+                                    <option value="admin">Admin</option>
                                 </select>
-                            </div> --}}
-
+                            </div>
 
                             <div class="mt-4 flex items-center">
                                 <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Emaill</label>

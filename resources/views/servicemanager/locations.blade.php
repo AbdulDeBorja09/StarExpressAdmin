@@ -23,7 +23,11 @@
 
     @foreach ($locations as $countryBranch => $regions)
     <div class="panel pb-2  mt-5">
-        <h1 style="font-size: 20px; text-transform:capitalize;">{{ $countryBranch }}</h1>
+
+        @php
+        $branches = \App\Models\Branches::find($countryBranch);
+        @endphp
+        <h1 style="font-size: 20px; text-transform:capitalize;">{{ $branches->country }}, {{ $branches->branch }}</h1>
         <div class="mb-5" x-data="modal">
             <!-- button -->
             <div class="flex items-center mt-4">
@@ -50,8 +54,7 @@
                             <form action="{{route('addlocations')}}" method="POST">
                                 @csrf
                                 <div class="mt-4 items-center">
-                                    <input type="hidden" name="country" value="{{ explode(', ', $countryBranch)[0] }}">
-                                    <input type="hidden" name="branch" value="{{ explode(', ', $countryBranch)[1] }}">
+                                    <input type="hidden" name="branch_id" id="" value="{{$branches->id}}">
                                     <label for="acno" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2">Region</label>
                                     <input id="acno" type="text" name="region" class="form-input flex-1"
                                         placeholder="Enter New Region" required>
@@ -82,6 +85,7 @@
                         <form action="{{route('deleteregion')}}" method="POST">
                             @csrf
                             <input type="hidden" name="region" value="{{ $region }}">
+                            <input type="hidden" name="branch_id" value="{{ $branches->id }}">
                             <button type="submit" class="btn btn-outline-danger">Delete Region</button>
                         </form>
                     </div>
@@ -106,10 +110,7 @@
                                     <form action="{{route('addlocations')}}" method="POST">
                                         @csrf
                                         <div class="mt-4 items-center">
-                                            <input type="hidden" name="country"
-                                                value="{{ explode(', ', $countryBranch)[0] }}">
-                                            <input type="hidden" name="branch"
-                                                value="{{ explode(', ', $countryBranch)[1] }}">
+
                                             <input type="hidden" name="region" value="{{ $region }}">
                                             <label for="acno" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2">Area</label>
                                             <input id="acno" type="text" name="area" class="form-input flex-1"
@@ -250,7 +251,7 @@
                     <div x-show="open" x-transition x-transition.duration.300
                         class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                         <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                            <h5 class="font-bold text-lg">Edit Area</h5>
+                            <h5 class="font-bold text-lg">Add New Country Locations</h5>
                             <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -261,15 +262,16 @@
                             </button>
                         </div>
                         <div class="p-5">
-                            <form action="{{route('addnewlocations')}}" method="POST">
+                            <form action="{{route('addlocations')}}" method="POST">
                                 @csrf
                                 <div class="mt-4 items-center">
 
                                     <label for="country" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                         style="font-size:15px">Country/Branch:</label>
-                                    <select class="form-input flex-1" name="branch" style="text-transform: capitalize">
-                                        @foreach ($countries as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    <select class="form-input flex-1" name="branch_id"
+                                        style="text-transform: capitalize">
+                                        @foreach ($branchs as $item)
+                                        <option value="{{$item->id}}">{{$item->country}}, {{$item->branch}}</option>
                                         @endforeach
                                     </select>
                                     <label for="region" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
@@ -298,18 +300,25 @@
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
         <div class="panel">
             <h1 style="font-size: 20px; text-transform:capitalize;">Add First Location</h1>
-            @if($role === 'admin')
-            <form action="{{route('addnewlocations')}}" method="POST">
+
+            <form action="{{route('addlocations')}}" method="POST">
                 @csrf
                 <div class="mt-4 items-center">
 
                     <label for="country" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                         style="font-size:15px">Country/Branch:</label>
-                    <select class="form-input flex-1" name="branch" style="text-transform: capitalize">
-                        @foreach ($countries as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                    @if($role === 'admin')
+                    <select class="form-input flex-1" name="branch_id" style="text-transform: capitalize">
+                        @foreach ($branchs as $item)
+                        <option value="{{$item->id}}">{{$item->country}}, {{$item->branch}}</option>
                         @endforeach
                     </select>
+                    @else
+                    <input i type="text" readonly class="form-input flex-1"
+                        value="{{$branchs->country}}, {{$branchs->branch}}" required style="text-transform: capitalize">
+                    <input id="branch" type="hidden" name="branch_id" class="form-input flex-1"
+                        value="{{$branchs->id}}">
+                    @endif
                     <label for="region" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Add Region
                     </label>
                     <input id="region" type="text" name="region" class="form-input flex-1" required>
@@ -321,29 +330,6 @@
                     <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>
                 </div>
             </form>
-            @else
-
-
-            <form action="{{route('addlocations')}}" method="POST">
-                @csrf
-                <div class="mt-4 items-center">
-                    <label for="country" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                        style="font-size:15px">Country:</label>
-                    <input id="country" type="text" readonly name="country" class="form-input flex-1"
-                        value="{{$userCountry}}" required>
-                    <input id="acno" type="hidden" name="branch" class="form-input flex-1" value="{{$userBranch}}">
-                    <label for="region" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Add Region
-                    </label>
-                    <input id="region" type="text" name="region" class="form-input flex-1" required>
-                    <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Add Area
-                    </label>
-                    <input id="area" type="text" name="area" class="form-input flex-1" required>
-                </div>
-                <div class="flex justify-center items-center mt-8">
-                    <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>
-                </div>
-            </form>
-            @endif
         </div>
     </div>
     @endif

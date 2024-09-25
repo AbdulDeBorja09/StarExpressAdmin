@@ -9,7 +9,7 @@ class CargoTruck extends Model
 {
     protected $table = 'cargo_truck';
     protected $fillable = [
-        'branch',
+        'branch_id',
         'driver_id',
         'model',
         'plate',
@@ -19,4 +19,9 @@ class CargoTruck extends Model
         'expiration',
     ];
     use HasFactory;
+
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'branch_id');
+    }
 }

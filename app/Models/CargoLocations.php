@@ -9,10 +9,14 @@ class CargoLocations extends Model
 {
     protected $table = 'cargo_location';
     protected $fillable = [
-        'country',
-        'branch',
+        'branch_id',
         'region',
         'areas',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'branch_id');
+    }
     use HasFactory;
 }

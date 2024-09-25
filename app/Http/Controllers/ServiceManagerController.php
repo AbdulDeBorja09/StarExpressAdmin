@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Management;
+use App\Models\Branches;
 use App\Models\CargoService;
 use App\Models\CargoLocations;
+use App\Models\CargoPrices;
 use App\Models\CargoTruck;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -15,67 +16,88 @@ use Laravel\Ui\Presets\Vue;
 
 class ServiceManagerController extends Controller
 {
+    public function getBranches($serviceId)
+    {
+        $branches = CargoLocations::where('branch_id', $serviceId)->get();
+        return response()->json($branches);
+    }
+
     public function cargoprices(): View
     {
 
-        return view('servicemanager.cargoprices');
+        $prices = CargoPrices::select('service_id')->orderBy('service_id', 'asc')
+            ->get();
+
+
+
+        $service = CargoService::with(['originBranch', 'destinationBranch'])->get();
+
+        return view('servicemanager.cargoprices', compact('prices', 'service'));
     }
+    public function addcargoprice(Request $request)
+    {
+        $request->validate([
+            'service_id' =>  'required|max:255',
+            'region' =>  'required|max:255',
+            'name' =>  'required|max:255',
+            'height' =>  'required|max:255',
+            'width' =>  'required|max:255',
+            'length' =>  'required|max:255',
+            'type' =>  'required|max:255',
+            'rate' =>  'required|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        list($originBranchId, $destinationBranchId, $item) = explode('|', $request->input('service_id'));
+        // $id = CargoService::where('id', $request->service_id)->first();
+        $imagePath = null;
+        $size = $request->input('height') . " " . $request->input('width') . " " . $request->input('length');
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+        }
+
+        try {
+            CargoPrices::create([
+                'branch_id' => $originBranchId,
+                'service_id' => $item,
+                'area' => $request->region,
+                'name' => $request->name,
+                'size' => $size,
+                'type' => $request->type,
+                'rate' => $request->rate,
+                'image' => $imagePath,
+            ]);
+            return redirect()->route('cargoprices');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
     public function servicelocations(): View
     {
         $id = Auth::id();
         $user = User::where('id', $id)->first();
         $role = $user->type;
+        $userbranch = $user->branch_id;
         if ($user->type === 'admin') {
-            $locations = CargoLocations::select('country', 'branch', 'region', 'areas')
-                ->orderBy('country', 'asc')
-                ->orderBy('branch', 'asc')
-                ->orderBy('region', 'asc')
-                ->orderBy('areas', 'asc')
+            $locations = CargoLocations::with('branch')->orderBy('branch_id', 'asc')
                 ->get()
-                ->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'country_branch' => $item->country . ', ' . $item->branch,
-                        'region' => $item->region,
-                        'areas' => $item->areas,
-                    ];
-                })
-                ->groupBy('country_branch'); // Grouping still makes sense here
+                ->groupBy('branch_id');
 
-            $countries = Management::select('country', 'branch')
-                ->get()
-                ->groupBy('country')
-                ->flatMap(function ($branches, $country) {
-                    return $branches->groupBy('branch')->flatMap(function ($positions, $branch) use ($country) {
-                        return $positions->filter(function ($item) {
-                            return !empty($item->branch);
-                        })->map(function ($item) use ($country, $branch) {
-                            return $branch ? "{$country}, {$branch}" : "{$country}";
-                        });
-                    });
-                });
-
-            return view('servicemanager.locations', compact('locations', 'role', 'countries'));
+            $branchs = Branches::orderBy('country', 'asc')->orderBy('branch', 'asc')->get();
+            return view('servicemanager.locations', compact('locations', 'role', 'branchs'));
         } else {
-            $userCountry = $user->country;
-            $userBranch = $user->branch;
-            $locations = CargoLocations::where('country', $userCountry)
-                ->where('branch', $userBranch)->orderBy('country', 'asc')
-                ->orderBy('branch', 'asc')
-                ->orderBy('region', 'asc')
-                ->orderBy('areas', 'asc')
+            $trucks = CargoTruck::with('branch')->orderBy('branch_id', 'asc')
                 ->get()
-                ->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'country_branch' => $item->country . ', ' . $item->branch,
-                        'region' => $item->region,
-                        'areas' => $item->areas,
-                    ];
-                })
-                ->groupBy('country_branch');
+                ->groupBy('branch_id');
 
-            return view('servicemanager.locations', compact('locations', 'role', 'userCountry', 'userBranch'));
+            $locations = CargoLocations::with('branch')->orderBy('branch_id', 'asc')
+                ->get()
+                ->groupBy('branch_id');
+
+            $branchs = Branches::where('id', $userbranch)->first();
+            return view('servicemanager.locations', compact('locations', 'role', 'branchs'));
         }
     }
     public function addnewlocations(Request $request)
@@ -104,14 +126,12 @@ class ServiceManagerController extends Controller
     public function addlocations(Request $request)
     {
         $request->validate([
-            'country' => 'required|string',
-            'branch' => 'required|string',
+            'branch_id' => 'required|string',
             'region' => 'required|string',
             'area' => 'required|string',
         ]);
         $area = str_replace(' ', '', $request->area);
-        $exists = CargoLocations::where('country', $request->country)
-            ->where('branch', $request->branch)
+        $exists = CargoLocations::where('branch_id', $request->branch_id)
             ->where('region', $request->region)
             ->where('areas', $area)
             ->exists();
@@ -120,8 +140,7 @@ class ServiceManagerController extends Controller
         } else {
             try {
                 CargoLocations::create([
-                    'country' => $request->country,
-                    'branch' => $request->branch,
+                    'branch_id' => $request->branch_id,
                     'region' => $request->region,
                     'areas' => $area,
                 ]);
@@ -132,12 +151,15 @@ class ServiceManagerController extends Controller
         }
     }
 
+
+
     public function deleteregion(Request $request)
     {
         $request->validate([
             'region' => 'required|string',
+            'branch_id' => 'required',
         ]);
-        CargoLocations::where('region', $request->region)->delete();
+        CargoLocations::where('region', $request->region)->where('branch_id', $request->branch_id)->delete();
         return redirect()->route('servicelocations');
     }
     public function deletearea(Request $request)
@@ -166,39 +188,30 @@ class ServiceManagerController extends Controller
         $id = Auth::id();
         $user = User::where('id', $id)->first();
         $role = $user->type;
-        $userCountry = $user->country;
-        $userBranch = $user->branch;
-        $branch = $userCountry . ', ' . $userBranch;
+        $branchid = $user->branch_id;
 
         if ($user->type === 'admin') {
-            $trucks = CargoTruck::orderBy('branch', 'asc')
+            $trucks = CargoTruck::with('branch')->orderBy('branch_id', 'asc')
                 ->get()
-                ->groupBy('branch');
-            $countries = Management::select('country', 'branch')
-                ->get()
-                ->groupBy('country')
-                ->flatMap(function ($branches, $country) {
-                    return $branches->groupBy('branch')->flatMap(function ($positions, $branch) use ($country) {
-                        return $positions->filter(function ($item) {
-                            return !empty($item->branch);
-                        })->map(function ($item) use ($country, $branch) {
-                            return $branch ? "{$country}, {$branch}" : "{$country}";
-                        });
-                    });
-                });
+                ->groupBy('branch_id');
+            $countries = Branches::orderBy('country', 'asc')
+                ->orderBy('branch', 'asc')
+                ->get();
+
             return view('servicemanager.trucklist',  compact('trucks', 'role', 'countries'));
         } else {
-            $trucks = CargoTruck::where('branch', $branch)->orderBy('branch', 'asc')
+            $branchs = Branches::where('id', $branchid)->first();
+            $trucks = CargoTruck::with('branch')->where('branch_id', $branchid)->orderBy('branch_id', 'asc')
                 ->get()
-                ->groupBy('branch');
+                ->groupBy('branch_id');
         }
-
-        return view('servicemanager.trucklist', compact('trucks', 'role'));
+        return view('servicemanager.trucklist', compact('trucks', 'role', 'branchid', 'branchs'));
     }
+
     public function addnewtruck(Request $request)
     {
         $request->validate([
-            'branch' => 'required|max:255',
+            'branch_id' => 'required|max:255',
             'model' => 'required|max:255',
             'plate' => 'required|max:255',
             'status' => 'required|max:255',
@@ -212,7 +225,7 @@ class ServiceManagerController extends Controller
         } else {
             try {
                 CargoTruck::create([
-                    'branch' => $request->branch,
+                    'branch_id' => $request->branch_id,
                     'model' => $request->model,
                     'plate' => $request->plate,
                     'status' => $request->status,

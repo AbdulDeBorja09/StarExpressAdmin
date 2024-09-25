@@ -20,6 +20,7 @@ class User extends Authenticatable
     public $timestamps = true;
     protected $table = 'stars';
     protected $fillable = [
+        'branch_id',
         'type',
         'employee_id',
         'name',
@@ -28,14 +29,10 @@ class User extends Authenticatable
         'gender',
         'address',
         'contact',
-        'country',
-        'branch',
         'status',
         'hired',
         'avatar',
         'active',
-
-
     ];
 
     /**
@@ -59,5 +56,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function branch()
+    {
+        return $this->belongsTo(Branches::class, 'branch_id');
     }
 }

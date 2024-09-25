@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branches;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Models\Management;
+
 
 class LoginController extends Controller
 {
@@ -26,10 +27,8 @@ class LoginController extends Controller
     use AuthenticatesUsers;
     public function showLoginForm()
     {
-        
-        $countries = Management::select('country')
-            ->orderBy('country', 'asc')
-            ->groupBy('country')->get();
+
+        $countries = Branches::get();
         return view('auth.login',  compact('countries'));
     }
 
@@ -57,12 +56,13 @@ class LoginController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
-            'country' => 'required',
+            'branch_id' => 'required',
         ]);
 
+        $input = $request->only(['email', 'password', 'branch_id']);
         if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
             $user = Auth::user();
-            if ($user->country === $input['country']) {
+            if ($user->branch_id === (int) $input['branch_id']) {
                 if ($user->status === 'active') {
                     Session::put('avatar', $user->avatar);
                     if ($user->type === 'accountant') {

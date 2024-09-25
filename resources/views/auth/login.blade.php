@@ -161,10 +161,12 @@
 
                                 <label for="Email">Country</label>
                                 <div class="relative text-white-dark">
-                                    <select class="form-input ps-10 " name="country" required autocomplete="" autofocus
+                                    <select class="form-input ps-10 " name="branch_id" required autofocus
                                         style="text-transform: capitalize">
                                         @foreach($countries as $country)
-                                        <option value="{{ $country->country }}">{{ $country->country }}</option>
+                                        <option value="{{$country->id}}">{{ $country->country
+                                            }}, {{
+                                            $country->branch }}</option>
                                         @endforeach
                                     </select>
                                     <span class="absolute start-4 top-1/2 -translate-y-1/2">

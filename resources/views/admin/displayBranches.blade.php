@@ -18,25 +18,21 @@
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Branches</a>
         </li>
     </ol>
-    <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
         <div class="panel lg:row-span-2">
-            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                <form class="space-y-5" action="{{route('submitaddbranch')}}" method="POST">
+            <div class="grid grid-cols-1 gap-6 xl:grid-cols-1">
+                <form class="space-y-5" action="{{route('submitaddBranch')}}" method="POST">
                     @csrf
-                    <h1 style="font-size: 20px"><b>Add Position</b></h1>
+                    <h1 style="font-size: 20px"><b>Add Branch</b></h1>
                     <div>
-                        <select name="country" class="form-select text-white-dark" required
-                            style="text-transform: capitalize;">
-                            @foreach ($countries as $country => $branches)
-                            <option value="{{$country}}">{{$country}}</option>
-                            @endforeach
-                        </select>
+                        <label for="country">Country Name:</label>
+                        <input id="country" type="text" name="country" placeholder="Enter Country" class="form-input"
+                            required />
                     </div>
                     <div>
-                        <input type="text" name="branch" placeholder="Enter Branch" class="form-input" required />
-                    </div>
-                    <div>
-                        <input type="text" name="position" placeholder="Enter Position" class="form-input" required />
+                        <label for="branch">Branch Name:</label>
+                        <input id="branch" type="text" name="branch" placeholder="Enter Branch" class="form-input"
+                            required />
                     </div>
                     @if ($errors->any())
                     <div>
@@ -49,7 +45,7 @@
                     @endif
                     <button type="submit" class="btn btn-primary !mt-6">Submit</button>
                 </form>
-                <form class="space-y-5" action="{{route('submitaddcountry')}}" method="POST">
+                {{-- <form class="space-y-5" action="{{route('submitaddcountry')}}" method="POST">
                     @csrf
                     <h1 style="font-size: 20px"><b>Add Country</b></h1>
                     <div>
@@ -57,7 +53,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary !mt-6">Submit</button>
-                </form>
+                </form> --}}
             </div>
         </div>
     </div>
@@ -69,7 +65,6 @@
                     <thead>
                         <tr>
                             <th>{{$country}}</th>
-                            <th style="width:70%;">Positions</th>
                             <th style="width:15%;">Action</th>
                         </tr>
                     </thead>
@@ -78,7 +73,6 @@
                         <tr>
                             @if($branch->branch !== NULL)
                             <td>{{ $branch->branch }}</td>
-                            <td>{{ $branch->position }}</td>
                             <td class="border-b border-[#ebedf2] dark:border-[#191e3a] text-center" style="width:15%">
                                 <button type="button" x-tooltip="Edit">
                                     <svg width="24" height="24" viewbox="0 0 24 24" fill="none"

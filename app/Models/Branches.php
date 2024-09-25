@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Management extends Model
+class Branches extends Model
 {
-    protected $table = 'management';
+    protected $table = 'branches';
     protected $fillable = [
         'country',
         'branch',
-        'position',
     ];
     use HasFactory;
 }
