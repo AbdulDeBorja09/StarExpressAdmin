@@ -16,3 +16,54 @@
     justify-content: space-around;
     display: flex;
 }
+.branch-title {
+    font-size: 20px;
+    text-transform: capitalize;
+}
+
+.sub-title {
+    font-size: 15px;
+    text-transform: capitalize;
+}
+.cargobox-table img {
+    height: 100%;
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+}
+.cargobox-table tr td {
+    width: 20%;
+    min-width: 100px;
+}
+.custom-swal-text {
+    margin-top: 20px; /* Adjust this value as needed */
+}
+.tcaps {
+    text-transform: capitalize;
+}
+.cargoprice-table tr th:nth-child(2),
+.cargoprice-table tr td:nth-child(2) {
+    width: 30%;
+    text-align: center;
+}
+.cargoprice-table tr th:first-child,
+.cargoprice-table tr td:first-child {
+    width: 30%;
+    text-align: start;
+}
+.cargoprice-table tr th:last-child,
+.cargoprice-table tr td:last-child {
+    width: 30%;
+    text-align: center;
+}
+
+.editinput {
+    border: 0;
+    background-color: transparent;
+    width: max-content;
+    text-align: center;
+}
+.editinput:focus {
+    outline: none;
+    border: none;
+}

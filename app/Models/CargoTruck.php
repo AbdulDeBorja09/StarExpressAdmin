@@ -16,7 +16,6 @@ class CargoTruck extends Model
         'status',
         'condition',
         'note',
-        'expiration',
     ];
     use HasFactory;
 

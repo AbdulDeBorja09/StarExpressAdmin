@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Branches;
+use App\Models\CargoBoxes;
 use App\Models\CargoService;
 use App\Models\CargoLocations;
 use App\Models\CargoPrices;
@@ -13,66 +14,250 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Ui\Presets\Vue;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\TryCatch;
 
 class ServiceManagerController extends Controller
 {
     public function getBranches($serviceId)
     {
-        $branches = CargoLocations::where('branch_id', $serviceId)->get();
+        $branches = CargoBoxes::where('service_id', $serviceId)->get();
+
         return response()->json($branches);
     }
+    public function getAreas($serviceId)
+    {
+        $cargoBox = CargoService::find($serviceId);
+        $areas = CargoLocations::where('branch_id', $cargoBox->destination)->get();
+        return response()->json($areas);
+    }
 
-    public function cargoprices(): View
+    public function cargoboxes(): View
     {
 
-        $prices = CargoPrices::select('service_id')->orderBy('service_id', 'asc')
-            ->get();
+        $user = Auth::user();
+        $role = $user->type;
+        $branchId = $user->branch_id;
+        if ($role === 'admin') {
+            $service = CargoService::with(['originBranch', 'destinationBranch'])->get();
+            $cargoboxes = CargoBoxes::with(['branch', 'service.originBranch', 'service.destinationBranch'])
+                ->orderBy('branch_id')
+                ->orderBy('service_id')
+                ->get()
+                ->groupBy(['branch_id', 'service_id']);
+            return view('servicemanager.cargoboxes', compact('cargoboxes', 'service'));
+        } else {
 
-
-
-        $service = CargoService::with(['originBranch', 'destinationBranch'])->get();
-
-        return view('servicemanager.cargoprices', compact('prices', 'service'));
+            $service = CargoService::with(['originBranch', 'destinationBranch'])
+                ->whereHas('originBranch', function ($query) use ($branchId) {
+                    $query->where('id', $branchId); // Adjust the condition based on your needs
+                })
+                ->get();
+            $cargoboxes = CargoBoxes::with(['branch', 'service.originBranch', 'service.destinationBranch'])
+                ->where('branch_id', $user->branch_id)
+                ->orderBy('branch_id')
+                ->orderBy('service_id')
+                ->get()
+                ->groupBy(['branch_id', 'service_id']);
+            return view('servicemanager.cargoboxes', compact('cargoboxes', 'service', 'role'));
+        }
     }
-    public function addcargoprice(Request $request)
+
+
+    public function addcargobox(Request $request)
     {
         $request->validate([
-            'service_id' =>  'required|max:255',
-            'region' =>  'required|max:255',
+            'service' =>  'required|max:255',
             'name' =>  'required|max:255',
             'height' =>  'required|max:255',
             'width' =>  'required|max:255',
             'length' =>  'required|max:255',
-            'type' =>  'required|max:255',
-            'rate' =>  'required|max:255',
+            'note' =>  'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        list($originBranchId, $destinationBranchId, $item) = explode('|', $request->input('service_id'));
+        list($originBranchId, $destinationBranchId, $item) = explode('|', $request->input('service'));
         // $id = CargoService::where('id', $request->service_id)->first();
         $imagePath = null;
-        $size = $request->input('height') . " " . $request->input('width') . " " . $request->input('length');
+        $size = $request->input('height') . ", " . $request->input('width') . ", " . $request->input('length');
 
+        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
+            $imgname = 'Box_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs('Boxes', $imgname, 'public');
         }
 
+        $exist = CargoBoxes::where('name',  $request->name)->where('service_id', $item)->first();
+        if ($exist) {
+            return redirect()->back()->withErrors(['box' => 'Cargo Box Already Exists']);
+        } else {
+            try {
+                CargoBoxes::create([
+                    'branch_id' => $originBranchId,
+                    'service_id' => $item,
+                    'name' => $request->name,
+                    'note' => $request->note,
+                    'size' => $size,
+                    'image' => $imagePath,
+                ]);
+                return redirect()->route('cargoboxes');
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+    }
+    public function editcargobox(Request $request)
+    {
+        $request->validate([
+            'id' =>  'required|max:255',
+            'name' =>  'required|max:255',
+            'height' =>  'required|max:255',
+            'width' =>  'required|max:255',
+            'length' =>  'required|max:255',
+            'note' =>  'required|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $id = $request->id;
+        $cargoBox = CargoBoxes::find($id);
+        $imagePath = null;
+        $size = $request->input('height') . ", " . $request->input('width') . ", " . $request->input('length');
+
+        if ($request->hasFile('image')) {
+            $imgname = 'Box_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs('Boxes', $imgname, 'public');
+
+            if ($id && $cargoBox->image) {
+                Storage::disk('public')->delete($cargoBox->image);
+            }
+        } else {
+            $imagePath = $cargoBox->image;
+        }
+
+        if (!$cargoBox) {
+            return redirect()->back()->withErrors(['box' => 'Cargo Box Not Found']);
+        } else {
+            try {
+                CargoBoxes::where('id', $id)->update([
+                    'name' => $request->name,
+                    'note' => $request->note,
+                    'size' => $size,
+                    'image' => $imagePath,
+                ]);
+                return redirect()->route('cargoboxes');
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function deletebox(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $cargoboxes = CargoBoxes::find($request->id);
+        if ($cargoboxes->image) {
+            Storage::disk('public')->delete($cargoboxes->image);
+        }
+        $cargoboxes->delete();
+        return redirect()->route('cargoboxes');
+    }
+    public function cargoprices(): View
+    {
+        $user = Auth::user();
+        $role = $user->type;
+        $branchId = $user->branch_id;
+        if ($role === 'admin') {
+            $service = CargoService::with(['originBranch', 'destinationBranch'])->get();
+            $cargoboxes = CargoBoxes::with([
+                'branch',
+                'service.originBranch',
+                'service.destinationBranch',
+                'prices'
+            ])->orderBy('branch_id')->orderBy('service_id')->get()->groupBy(['branch_id', 'service_id']);
+            foreach ($cargoboxes as &$serviceGroup) {
+                foreach ($serviceGroup as &$boxes) {
+                    foreach ($boxes as $box) {
+                        $box->groupedPrices = $box->prices->groupBy('type');
+                    }
+                }
+            }
+            return view('servicemanager.cargoprices', compact('cargoboxes', 'service'));
+        } else {
+            $service = CargoService::with(['originBranch', 'destinationBranch'])->where('origin', $branchId)->get();
+            $cargoboxes = CargoBoxes::with([
+                'branch',
+                'service.originBranch',
+                'service.destinationBranch',
+                'prices'
+            ])->where('branch_id', $branchId)->orderBy('branch_id')->orderBy('service_id')->get()->groupBy(['branch_id', 'service_id']);
+            foreach ($cargoboxes as &$serviceGroup) {
+                foreach ($serviceGroup as &$boxes) {
+                    foreach ($boxes as $box) {
+                        $box->groupedPrices = $box->prices->groupBy('type');
+                    }
+                }
+            }
+            return view('servicemanager.cargoprices', compact('cargoboxes', 'service'));
+        }
+
+        return view('servicemanager.cargoprices');
+    }
+    public function addcargoprice(Request $request)
+    {
+        $request->validate([
+            'box' =>  'required',
+            'type' => 'required',
+            'area' => 'required',
+            'rate' => 'required|numeric',
+        ]);
+
+        $price = CargoPrices::where('box_id', $request->box)->where('type', $request->type)->where('area',  $request->area)->first();
+        if ($price) {
+            return redirect()->back()->withErrors(['exists' => 'Price for that area already exists.']);
+        } else {
+            try {
+                CargoPrices::create([
+                    'box_id' => $request->box,
+                    'type' =>  $request->type,
+                    'area' => $request->area,
+                    'rate' =>  $request->rate,
+                ]);
+                return redirect()->route('cargoprices');
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+    }
+    public function editcargoprice(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'area' => 'required',
+            'rate' => 'required|numeric',
+        ]);
         try {
-            CargoPrices::create([
-                'branch_id' => $originBranchId,
-                'service_id' => $item,
-                'area' => $request->region,
-                'name' => $request->name,
-                'size' => $size,
-                'type' => $request->type,
-                'rate' => $request->rate,
-                'image' => $imagePath,
+            CargoPrices::where('id', $request->id)->update([
+                'area' => $request->area,
+                'rate' =>  $request->rate,
+
             ]);
             return redirect()->route('cargoprices');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    public function deleteprice(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $CargoPrices = CargoPrices::find($request->id);
+        $CargoPrices->delete();
+        return redirect()->route('cargoprices');
+    }
+
 
     public function servicelocations(): View
     {
@@ -131,6 +316,7 @@ class ServiceManagerController extends Controller
             'area' => 'required|string',
         ]);
         $area = str_replace(' ', '', $request->area);
+        $region = strtoupper($request->region);
         $exists = CargoLocations::where('branch_id', $request->branch_id)
             ->where('region', $request->region)
             ->where('areas', $area)
@@ -141,7 +327,7 @@ class ServiceManagerController extends Controller
             try {
                 CargoLocations::create([
                     'branch_id' => $request->branch_id,
-                    'region' => $request->region,
+                    'region' =>  $region,
                     'areas' => $area,
                 ]);
                 return redirect()->route('servicelocations');
@@ -216,7 +402,6 @@ class ServiceManagerController extends Controller
             'plate' => 'required|max:255',
             'status' => 'required|max:255',
             'condition' => 'required|max:255',
-            'expired' => 'required|max:255',
         ]);
 
         $plate = CargoTruck::where('plate', $request->plate)->first();
@@ -230,7 +415,6 @@ class ServiceManagerController extends Controller
                     'plate' => $request->plate,
                     'status' => $request->status,
                     'condition' => $request->condition,
-                    'expiration' => $request->expired,
                 ]);
                 return redirect()->route('trucklist');
             } catch (\Exception $e) {

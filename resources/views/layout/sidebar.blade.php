@@ -146,6 +146,11 @@
                     </button>
                     <ul x-cloak="" x-show="activeDropdown === 'Cargo'" x-collapse="" class="sub-menu text-gray-500">
                         <li>
+                            <a href="{{route('cargoboxes')}}"
+                                class="{{ Route::currentRouteName() == 'cargoboxes' ? 'active' : '' }}">Cargo
+                                Boxes</a>
+                        </li>
+                        <li>
                             <a href="{{route('cargoprices')}}"
                                 class="{{ Route::currentRouteName() == 'cargoprices' ? 'active' : '' }}">Cargo
                                 Prices</a>

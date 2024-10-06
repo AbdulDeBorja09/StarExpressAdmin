@@ -120,7 +120,6 @@
                             <th>Plate Number</th>
                             <th>Status</th>
                             <th>Condition</th>
-                            <th>Expiration Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -141,10 +140,7 @@
                                 <span class="badge badge-outline-danger">{{ $item->condition }}</span>
                                 @endif
                             </td>
-
-                            <td>{{$item->expiration}}</td>
-                            <td class="border-b flex justify-around border-[#ebedf2] dark:border-[#191e3a]">
-
+                            <td class="flex justify-around border-[#ebedf2] dark:border-[#191e3a]">
                                 <div x-data="modal">
                                     <!-- button -->
                                     <button type=" button" @click="toggle" x-tooltip="Edit">
@@ -218,14 +214,6 @@
                                                                 <option value="Good">Good</option>
                                                                 <option value="Bad">Bad</option>
                                                             </select>
-                                                            {{-- <label for="area"
-                                                                class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                                                                style="font-size:15px">Expiration Date
-                                                            </label>
-                                                            <input id="area" type="date" name="expired"
-                                                                class="form-input flex-1"
-                                                                value="{{ $item->expiration->format('Y-m-d')}}"
-                                                                required> --}}
                                                         </div>
                                                         <div class="flex justify-center items-center mt-8">
                                                             <button type="submit" class="btn btn-outline-success"
@@ -343,13 +331,13 @@
                     <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Condition
                     </label>
                     <select class="form-input flex-1" name="condition" style="text-transform: capitalize">
-                        <option value="excellent">Excellent</option>
-                        <option value="good">Good</option>
-                        <option value="bad">Bad</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Bad">Bad</option>
                     </select>
                     <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Expiration Date
                     </label>
-                    <input id="area" type="date" name="expired" class="form-input flex-1" required>
+
                 </div>
                 <div class="flex justify-center items-center mt-8">
                     <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>

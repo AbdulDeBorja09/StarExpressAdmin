@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Management;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Branches;
+use App\Models\CargoLocations;
+use App\Models\CargoPrices;
+use App\Models\CargoService;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +17,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+
+
+        $branch1 = Branches::create([
+            'country' => 'china',
+            'branch' => 'macau',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $branch2 = Branches::create([
+            'country' => 'philippines',
+            'branch' => 'tarlac',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
 
         User::factory()->createMany([
             [
-                'branch_id' => 1,
+                'branch_id' => $branch1->id,
                 'type' => 'admin',
                 'employee_id' => '1231231231',
                 'name' => 'Admin User',
@@ -27,22 +45,44 @@ class DatabaseSeeder extends Seeder
                 'contact' => '1234567890',
                 'status' => 'active',
                 'email' => 'admin@com',
-                'hired' => '08/09/04',
+                'hired' => '2004-08-09',
                 'password' => bcrypt('Password'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'branch_id' => 1,
-                'type' => 'accountant',
+                'branch_id' => $branch1->id,
+                'type' => 'servicemanager',
                 'employee_id' => '9876543210',
                 'name' => 'Accountant User',
                 'gender' => 'female',
                 'address' => 'Accountant Address',
                 'contact' => '0987654321',
                 'status' => 'active',
-                'email' => 'accountant@com',
-                'hired' => '10/11/05',
+                'email' => 'sm@com',
+                'hired' => '2005-10-11',
                 'password' => bcrypt('Password'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
+        ]);
+
+
+        CargoService::create([
+            'origin' => $branch1->id,
+            'destination' => $branch2->id,
+            'status' => 'active',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+
+        CargoLocations::create([
+            'branch_id' => $branch1->id,
+            'region' => 'MNL',
+            'areas' => 'manila',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

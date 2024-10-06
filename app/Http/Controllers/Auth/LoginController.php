@@ -58,9 +58,12 @@ class LoginController extends Controller
             'password' => 'required',
             'branch_id' => 'required',
         ]);
+        $credentials = $request->only('email', 'password');
+
+
 
         $input = $request->only(['email', 'password', 'branch_id']);
-        if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->branch_id === (int) $input['branch_id']) {
                 if ($user->status === 'active') {
@@ -69,6 +72,8 @@ class LoginController extends Controller
                         return redirect()->route('accountant.home');
                     } elseif ($user->type === 'admin') {
                         return redirect()->route('admin.home');
+                    } elseif ($user->type === 'servicemanager') {
+                        return redirect()->route('servicemanager.home');
                     } else {
                         Auth::logout();
                         return redirect()->route('login')->withErrors(['unauthorized' => 'Unauthorized user type.']);

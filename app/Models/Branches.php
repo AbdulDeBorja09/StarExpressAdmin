@@ -12,5 +12,10 @@ class Branches extends Model
         'country',
         'branch',
     ];
+    public function services()
+    {
+        return $this->hasMany(CargoService::class, 'origin_branch_id');
+    }
+
     use HasFactory;
 }

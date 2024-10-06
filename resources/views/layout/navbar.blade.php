@@ -25,7 +25,7 @@
                     </svg>
                 </a>
             </div>
-            <div class="hidden ltr:mr-2 rtl:ml-2 sm:block">
+            {{-- <div class="hidden ltr:mr-2 rtl:ml-2 sm:block">
                 <ul class="flex items-center space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
                     <li>
                         <a href=""
@@ -75,41 +75,60 @@
                         </a>
                     </li>
                 </ul>
+            </div> --}}
+
+            <div class="hidden ltr:mr-2 rtl:ml-2 sm:block ml-2">
+                <h1 style="font-size: 17px" id="current-date-time"></h1>
             </div>
-            <div x-data="header"
+            <script>
+                function updateDateTime(timezone) {
+                    const now = new Date();  // Get the current date and time
+                
+                    // Options for date formatting
+                    const dateOptions = { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    };
+                
+                    // Options for time formatting
+                    const timeOptions = { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit', 
+                        hour12: true, // Use 12-hour format
+                        timeZone: timezone // Set timezone
+                    };
+                
+                    const currentDate = now.toLocaleDateString([], dateOptions); // Format the date
+                    const currentTime = now.toLocaleTimeString([], timeOptions); // Format the time
+                
+                    // Combine date and time
+                    const dateTimeString = `${currentDate} ${currentTime}`;
+                
+                    document.getElementById('current-date-time').textContent = dateTimeString; // Update the date and time in the navbar
+                }
+                
+                // Fetch the user's timezone using ipapi.co
+                fetch('https://ipapi.co/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const timezone = data.timezone; // Get the timezone from the response
+                
+                        // Update the date and time every second based on the user's timezone
+                        setInterval(() => updateDateTime(timezone), 1000);
+                
+                        // Initial call to set the date and time immediately
+                        updateDateTime(timezone);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching location data', error);
+                    });
+            </script>
+            <div x-data=" header"
                 class="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
                 <div class="sm:ltr:mr-auto sm:rtl:ml-auto" x-data="{ search: false }" @click.outside="search = false">
-                    <form
-                        class="absolute inset-x-0 top-1/2 z-10 mx-4 hidden -translate-y-1/2 sm:relative sm:top-0 sm:mx-0 sm:block sm:translate-y-0"
-                        :class="{'!block' : search}" @submit.prevent="search = false">
-                        <div class="relative">
-                            <input type="text"
-                                class="peer form-input bg-gray-100 placeholder:tracking-widest ltr:pl-9 ltr:pr-9 rtl:pl-9 rtl:pr-9 sm:bg-transparent ltr:sm:pr-4 rtl:sm:pl-4"
-                                placeholder="Search...">
-                            <button type="button"
-                                class="absolute inset-0 h-9 w-9 appearance-none peer-focus:text-primary ltr:right-auto rtl:left-auto">
-                                <svg class="mx-auto" width="16" height="16" viewbox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5"
-                                        opacity="0.5"></circle>
-                                    <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round"></path>
-                                </svg>
-                            </button>
-                            <button type="button"
-                                class="absolute top-1/2 block -translate-y-1/2 hover:opacity-80 ltr:right-2 rtl:left-2 sm:hidden"
-                                @click="search = false">
-                                <svg width="20" height="20" viewbox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="1.5"></circle>
-                                    <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
+
                     <button type="button"
                         class="search_btn rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 dark:bg-dark/40 dark:hover:bg-dark/60 sm:hidden"
                         @click="search = ! search">
@@ -128,9 +147,12 @@
                         @click="$store.app.toggleTheme('dark')">
                         <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path d="M12 2V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path d="M12 20V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path d="M4 12L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M12 2V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            </path>
+                            <path d="M12 20V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            </path>
+                            <path d="M4 12L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            </path>
                             <path d="M22 12L20 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                             </path>
                             <path opacity="0.5" d="M19.7778 4.22266L17.5558 6.25424" stroke="currentColor"
@@ -197,7 +219,8 @@
                                             <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor"
                                                 stroke-width="1.5"></circle>
                                             <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor"
-                                                stroke-width="1.5" stroke-linecap="round"></path>
+                                                stroke-width="1.5" stroke-linecap="round">
+                                            </path>
                                         </svg>
                                     </button>
                                 </div>
@@ -212,7 +235,8 @@
                                     <svg class="h-4 w-4 transition duration-300 group-hover:translate-x-1 ltr:ml-1 rtl:mr-1"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor"
-                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        </path>
                                     </svg>
                                 </div>
                             </li>
@@ -250,7 +274,8 @@
                                 stroke="currentColor" stroke-width="1.5"></path>
                             <path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19"
                                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path d="M12 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M12 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            </path>
                         </svg>
 
                         <span class="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">

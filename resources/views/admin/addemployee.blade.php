@@ -36,17 +36,6 @@
                                 class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file:ml-5 file:text-white file:hover:bg-primary" />
                         </div>
                     </div>
-                    <div class="w-full lg:w-1/2 lg:max-w-fit">
-                        <div class="flex items-center">
-                            <label for="number" class="mb-0 flex-1 ltr:mr-2 rtl:ml-2">ID Number</label>
-                            <input id="number" type="text" name="employee_id" class="form-input w-2/3 lg:w-[250px]"
-                                placeholder="Enter ID">
-                        </div>
-                        <div class="mt-4 flex items-center">
-                            <label for="dueDate" class="mb-0 flex-1 ltr:mr-2 rtl:ml-2">Start Date</label>
-                            <input id="dueDate" type="date" name="hired_date" class="form-input w-2/3 lg:w-[250px]">
-                        </div>
-                    </div>
                 </div>
                 <hr class="my-6 border-[#e0e6ed] dark:border-[#1b2e4b]">
                 <div class="mt-8 px-4">
