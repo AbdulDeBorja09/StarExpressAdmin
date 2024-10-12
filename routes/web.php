@@ -7,7 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\ServiceManagerController;
-
+use App\Http\Controllers\GlobalController;
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
+Route::middleware(['auth', 'set.timezone', 'user-access:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'adminHome'])->name('admin.home');
     Route::get('/Branches', [ManagementController::class, 'Branches'])->name('admin.Branches');
     Route::get('/Employees', [ManagementController::class, 'allEmployees'])->name('admin.allEmployees');
@@ -47,11 +47,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/Services/edit', [ManagementController::class, 'editservices'])->name('editservices');
 });
 
-Route::middleware(['auth', 'user-access:accountant|admin'])->group(function () {
+Route::middleware(['auth', 'set.timezone', 'user-access:accountant|admin'])->group(function () {
     Route::get('/Accountant', [AdminController::class, 'accountantHome'])->name('accountant.home');
 });
 
-Route::middleware(['auth', 'user-access:servicemanager|admin'])->group(function () {
+Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])->group(function () {
     Route::get('/Servicemanager', [AdminController::class, 'servicemanagerHome'])->name('servicemanager.home');
     Route::get('/Cargo_Boxes', [ServiceManagerController::class, 'cargoboxes'])->name('cargoboxes');
     Route::get('/Cargo_Prices', [ServiceManagerController::class, 'cargoprices'])->name('cargoprices');
@@ -59,6 +59,7 @@ Route::middleware(['auth', 'user-access:servicemanager|admin'])->group(function 
     Route::get('/Cargo_truck_list', [ServiceManagerController::class, 'trucklist'])->name('trucklist');
     Route::get('/branches/{serviceId}', [ServiceManagerController::class, 'getBranches']);
     Route::get('/areas/{locationID}', [ServiceManagerController::class, 'getAreas']);
+    Route::get('/AllOrders', [ServiceManagerController::class, 'allorders'])->name('allorders');
 
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');
     Route::post('/Cargo_locations/add_region', [ServiceManagerController::class, 'addregion'])->name('addregion');
@@ -77,4 +78,10 @@ Route::middleware(['auth', 'user-access:servicemanager|admin'])->group(function 
     Route::post('/Cargo_Price/add', [ServiceManagerController::class, 'addcargoprice'])->name('addcargoprice');
     Route::post('/Cargo_Price/delete', [ServiceManagerController::class, 'deleteprice'])->name('deleteprice');
     Route::post('/Cargo_Price/edit', [ServiceManagerController::class, 'editcargoprice'])->name('editcargoprice');
+
+    Route::post('/Details/statusedit', [GlobalController::class, 'updateStatus'])->name('updateStatus');
+});
+
+Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
+    Route::get('/details/{reference_number}', [GlobalController::class, 'orderdetails']);
 });

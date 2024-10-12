@@ -58,7 +58,7 @@
                     <tbody>
                         @foreach($boxes as $box)
                         <tr>
-                            <td><img src="{{ asset('storage/' . $box->image) }}" alt=""></td>
+                            <td><img src="{{ asset('Storage/' . $box->image) }}" alt=""></td>
                             <td>{{ $box->name }}</td>
                             <td>
                                 @php
@@ -217,10 +217,10 @@
             $('#regionDropdown').empty().append('<option value="">-- SELECT REGION --</option>');
 
             if (serviceId) {
-                $.ajax({
-                    url: '/branches/' + serviceId, 
-                    type: 'GET',
-                    dataType: 'json',
+                    $.ajax({
+                        url: '/branches/' + serviceId, 
+                        type: 'GET',
+                        dataType: 'json',
                     success: function(data) {
                         $.each(data, function(key, value) {
                             $('#regionDropdown').append('<option value="' + value.region+ '">' + value.region + '</option>');

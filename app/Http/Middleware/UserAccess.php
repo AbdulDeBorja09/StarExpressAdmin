@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class UserAccess
 {
@@ -15,12 +16,9 @@ class UserAccess
      */
     public function handle(Request $request, Closure $next, $userTypes): Response
     {
-        if (auth()->check()) {
-            // Split the user types into an array
+        if (Auth::check()) { // Use Auth::check() instead
             $typesArray = explode('|', $userTypes);
-
-            // Check if the user's type matches any of the allowed types
-            if (in_array(auth()->user()->type, $typesArray)) {
+            if (in_array(Auth::user()->type, $typesArray)) {
                 return $next($request);
             }
         }

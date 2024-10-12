@@ -10,6 +10,7 @@ use App\Models\CargoService;
 use App\Models\CargoLocations;
 use App\Models\CargoPrices;
 use App\Models\CargoTruck;
+use App\Models\Orders;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class ServiceManagerController extends Controller
             'width' =>  'required|max:255',
             'length' =>  'required|max:255',
             'note' =>  'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         ]);
 
         list($originBranchId, $destinationBranchId, $item) = explode('|', $request->input('service'));
@@ -115,7 +116,7 @@ class ServiceManagerController extends Controller
             'width' =>  'required|max:255',
             'length' =>  'required|max:255',
             'note' =>  'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         ]);
         $id = $request->id;
         $cargoBox = CargoBoxes::find($id);
@@ -281,7 +282,7 @@ class ServiceManagerController extends Controller
                 ->get()
                 ->groupBy('branch_id');
 
-            $branchs = Branches::where('id', $userbranch)->first();
+            $branchs = Branches::where('id', $userbranch)->get();
             return view('servicemanager.locations', compact('locations', 'role', 'branchs'));
         }
     }
@@ -452,5 +453,22 @@ class ServiceManagerController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function allorders(Request $request)
+    {
+        $id = Auth::id();
+        $user = User::where('id', $id)->first();
+        $role = $user->type;
+        $branchid = $user->branch_id;
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
+
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+
+        return view('servicemanager.vieworders', compact('orders', 'perPage', 'currentPage'));
     }
 }

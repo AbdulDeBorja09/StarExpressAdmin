@@ -67,7 +67,7 @@
                     </div>
                     <div class="relative -mt-2 px-6 pb-24">
                         <div class="rounded-md bg-white px-2 py-4 shadow-md dark:bg-gray-900">
-                            <div class="name text-xl">{{$item->name}}</div>
+                            <div class="name text-xl">{{$item->lname}}, {{$item->fname}} {{$item->mname}}</div>
                             <div class="text-white-dark" style="text-transform: capitalize">{{$item->type}}</div>
                             <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
                                 <div class="flex-auto">

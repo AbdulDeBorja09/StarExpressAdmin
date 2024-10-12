@@ -27,9 +27,7 @@ class LoginController extends Controller
     use AuthenticatesUsers;
     public function showLoginForm()
     {
-
-        $countries = Branches::get();
-        return view('auth.login',  compact('countries'));
+        return view('auth.login');
     }
 
     /**
@@ -56,7 +54,6 @@ class LoginController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
-            'branch_id' => 'required',
         ]);
         $credentials = $request->only('email', 'password');
 
@@ -65,26 +62,22 @@ class LoginController extends Controller
         $input = $request->only(['email', 'password', 'branch_id']);
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->branch_id === (int) $input['branch_id']) {
-                if ($user->status === 'active') {
-                    Session::put('avatar', $user->avatar);
-                    if ($user->type === 'accountant') {
-                        return redirect()->route('accountant.home');
-                    } elseif ($user->type === 'admin') {
-                        return redirect()->route('admin.home');
-                    } elseif ($user->type === 'servicemanager') {
-                        return redirect()->route('servicemanager.home');
-                    } else {
-                        Auth::logout();
-                        return redirect()->route('login')->withErrors(['unauthorized' => 'Unauthorized user type.']);
-                    }
-                } elseif ($user->status === 'suspended') {
+            if ($user->status === 'active') {
+                Session::put('avatar', $user->avatar);
+                
+                if ($user->type === 'accountant') {
+                    return redirect()->route('accountant.home');
+                } elseif ($user->type === 'admin') {
+                    return redirect()->route('admin.home');
+                } elseif ($user->type === 'servicemanager') {
+                    return redirect()->route('servicemanager.home');
+                } else {
                     Auth::logout();
-                    return redirect()->route('login')->withErrors(['suspended' => 'Your account is suspended.']);
+                    return redirect()->route('login')->withErrors(['unauthorized' => 'Unauthorized user type.']);
                 }
-            } else {
+            } elseif ($user->status === 'suspended') {
                 Auth::logout();
-                return redirect()->route('login')->withErrors(['country' => 'You are not authorized to log in from your country.']);
+                return redirect()->route('login')->withErrors(['suspended' => 'Your account is suspended.']);
             }
         } else {
             return redirect()->route('login');

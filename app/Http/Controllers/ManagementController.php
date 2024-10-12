@@ -65,19 +65,15 @@ class ManagementController extends Controller
 
         ]);
 
-
-        $fullname = $request->input('fname') . " " . $request->input('mname') . " " . $request->input('lname');
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imgname = 'Avatar_' . time() . '_' . $request->file('image')->getClientOriginalName();
-            $imagePath = $request->file('image')->storeAs('Avatars', $imgname, 'public');
         }
         if ($request->input('password') === $request->input('confirm-password')) {
             if (User::where('email', $request->input('email'))->exists()) {
                 return redirect()->back()->withErrors(['email' => 'The email address is already in use.']);
             } else {
                 try {
-
                     if ($request->input('password') === $request->input('confirm-password')) {
                         if (User::where('email', $request->input('email'))->exists()) {
                             return redirect()->back()->withErrors(['email' => 'The email address is already in use.']);
@@ -89,7 +85,9 @@ class ManagementController extends Controller
                                     'branch_id' => $request->branch_id,
                                     'type' => $request->type,
                                     'employee_id' => $employeeId,
-                                    'name' => $fullname,
+                                    'fname' => $request->input('fname'),
+                                    'mname' => $request->input('mname'),
+                                    'lname' => $request->input('lname'),
                                     'gender' => $request->gender,
                                     'address' => $request->address,
                                     'contact' => $request->contact,
@@ -108,21 +106,6 @@ class ManagementController extends Controller
                     } else {
                         return redirect()->back()->withErrors(['confirm-password' => 'Passwords do not match.']);
                     }
-                    User::create([
-                        'branch_id' => $request->branch_id,
-                        'type' => $request->type,
-                        'employee_id' => $request->employee_id,
-                        'name' => $fullname,
-                        'gender' => $request->gender,
-                        'address' => $request->address,
-                        'contact' => $request->contact,
-                        'status' => $request->status,
-                        'email' => $request->input('email'),
-                        'password' => bcrypt($request->input('password')),
-                        'avatar' => $imagePath,
-                        'hired' => $request->hired_date,
-                    ]);
-                    return redirect()->route('admin.allEmployees');
                 } catch (\Exception $e) {
 
                     return redirect()->back()->withErrors(['error' => $e->getMessage()]);

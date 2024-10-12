@@ -78,54 +78,55 @@
             </div> --}}
 
             <div class="hidden ltr:mr-2 rtl:ml-2 sm:block ml-2">
-                <h1 style="font-size: 17px" id="current-date-time"></h1>
+                <h1 style="font-size: 17px" id="current-time"></h1>
             </div>
             <script>
-                function updateDateTime(timezone) {
-                    const now = new Date();  // Get the current date and time
-                
-                    // Options for date formatting
-                    const dateOptions = { 
+                function formatDate(date) {
+                    const options = { 
                         year: 'numeric', 
                         month: 'long', 
-                        day: 'numeric' 
+                        day: '2-digit'
                     };
-                
-                    // Options for time formatting
-                    const timeOptions = { 
-                        hour: '2-digit', 
-                        minute: '2-digit', 
-                        second: '2-digit', 
-                        hour12: true, // Use 12-hour format
-                        timeZone: timezone // Set timezone
-                    };
-                
-                    const currentDate = now.toLocaleDateString([], dateOptions); // Format the date
-                    const currentTime = now.toLocaleTimeString([], timeOptions); // Format the time
-                
-                    // Combine date and time
-                    const dateTimeString = `${currentDate} ${currentTime}`;
-                
-                    document.getElementById('current-date-time').textContent = dateTimeString; // Update the date and time in the navbar
+                    // Format the date using Intl.DateTimeFormat
+                    const dateString = new Intl.DateTimeFormat('en-US', options).format(date);
+                    
+                    // Get the time components
+                    const hours = date.getHours();
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    const seconds = date.getSeconds().toString().padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0'); // Convert to 12-hour format
+        
+                    // Combine everything into the desired format
+                    return `${dateString} ${formattedHours}:${minutes}:${seconds} ${ampm}`;
                 }
-                
-                // Fetch the user's timezone using ipapi.co
-                fetch('https://ipapi.co/json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        const timezone = data.timezone; // Get the timezone from the response
-                
-                        // Update the date and time every second based on the user's timezone
-                        setInterval(() => updateDateTime(timezone), 1000);
-                
-                        // Initial call to set the date and time immediately
-                        updateDateTime(timezone);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching location data', error);
-                    });
+        
+                function updateTime() {
+                    const timeElement = document.getElementById('current-time');
+                    let currentTime = new Date(timeElement.getAttribute('data-time'));
+        
+                    // Increment the time by one second
+                    currentTime.setSeconds(currentTime.getSeconds() + 1);
+                    
+                    // Format the time as "October 11, 2024 04:23:04 PM"
+                    const formattedTime = formatDate(currentTime);
+                    timeElement.innerText = formattedTime;
+        
+                    // Set the updated time back to the data attribute for the next call
+                    timeElement.setAttribute('data-time', currentTime);
+                }
+        
+                // Set an interval to update the time every second
+                setInterval(updateTime, 1000);
+        
+                // Initialize the time when the DOM is fully loaded
+                document.addEventListener('DOMContentLoaded', () => {
+                    const initialTime = new Date('{{ now()->format('Y-m-d H:i:s') }}'); // Use 'H' for 24-hour format
+                    document.getElementById('current-time').setAttribute('data-time', initialTime);
+                    updateTime(); // Initial call to display the time immediately
+                });
             </script>
-            <div x-data=" header"
+            <div
                 class="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
                 <div class="sm:ltr:mr-auto sm:rtl:ml-auto" x-data="{ search: false }" @click.outside="search = false">
 
@@ -200,7 +201,7 @@
                                 <h4 class="relative z-10 text-lg font-semibold">Messages</h4>
                             </div>
                         </li>
-                        <template x-for="msg in messages">
+                        <template>
                             <li>
                                 <div class="flex items-center px-5 py-3" @click.self="toggle">
                                     <div x-html="msg.image"></div>
@@ -226,7 +227,7 @@
                                 </div>
                             </li>
                         </template>
-                        <template x-if="messages.length">
+                        <template>
                             <li class="mt-5 border-t border-white-light text-center dark:border-white/10">
                                 <div class="group flex cursor-pointer items-center justify-center px-4 py-4 font-semibold text-primary dark:text-gray-400"
                                     @click="toggle">
@@ -241,7 +242,7 @@
                                 </div>
                             </li>
                         </template>
-                        <template x-if="!messages.length">
+                        <template>
                             <li class="mb-5">
                                 <div class="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
                                     <div class="mx-auto mb-4 rounded-full text-primary ring-4 ring-primary/30">
@@ -290,12 +291,12 @@
                             <div
                                 class="flex items-center justify-between px-4 py-2 font-semibold hover:!bg-transparent">
                                 <h4 class="text-lg">Notification</h4>
-                                <template x-if="notifications.length">
+                                <template>
                                     <span class="badge bg-primary/80" x-text="notifications.length + 'New'"></span>
                                 </template>
                             </div>
                         </li>
-                        <template x-for="notification in notifications">
+                        <template>
                             <li class="dark:text-white-light/90">
                                 <div class="group flex items-center px-4 py-2" @click.self="toggle">
                                     <div class="grid place-content-center rounded">
@@ -313,9 +314,8 @@
                                     </div>
                                     <div class="flex flex-auto ltr:pl-3 rtl:pr-3">
                                         <div class="ltr:pr-3 rtl:pl-3">
-                                            <h6 x-html="notification.message"></h6>
-                                            <span class="block text-xs font-normal dark:text-gray-500"
-                                                x-text="notification.time"></span>
+                                            <h6></h6>
+                                            <span class="block text-xs font-normal dark:text-gray-500"></span>
                                         </div>
                                         <button type="button"
                                             class="text-neutral-300 opacity-0 hover:text-danger group-hover:opacity-100 ltr:ml-auto rtl:mr-auto"
@@ -333,7 +333,7 @@
                                 </div>
                             </li>
                         </template>
-                        <template x-if="notifications.length">
+                        <template>
                             <li>
                                 <div class="p-4">
                                     <button class="btn btn-primary btn-small block w-full" @click="toggle">Read All
@@ -341,7 +341,7 @@
                                 </div>
                             </li>
                         </template>
-                        <template x-if="!notifications.length">
+                        <template>
                             <li>
                                 <div class="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
                                     <div class="mx-auto mb-4 rounded-full text-primary ring-4 ring-primary/30">

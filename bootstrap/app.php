@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'user-access' => \App\Http\Middleware\UserAccess::class,
-            // 'track-login-attempts' => \App\Http\Middleware\TrackLoginAttempts::class,
+            'set.timezone' => \App\Http\Middleware\SetUserTimezone::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
