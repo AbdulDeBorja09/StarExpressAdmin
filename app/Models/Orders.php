@@ -27,8 +27,9 @@ class Orders extends Model
         'payment',
         'method',
         'voucher',
-        'total',
         'status',
+        'state',
+        'total',
     ];
     public function cargoService()
     {

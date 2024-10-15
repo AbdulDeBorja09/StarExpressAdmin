@@ -67,3 +67,22 @@
     outline: none;
     border: none;
 }
+.rednatext {
+    color: rgb(117, 0, 0);
+}
+.orders-table tr th:nth-child(1),
+.orders-table tr td:nth-child(1) {
+    width: 4%;
+
+    text-align: center;
+}
+.orders-table tr th:nth-child(2),
+.orders-table tr td:nth-child(2) {
+    width: 13%;
+}
+.delivery-drag-title {
+    text-align: center;
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: 5px 0px;
+}

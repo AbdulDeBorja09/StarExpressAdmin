@@ -11,12 +11,15 @@ use App\Models\CargoLocations;
 use App\Models\CargoPrices;
 use App\Models\CargoTruck;
 use App\Models\Orders;
+use App\Models\Delivery;
+use App\Models\TruckDriver;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Ui\Presets\Vue;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
+use Carbon\Carbon;
 
 class ServiceManagerController extends Controller
 {
@@ -455,20 +458,123 @@ class ServiceManagerController extends Controller
         }
     }
 
-    public function allorders(Request $request)
+
+
+    public function alldeliveries(Request $request)
     {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
-        $role = $user->type;
-        $branchid = $user->branch_id;
         $perPage = $request->input('perPage', 20);
         $currentPage = $request->input('page', 1);
+
+        $delivery = Delivery::with(['manager', 'driver'])->paginate($perPage);
+        return view('servicemanager.deliveries', compact('perPage', 'currentPage', 'delivery'));
+    }
+
+    public function submitdelivery(Request $request)
+    {
+        Log::info('Raw Request Data:', [$request->getContent()]);
+        Log::info('Submitted Data:', $request->all());
+        $validated = $request->validate([
+            'id' => 'required',
+            'truck' => 'nullable|string',
+            'driver' => 'nullable|string',
+            'note' => 'nullable|string',
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:orders,id'
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            $delivery = Delivery::find($request->id);
+
+            if ($delivery) {
+                // Decode existing order_ids; initialize to an empty array if null
+                $existingOrderIds = json_decode($delivery->items, true) ?? [];
+
+                // Check if $validated['order_ids'] is an array; if not, convert it to an array
+                $newOrderIds = is_array($validated['order_ids']) ? $validated['order_ids'] : [$validated['order_ids']];
+
+                // Merge existing order_ids with new order_ids, using array_unique to avoid duplicates
+                $mergedOrderIds = array_unique(array_merge($existingOrderIds, $newOrderIds));
+
+                // Update the delivery record
+                $submittedOrder = $delivery->update([
+                    'driver_id' => $request->driver,
+                    'truck_id' => $request->truck,
+                    'items' => json_encode($mergedOrderIds),
+                    'note' => $request->note,
+                    'status' => 'pending'
+                ]);
+                // if ($submittedOrder) {
+                //     foreach ($validated['order_ids'] as $orderId) {
+                //         $order = Orders::find($orderId);
+                //         if ($order) {
+                //             $newStatusWithTimestamp = [
+                //                 'status' => "Out for delivery",
+                //                 'logs' => 'Set By: ' . $user->lname . ', ' . $user->fname,
+                //                 'timestamp' => now()->toDateTimeString(),
+                //             ];
+
+                //             $existingStatuses = $order->status ? json_decode($order->status, true) : [];
+                //             $existingStatuses[] = $newStatusWithTimestamp;
+
+                //             $order->status = json_encode($existingStatuses);
+                //             $order->state = "OutForDelivery";
+                //             $order->save();
+                //         }
+                //     }
+                // }
+            } else {
+                return response()->json(['message' => 'error error error!']);
+            }
+            // 
+            return response()->json([
+                'message' => 'Delivery submitted successfully!',
+                'data' => $submittedOrder
+            ]);
+        } catch (\Exception $e) {
+
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    private function generateTripNumber()
+    {
+        $randomString = bin2hex(random_bytes(10));
+
+        return 'ID-' . substr($randomString, 0, 10);
+    }
+
+
+    public function DeliveryDetails($id)
+    {
+        // Retrieve orders that are ready for delivery
         $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
+            ->where('state', 'ReadyForDelivery')
+            ->orderBy('created_at', 'desc')->get();
 
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
 
+        $delivery = Delivery::with(['manager', 'driver'])->where('id', $id)->first();
 
-        return view('servicemanager.vieworders', compact('orders', 'perPage', 'currentPage'));
+        $deliveryIds = [];
+        if ($delivery && $delivery->items) {
+            $items = json_decode($delivery->items, true); 
+            if (!empty($items)) {
+                $deliveryIds = array_merge($deliveryIds, $items); 
+            }
+        }
+
+        // Remove duplicates if necessary
+        $deliveryIds = array_unique($deliveryIds);
+
+        // Retrieve detailed orders using the delivery IDs
+        $orderDetails = Orders::whereIn('id', $deliveryIds)->get();
+
+        // Get all drivers and trucks
+        $driver = TruckDriver::get();
+        $truck = CargoTruck::get();
+
+        // Pass everything to the view
+        return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails'));
     }
 }

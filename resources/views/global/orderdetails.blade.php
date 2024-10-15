@@ -23,32 +23,40 @@
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5" style="min-height: 80vh">
         <div class="panel">
-            <div class="mb-5  flex flex-col sm:flex-row" x-data="{ tab: 'overall'}">
+            <div class="mb-5  flex flex-col sm:flex-row" x-data="{ 
+                tab: localStorage.getItem('activeTab') || 'overall',
+                setTab(selectedTab) {
+                    this.tab = selectedTab; // Set the current tab
+                    localStorage.setItem('activeTab', selectedTab); // Store the selected tab in localStorage
+                }
+            }">
                 <div class="mr-5 mb-5 sm:mb-0">
                     <ul class="m-auto w-24 text-start font-semibold" id="tabs">
                         <li>
                             <a href="javascript:;" id="overallTab"
                                 class="relative -mb-[1px] block border-white-light p-3.5 py-4 before:absolute before:bottom-0 before:top-0 before:m-auto before:h-0 before:w-[1px] before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:h-[80%] ltr:border-r ltr:before:-right-[1px] rtl:border-l rtl:before:-left-[1px] dark:border-[#191e3a] text-secondary before:!h-[80%]"
                                 :class="{'text-secondary before:!h-[80%]' : tab === 'overall'}"
-                                @click="tab='overall'">Overall</a>
+                                @click="setTab('overall')">Overall</a>
                         </li>
                         <li>
                             <a href="javascript:;" id="itemsTab"
                                 class="relative -mb-[1px] block border-white-light p-3.5 py-4 before:absolute before:bottom-0 before:top-0 before:m-auto before:h-0 before:w-[1px] before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:h-[80%] ltr:border-r ltr:before:-right-[1px] rtl:border-l rtl:before:-left-[1px] dark:border-[#191e3a]"
                                 :class="{'text-secondary before:!h-[80%]' : tab === 'details'}"
-                                @click="tab='details'">Items</a>
+                                @click="setTab('details')">Items</a>
                         </li>
+                        @if(Auth::user()->type === 'admin' || Auth::user()->type === 'servicemanager' )
                         <li>
                             <a href="javascript:;" id="paymentTab"
                                 class="relative -mb-[1px] block border-white-light p-3.5 py-4 before:absolute before:bottom-0 before:top-0 before:m-auto before:h-0 before:w-[1px] before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:h-[80%] ltr:border-r ltr:before:-right-[1px] rtl:border-l rtl:before:-left-[1px] dark:border-[#191e3a]"
                                 :class="{'text-secondary before:!h-[80%]' : tab === 'payment'}"
-                                @click="tab='payment'">Payment</a>
+                                @click="setTab('payment')">Payment</a>
                         </li>
+                        @endif
                         <li>
                             <a href="javascript:;" id="statusTab"
                                 class="relative -mb-[1px] block border-white-light p-3.5 py-4 before:absolute before:bottom-0 before:top-0 before:m-auto before:h-0 before:w-[1px] before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:h-[80%] ltr:border-r ltr:before:-right-[1px] rtl:border-l rtl:before:-left-[1px] dark:border-[#191e3a]"
                                 :class="{'text-secondary before:!h-[80%]' : tab === 'status'}"
-                                @click="tab='status'">Status</a>
+                                @click="setTab('status')">Status</a>
                         </li>
                     </ul>
                 </div>
@@ -74,9 +82,9 @@
                             </div>
 
                             <hr class="my-6 border-[#e0e6ed] dark:border-[#1b2e4b]">
-                            <div class="flex flex-col flex-wrap justify-between gap-6 lg:flex-row">
-                                <div class="flex flex-col justify-between gap-6 sm:flex-row " style="width:100%">
-                                    <div class="xl:1/3 sm:w-1/2 lg:w-2/5" st>
+                            <div class=" gap-6 xl:grid-cols-3 flex-wrap justify-between lg:flex-row">
+                                <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+                                    <div>
                                         <div class="mb-2 flex w-full items-center justify-between">
                                             <div class="font-semibold text-black dark:text-white">Sender Info
                                             </div>
@@ -99,12 +107,13 @@
                                             <div>{{ $contactparts[1] ?? 'N/A' }}</div>
                                         </div>
                                         <div class="mb-2 flex w-full items-center">
-                                            <div class="text-white-dark" style="width: 80px;">Address:</div>
+                                            <div class="text-white-dark" style="width: 80px;padding-right:20px">
+                                                Address:</div>
                                             <div>
                                                 {{$details->sender_address}}</div>
                                         </div>
                                     </div>
-                                    <div class="xl:1/3 sm:w-1/2 lg:w-2/5">
+                                    <div>
                                         <div class="mb-2 flex w-full items-center justify-between">
                                             <div class="font-semibold text-black dark:text-white">Receiver Info
                                             </div>
@@ -126,7 +135,8 @@
                                             <div>{{ $contactparts[1] ?? 'N/A' }}</div>
                                         </div>
                                         <div class="mb-2 flex w-full items-center ">
-                                            <div class="text-white-dark" style="width: 80px;"> Address:</div>
+                                            <div class="text-white-dark" style="width: 80px;padding-right:20px">
+                                                Address:</div>
                                             <div>
                                                 {{$details->receiver_address}}</div>
                                         </div>
@@ -135,7 +145,7 @@
                                             <div>{{$details->gov_id}}</div>
                                         </div>
                                     </div>
-                                    <div class="xl:1/3 sm:w-1/2 lg:w-2/5">
+                                    <div>
                                         <div class="mb-2 flex w-full items-center justify-between">
                                             <div class="font-semibold text-black dark:text-white">Alternate Receiver
                                                 Info
@@ -171,21 +181,21 @@
                                         @endphp
                                         @foreach ($items as $item)
                                         <tr>
-                                            <td>{{ $item['quantity'] }}</td>
-                                            <td>{{ $item['cargoBoxName'] }}</td>
+                                            <td>{{ $item['qty'] }}</td>
+                                            <td>{{ $item['name'] }}</td>
                                             <td>{{ $item['area'] }}</td>
-                                            <td>{{ $item['package'] }}</td>
+                                            <td>{{ $item['type'] }}</td>
                                             <td class="ltr:text-right rtl:text-left">{{ number_format($item['price'], 2)
                                                 }}
                                             </td>
                                             @php
-                                            $totalammount = $item['price']*$item['quantity'];
+                                            $totalammount = $item['price']*$item['qty'];
                                             @endphp
                                             <td class="ltr:text-right rtl:text-left">
                                                 {{ number_format($totalammount, 2)
                                                 }}</td>
                                         </tr>
-                                        @php $totalQuantity += $item['quantity'];
+                                        @php $totalQuantity += $item['qty'];
                                         $grandtotal += $totalammount;
                                         @endphp
                                         @endforeach
@@ -215,39 +225,46 @@
                     </template>
 
                     <template x-if="tab === 'details'">
-                        <div style="padding-left:20px">
-                            <div class="flex items-start">
-                                <div class="h-20 w-20 flex-none ltr:mr-4 rtl:ml-4">
-
-                                </div>
-                                <div class="flex-auto">
-                                    <h5 class="mb-4 text-xl font-medium">Media heading</h5>
-                                    <p class="text-white-dark">
-                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                                        sollicitudin. Cras
-                                        purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum
-                                        nunc ac nisi
-                                        vulputate fringilla. Donec lacinia congue felis in faucibus.
-                                    </p>
+                        <div style="padding-left:30px">
+                            <div>
+                                <div class="text-2xl font-semibold uppercase">Packing List</div>
+                                <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+                                    @if (!empty($items) && !empty($list))
+                                    @foreach ($items as $index => $item)
+                                    <div>
+                                        <h1 style="font-size: 20px"
+                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-5">
+                                            {{
+                                            $item['qty']
+                                            }}x {{ $item['name'] }} ({{ $item['area'] }})</h1>
+                                        <h3
+                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-2">
+                                            Packing List:</h3>
+                                        Clothing: {{ $list[$index]['Clothing'] ?? 0 }}x<br>
+                                        Utensils: {{ $list[$index]['Utensils'] ?? 0 }}x<br>
+                                        Consumables: {{ $list[$index]['Consumables'] ?? 0 }}x<br>
+                                        Footware: {{ $list[$index]['Footware'] ?? 0 }}x<br>
+                                        Toiletries: {{ $list[$index]['Toiletries'] ?? 0 }}x<br>
+                                        Toys: {{ $list[$index]['Toys'] ?? 0 }}x<br>
+                                        Canned Goods: {{ $list[$index]['CannedGoods'] ?? 0 }}x<br>
+                                        Electronics: {{ $list[$index]['Electronics'] ?? 0 }}x<br>
+                                        <h2
+                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-1">
+                                            Others:</h2>
+                                        <h2>{{
+                                            $list[$index]['others'] ?? 'None' }}</h2>
+                                    </div>
+                                    @endforeach
+                                    @else
+                                    <p>No items or packing details available.</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </template>
                     <template x-if="tab === 'payment'">
-                        <div style="padding-left:20px">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt
-                                ut labore et
-                                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                nisi
-                                ut aliquip
-                                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu
-                                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                officia
-                                deserunt mollit anim id est laborum.
-                            </p>
+                        <div style="padding-left:30px">
+                            <div class="text-2xl font-semibold uppercase">Payment Status</div>
                         </div>
                     </template>
                     <template x-if="tab === 'status'">
@@ -255,37 +272,99 @@
                             <div class="text-2xl font-semibold uppercase">Order Status</div>
                             <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
                                 <div class="max-w-[900px]">
-                                    @foreach ($statuses as $statusEntry)
+                                    @foreach ($statuses as $index => $statusEntry)
                                     <div class="flex">
+                                        <!-- Time -->
                                         <p style="min-width: 100px"
                                             class="text-[#3b3f5c] dark:text-white-light min-w-[58px] max-w-[100px] text-base font-semibold py-2.5">
                                             {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->format('h:i A') }}
-
-
                                         </p>
                                         <div
                                             class="relative before:absolute before:left-1/2 before:-translate-x-1/2 before:top-[15px] before:w-2.5 before:h-2.5 before:border-2 before:border-secondary before:rounded-full 
-                                    @if(!$loop->last) after:absolute after:left-1/2 after:-translate-x-1/2 after:top-[25px] after:-bottom-[15px] after:w-0 after:h-auto after:border-l-2 after:border-secondary after:rounded-full @endif">
+                                            @if(!$loop->last) after:absolute after:left-1/2 after:-translate-x-1/2 after:top-[25px] after:-bottom-[15px] after:w-0 after:h-auto after:border-l-2 after:border-secondary after:rounded-full @endif">
                                         </div>
 
                                         <div class="p-2.5 self-center ltr:ml-2.5 rtl:ltr:mr-2.5 rtl:ml-2.5">
-                                            <p>{{ \Carbon\Carbon::parse($statusEntry['timestamp'])->format('F, j Y
-                                                ') }}
+                                            <!-- Date -->
+                                            <p>{{ \Carbon\Carbon::parse($statusEntry['timestamp'])->format('F j, Y') }}
                                             </p>
+
+                                            <!-- Status -->
                                             <p class="text-[#3b3f5c] dark:text-white-light font-semibold text-[13px]"
                                                 style="text-transform:capitalize;">
                                                 Status: {{ $statusEntry['status'] }}
                                             </p>
-                                            <p class="status-time"
-                                                class="text-white-dark text-xs font-bold self-center min-w-[100px] max-w-[100px]">
+
+                                            <!-- Logs -->
+                                            <p class="{{ Str::contains($statusEntry['logs'], 'Edited By:' ) ? 'text-warning'
+                                                : 'text-[#3b3f5c] dark:text-white-light' }}">{{ $statusEntry['logs'] }}
+                                            </p>
+
+                                            <!-- Time since -->
+                                            <p
+                                                class="status-time text-white-dark text-xs font-bold self-center min-w-[100px] max-w-[100px]">
                                                 {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->diffForHumans() }}
                                             </p>
+
+                                            <!-- Edit Button -->
+                                            <button type="button" class="edit-btn my-2"
+                                                style="text-decoration: underline"
+                                                onclick="showEditForm({{ $loop->index }})">Edit Status</button>
+
+                                            <!-- Hidden Edit Form -->
+                                            <form id="editForm{{ $loop->index }}"
+                                                action="{{ route('statuses.edit', ['order' => $details->id, 'index' => $loop->index]) }}"
+                                                method="POST" style="display: none;">
+                                                @csrf
+                                                @method('PUT')
+
+                                                <!-- Editable Status -->
+                                                <select id="status" name="status" class="form-input flex-1">
+                                                    <option value="{{ $statusEntry['status'] }}" selected>{{
+                                                        $statusEntry['status'] }}</option>
+                                                    <option value="To Deliver Cargo Box">To Deliver Cargo Box</option>
+                                                    <option value="To Pickup">To Pickup</option>
+                                                    <option value="In Warehouse">In Warehouse</option>
+                                                    <option value="In Transit To">In Transit To</option>
+                                                    <option value="Cargo Is Loaded In The Container">Cargo Is Loaded In
+                                                        The
+                                                        Container</option>
+                                                    <option value="Cargo Has Departed From">Cargo has departed From
+                                                    </option>
+                                                    <option value="Cargo Has Arrived At">Cargo Has Arrived At</option>
+                                                    <option value="Cleared At Customs">Cleared At Customs</option>
+                                                    <option value="Cargo Has Arrived At">Cargo Has Arrived At</option>
+                                                    <option value="Arrived At Warehouse">Arrived At Warehouse</option>
+                                                    <option value="Processing Cargo">Processing Cargo</option>
+                                                    <option value="Out For Delivery">Out For Delivery</option>
+                                                    <option value="On The Way">On The Way</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                </select>
+                                                <!-- Editable Logs -->
+                                                <button type="submit" class="badge badge-outline-success">Save</button>
+                                                <button type="button" class="badge badge-outline-danger"
+                                                    onclick="hideEditForm({{ $loop->index }})">Cancel</button>
+                                            </form>
                                         </div>
                                     </div>
                                     @endforeach
+
+                                    <script>
+                                        function showEditForm(index) {
+                                            document.getElementById('editForm' + index).style.display = 'block';
+                                        }
+                                    
+                                        function hideEditForm(index) {
+                                            document.getElementById('editForm' + index).style.display = 'none';
+                                        }
+                                    </script>
+
+
+
                                 </div>
                                 <div>
                                     <!-- Form to add a new status -->
+                                    @if ($details->state === "pending")
                                     <form action="{{ route('updateStatus')}}" method="POST">
                                         @csrf
                                         <input class="form-input flex-1" type="hidden" name="id"
@@ -306,9 +385,6 @@
                                             <option value="Cargo Has Arrived At">Cargo Has Arrived At</option>
                                             <option value="Arrived At Warehouse">Arrived At Warehouse</option>
                                             <option value="Processing Cargo">Processing Cargo</option>
-                                            <option value="Out For Delivery">Out For Delivery</option>
-                                            <option value="On The Way">On The Way</option>
-                                            <option value="Delivered">Delivered</option>
                                         </select>
                                         <label for="location" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                             style="font-size:15px">Location:
@@ -318,6 +394,8 @@
                                             style="width:100%">Add
                                             Status</button>
                                     </form>
+
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -328,7 +406,15 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
+    function setTab(tab) {
+        localStorage.setItem('activeTab', tab);
+        this.tab = tab;     
+    }
+</script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Get the last selected tab from local storage
         const lastTab = localStorage.getItem('selectedTab') || 'overall';
@@ -357,6 +443,6 @@
      
 
     });
-</script>
+</script> --}}
 
 @endsection

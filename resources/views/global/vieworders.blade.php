@@ -25,7 +25,7 @@
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="orders-table table table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -43,7 +43,6 @@
 
                         @foreach ($orders as $index => $order)
                         <tr>
-
                             @php
                             $statuses = json_decode($order->status, true);
                             $latestStatus = is_array($statuses) ? end($statuses)['status'] : 'N/A';
@@ -86,9 +85,9 @@
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">
                                 <option value="20" {{ $perPage==20 ? 'selected' : '' }}>20</option>
                                 <option value="40" {{ $perPage==40 ? 'selected' : '' }}>40</option>
-                                <option value="60" {{ $perPage==60 ? 'selected' : '' }}>60</option>
-                                <option value="80" {{ $perPage==80 ? 'selected' : '' }}>80</option>
+                                <option value="50" {{ $perPage==50 ? 'selected' : '' }}>50</option>
                                 <option value="100" {{ $perPage==100 ? 'selected' : '' }}>100</option>
+                                <option value="999" {{ $perPage==999 ? 'selected' : '' }}>All</option>
                             </select>
                         </label>
                     </div>

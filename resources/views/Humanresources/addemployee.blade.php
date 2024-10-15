@@ -13,7 +13,7 @@
                 </svg>
             </a>
         </li>
-        <li class="before:px-1.5 before:content-['/']"><a href="{{route('admin.allEmployees')}}">Employees</a></li>
+        <li class="before:px-1.5 before:content-['/']"><a href="{{route('allEmployees')}}">Employees</a></li>
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Add
@@ -93,7 +93,6 @@
                                     <option value="hr">Human Resources</option>
                                     <option value="servicemanager">Service Manager</option>
                                     <option value="accountant">Accountant</option>
-                                    <option value="admin">Admin</option>
                                 </select>
                             </div>
 
