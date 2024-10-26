@@ -12,7 +12,7 @@ class SetUserTimezone
     public function handle(Request $request, Closure $next)
     {
         // Get the authenticated user
-        $user = $request->user();
+        $user = Auth::user();
 
         if ($user) {
             // Get the country of the user from the authenticated user

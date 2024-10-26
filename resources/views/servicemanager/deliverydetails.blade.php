@@ -47,9 +47,15 @@
                         @endforeach
                     </select>
 
+                    <label for="truck" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Status:</label>
+                    <select class="form-input flex-1 mb-2" name="status" id="truck">
+                        <option value="pending">Pending</option>
+                        <option value="ready">Ready</option>
+                    </select>
+
                     <label for="note" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Note:</label>
                     <input class="form-input flex-1 mb-2" id="note" type="text" name="note"
-                        value="{{$delivery->note ?? ''}}">
+                        value="{{$delivery->note ?? ' N/A '}}">{{$delivery->note ?? ' N/A '}}
                     <button type="button" class="btn btn-primary mt-3" style="width:100%"
                         onclick="submitOrders()">Submit Delivery</button>
                 </form>

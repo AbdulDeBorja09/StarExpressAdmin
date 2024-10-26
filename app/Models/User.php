@@ -36,6 +36,15 @@ class User extends Authenticatable
         'avatar',
         'active',
     ];
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -9,6 +9,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\ServiceManagerController;
 use App\Http\Controllers\GlobalController;
 use App\Http\Controllers\HrController;
+use App\Http\Controllers\ChatController;
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -85,6 +86,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::put('/orders/{order}/statuses/{index}/edit', [GlobalController::class, 'editStatus'])->name('statuses.edit');
 
     Route::post('/submit-orders', [ServiceManagerController::class, 'submitdelivery'])->name('submitdelivery');
+    Route::post('/create-delivery', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
 });
 
 
@@ -107,4 +109,11 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
 Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
     Route::get('/details/{reference_number}', [GlobalController::class, 'orderdetails']);
     Route::get('/AllOrders', [GlobalController::class, 'allorders'])->name('allorders');
+    Route::get('/Chat', [ChatController::class, 'chatpage'])->name('chatpage');
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
 });

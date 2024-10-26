@@ -457,6 +457,28 @@ class ServiceManagerController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+    public function createdelivery(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|string',
+            'status' => 'required|string',
+            'note' => 'required|string',
+        ]);
+
+        try {
+            Delivery::create([
+                'trip_id' => 'ID-' . uniqid(),
+                'manager_id' => Auth::id(),
+                'date' => $request->date,
+                'status' => $request->status,
+                'note' => $request->note,
+            ]);
+
+            return redirect()->route('alldeliveries');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 
 
 
@@ -471,13 +493,12 @@ class ServiceManagerController extends Controller
 
     public function submitdelivery(Request $request)
     {
-        Log::info('Raw Request Data:', [$request->getContent()]);
-        Log::info('Submitted Data:', $request->all());
         $validated = $request->validate([
             'id' => 'required',
             'truck' => 'nullable|string',
             'driver' => 'nullable|string',
             'note' => 'nullable|string',
+            'status' => 'required|string',
             'order_ids' => 'required|array',
             'order_ids.*' => 'exists:orders,id'
         ]);
@@ -488,42 +509,35 @@ class ServiceManagerController extends Controller
             $delivery = Delivery::find($request->id);
 
             if ($delivery) {
-                // Decode existing order_ids; initialize to an empty array if null
                 $existingOrderIds = json_decode($delivery->items, true) ?? [];
-
-                // Check if $validated['order_ids'] is an array; if not, convert it to an array
                 $newOrderIds = is_array($validated['order_ids']) ? $validated['order_ids'] : [$validated['order_ids']];
-
-                // Merge existing order_ids with new order_ids, using array_unique to avoid duplicates
                 $mergedOrderIds = array_unique(array_merge($existingOrderIds, $newOrderIds));
-
-                // Update the delivery record
                 $submittedOrder = $delivery->update([
                     'driver_id' => $request->driver,
                     'truck_id' => $request->truck,
                     'items' => json_encode($mergedOrderIds),
                     'note' => $request->note,
-                    'status' => 'pending'
+                    'status' => $request->status
                 ]);
-                // if ($submittedOrder) {
-                //     foreach ($validated['order_ids'] as $orderId) {
-                //         $order = Orders::find($orderId);
-                //         if ($order) {
-                //             $newStatusWithTimestamp = [
-                //                 'status' => "Out for delivery",
-                //                 'logs' => 'Set By: ' . $user->lname . ', ' . $user->fname,
-                //                 'timestamp' => now()->toDateTimeString(),
-                //             ];
+                if ($submittedOrder) {
+                    foreach ($validated['order_ids'] as $orderId) {
+                        $order = Orders::find($orderId);
+                        if ($order) {
+                            $newStatusWithTimestamp = [
+                                'status' => "Out for delivery",
+                                'logs' => 'Set By: ' . $user->lname . ', ' . $user->fname,
+                                'timestamp' => now()->toDateTimeString(),
+                            ];
 
-                //             $existingStatuses = $order->status ? json_decode($order->status, true) : [];
-                //             $existingStatuses[] = $newStatusWithTimestamp;
+                            $existingStatuses = $order->status ? json_decode($order->status, true) : [];
+                            $existingStatuses[] = $newStatusWithTimestamp;
 
-                //             $order->status = json_encode($existingStatuses);
-                //             $order->state = "OutForDelivery";
-                //             $order->save();
-                //         }
-                //     }
-                // }
+                            $order->status = json_encode($existingStatuses);
+                            $order->state = "OutForDelivery";
+                            $order->save();
+                        }
+                    }
+                }
             } else {
                 return response()->json(['message' => 'error error error!']);
             }
@@ -558,9 +572,9 @@ class ServiceManagerController extends Controller
 
         $deliveryIds = [];
         if ($delivery && $delivery->items) {
-            $items = json_decode($delivery->items, true); 
+            $items = json_decode($delivery->items, true);
             if (!empty($items)) {
-                $deliveryIds = array_merge($deliveryIds, $items); 
+                $deliveryIds = array_merge($deliveryIds, $items);
             }
         }
 

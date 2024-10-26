@@ -22,7 +22,61 @@
     @include('layout.components.error')
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
-            <div class="mb-5">
+            <div class="flex  mb-5" style="justify-content: space-between">
+
+                <div x-data="modal">
+                    <button type="button" class="btn btn-outline-info" @click="toggle">Add Delivery Trip</button>
+
+                    <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto" :class="open && '!block'">
+                        <div class="flex items-center justify-center min-h-screen px-4" @click.self="open = false">
+                            <div x-show="open" x-transition x-transition.duration.300
+                                class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                    <h5 class="font-bold text-lg">Add Delivery Trip</h5>
+                                    <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="p-5">
+                                    <form action="{{route('createdelivery')}}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mt-4 items-center">
+                                            <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                style="font-size:15px; text-align:start">Select Date:
+                                            </label>
+                                            <input id="price" type="date" name="date" class="form-input flex-1"
+                                                required>
+
+                                            <label for="status" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                style="font-size:15px; text-align:start">Status
+                                            </label>
+                                            <select id="status" class="form-input flex-1" name="status" required
+                                                style="text-transform: capitalize">
+                                                <option value="pending">Pending</option>
+                                                <option value="pending">Ready</option>
+                                            </select>
+                                            <label for="note" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                style="font-size:15px; text-align:start">Note:
+                                            </label>
+                                            <input id="price" type="text" name="note" class="form-input flex-1" required
+                                                value="">
+                                        </div>
+                                        <div class="flex justify-center items-center mt-8">
+                                            <button type="submit" class="btn btn-outline-success"
+                                                style="width:50%">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
             <div class="table-responsive">
@@ -51,7 +105,9 @@
                             <td>{{$item->date}}</td>
                             <td>{{$item->driver->name ?? 'N/A'}}</td>
                             <td>{{$item->truck_id ?? 'N/A'}} </td>
-                            <td style="width: 180px; text-align:center">{{ count(json_decode($item->items, true)) }}
+                            <td style="width: 180px; text-align:center">{{ is_array(json_decode($item->items, true)) ?
+                                count(json_decode($item->items, true)) : 0 }}
+
                             </td>
                             <td style="text-transform: capitalize; text-align: center;">{{$item->status}}</td>
                             <td>
