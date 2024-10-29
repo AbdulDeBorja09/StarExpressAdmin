@@ -182,7 +182,7 @@
                                         @foreach ($items as $item)
                                         <tr>
                                             <td>{{ $item['qty'] }}</td>
-                                            <td>{{ $item['name'] }}</td>
+                                            <td>    </td>
                                             <td>{{ $item['area'] }}</td>
                                             <td>{{ $item['type'] }}</td>
                                             <td class="ltr:text-right rtl:text-left">{{ number_format($item['price'], 2)

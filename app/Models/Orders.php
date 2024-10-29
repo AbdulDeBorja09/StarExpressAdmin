@@ -35,5 +35,14 @@ class Orders extends Model
     {
         return $this->belongsTo(CargoService::class, 'service_id');
     }
+    public function originBranch()
+    {
+        return $this->belongsTo(Branches::class, 'origin');
+    }
+
+    public function destinationBranch()
+    {
+        return $this->belongsTo(Branches::class, 'destination');
+    }
     use HasFactory;
 }
