@@ -50,8 +50,8 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>{{ $order->reference_number }}</td>
-                            <td>{{ optional($order->cargoService->originBranch)->branch ?? 'N/A' }}</td>
-                            <td>{{ optional($order->cargoService->destinationBranch)->country ?? 'N/A' }}</td>
+                            <td></td>
+                            <td></td>
                             <td style="text-transform:capitalize;">{{ $latestStatus }}</td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
