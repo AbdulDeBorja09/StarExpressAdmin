@@ -7,9 +7,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\ServiceManagerController;
-use App\Http\Controllers\GlobalController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\TruckController;
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -57,7 +58,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Cargo_Boxes', [ServiceManagerController::class, 'cargoboxes'])->name('cargoboxes');
     Route::get('/Cargo_Prices', [ServiceManagerController::class, 'cargoprices'])->name('cargoprices');
     Route::get('/Cargo_locations', [ServiceManagerController::class, 'servicelocations'])->name('servicelocations');
-    Route::get('/Cargo_truck_list', [ServiceManagerController::class, 'trucklist'])->name('trucklist');
+    Route::get('/Cargo_truck_list', [TruckController::class, 'trucklist'])->name('trucklist');
     Route::get('/branches/{serviceId}', [ServiceManagerController::class, 'getBranches']);
     Route::get('/areas/{locationID}', [ServiceManagerController::class, 'getAreas']);
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
@@ -69,9 +70,9 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::post('/Cargo_locations/delete_area', [ServiceManagerController::class, 'deletearea'])->name('deletearea');
     Route::post('/Cargo_locations/update_area', [ServiceManagerController::class, 'updateArea'])->name('updateArea');
 
-    Route::post('/Cargo_Truck/delete', [ServiceManagerController::class, 'deletetruck'])->name('deletetruck');
-    Route::post('/Cargo_Truck/addnew', [ServiceManagerController::class, 'addnewtruck'])->name('addnewtruck');
-    Route::post('/Cargo_Truck/edit', [ServiceManagerController::class, 'edittruck'])->name('edittruck');
+    Route::post('/Cargo_Truck/delete', [TruckController::class, 'deletetruck'])->name('deletetruck');
+    Route::post('/Cargo_Truck/addnew', [TruckController::class, 'addnewtruck'])->name('addnewtruck');
+    Route::post('/Cargo_Truck/edit', [TruckController::class, 'edittruck'])->name('edittruck');
 
     Route::post('/Cargo_Box/add', [ServiceManagerController::class, 'addcargobox'])->name('addcargobox');
     Route::post('/Cargo_Box/edit', [ServiceManagerController::class, 'editcargobox'])->name('editcargobox');
@@ -81,9 +82,9 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::post('/Cargo_Price/delete', [ServiceManagerController::class, 'deleteprice'])->name('deleteprice');
     Route::post('/Cargo_Price/edit', [ServiceManagerController::class, 'editcargoprice'])->name('editcargoprice');
 
-    Route::post('/Details/statusedit', [GlobalController::class, 'updateStatus'])->name('updateStatus');
-    Route::put('/statuses/{index}', [GlobalController::class, 'editstatus'])->name('statuses.update');
-    Route::put('/orders/{order}/statuses/{index}/edit', [GlobalController::class, 'editStatus'])->name('statuses.edit');
+    Route::post('/Details/statusedit', [OrdersController::class, 'updateStatus'])->name('updateStatus');
+    Route::put('/statuses/{index}', [OrdersController::class, 'editstatus'])->name('statuses.update');
+    Route::put('/orders/{order}/statuses/{index}/edit', [OrdersController::class, 'editStatus'])->name('statuses.edit');
 
     Route::post('/submit-orders', [ServiceManagerController::class, 'submitdelivery'])->name('submitdelivery');
     Route::post('/create-delivery', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
@@ -107,8 +108,17 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
 
 // Global Access
 Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
-    Route::get('/details/{reference_number}', [GlobalController::class, 'orderdetails']);
-    Route::get('/AllOrders', [GlobalController::class, 'allorders'])->name('allorders');
+    Route::get('/details/{reference_number}', [OrdersController::class, 'orderdetails']);
+    Route::get('/AllOrders', [OrdersController::class, 'allorders'])->name('allorders');
+    Route::get('/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
+    Route::get('/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
+
+
+
+
+
+
+
     Route::get('/Chat', [ChatController::class, 'chatpage'])->name('chatpage');
 });
 

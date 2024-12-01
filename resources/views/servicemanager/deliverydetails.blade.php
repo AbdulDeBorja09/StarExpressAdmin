@@ -180,16 +180,14 @@
                     </div>
                 </div>
             </div>
+            <style>
+                .selected {
+                    background-color: lightblue;
+                    /* Change this to highlight selected orders */
+                }
+            </style>
         </div>
-
-        <style>
-            .selected {
-                background-color: lightblue;
-                /* Change this to highlight selected orders */
-            }
-        </style>
     </div>
-</div>
 </div>
 <script>
     document.getElementById('order-search').addEventListener('input', function () {

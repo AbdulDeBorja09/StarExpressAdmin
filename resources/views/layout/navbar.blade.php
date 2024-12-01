@@ -87,43 +87,30 @@
                         month: 'long', 
                         day: '2-digit'
                     };
-                    // Format the date using Intl.DateTimeFormat
                     const dateString = new Intl.DateTimeFormat('en-US', options).format(date);
-                    
-                    // Get the time components
                     const hours = date.getHours();
                     const minutes = date.getMinutes().toString().padStart(2, '0');
                     const seconds = date.getSeconds().toString().padStart(2, '0');
                     const ampm = hours >= 12 ? 'PM' : 'AM';
-                    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0'); // Convert to 12-hour format
-        
-                    // Combine everything into the desired format
+                    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0'); 
+
                     return `${dateString} ${formattedHours}:${minutes}:${seconds} ${ampm}`;
                 }
         
                 function updateTime() {
                     const timeElement = document.getElementById('current-time');
                     let currentTime = new Date(timeElement.getAttribute('data-time'));
-        
-                    // Increment the time by one second
+
                     currentTime.setSeconds(currentTime.getSeconds() + 1);
-                    
-                    // Format the time as "October 11, 2024 04:23:04 PM"
                     const formattedTime = formatDate(currentTime);
                     timeElement.innerText = formattedTime;
-        
-                    // Set the updated time back to the data attribute for the next call
                     timeElement.setAttribute('data-time', currentTime);
                 }
-        
-                // Set an interval to update the time every second
                 setInterval(updateTime, 1000);
-        
-                // Initialize the time when the DOM is fully loaded
                 document.addEventListener('DOMContentLoaded', () => {
-                    const initialTime = new Date('{{ now()->format('Y-m-d H:i:s') }}'); // Use 'H' for 24-hour format
+                    const initialTime = new Date('{{ now()->format('Y-m-d H:i:s') }}'); 
                     document.getElementById('current-time').setAttribute('data-time', initialTime);
-                    updateTime(); // Initial call to display the time immediately
+                    updateTime(); 
                 });
             </script>
             <div

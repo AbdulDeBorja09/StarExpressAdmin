@@ -18,6 +18,7 @@
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Trucks</a>
         </li>
     </ol>
+    @include('layout.components.error')
     @if($trucks->isNotEmpty())
 
     @foreach ($trucks as $branch => $trucks)
@@ -55,6 +56,24 @@
                                     <form action="{{route('addnewtruck')}}" method="POST">
                                         @csrf
                                         <div class="mt-0 items-center">
+                                            <label for="country" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                style="font-size:15px">Country/Branch:</label>
+                                            @if ($role === 'admin')
+                                            <select class="form-input flex-1" name="branch_id"
+                                                style="text-transform: capitalize">
+                                                @foreach ($countries as $item)
+                                                <option value="{{ $item->id }}">{{ $item->country }}, {{ $item->branch
+                                                    }}</option>
+                                                @endforeach
+                                            </select>
+                                            @else
+                                            <input style="text-transform: capitalize" id="region" type="hidden"
+                                                name="branch_id" class="form-input flex-1" value="{{$branchs->id}}">
+                                            <input style="text-transform: capitalize" id="region" type="text"
+                                                class="form-input flex-1"
+                                                value="{{$branchs->country}}, {{$branchs->branch}}" readonly>
+
+                                            @endif
                                             <label for="region" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px">Model
                                             </label>
@@ -84,11 +103,6 @@
                                                 <option value="Good">Good</option>
                                                 <option value="Bad">Bad</option>
                                             </select>
-                                            <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                                                style="font-size:15px">Expiration Date
-                                            </label>
-                                            <input id="area" type="date" name="expired" class="form-input flex-1"
-                                                required>
                                         </div>
                                         <div class="flex justify-center items-center mt-8">
                                             <button type="submit" class="btn btn-outline-success"
@@ -103,15 +117,6 @@
                 </div>
             </div>
             <div class="table-responsive">
-                @if ($errors->any())
-                <div class="panel">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li><i>* {{ $error }}</i></li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
                 <table class="truck-table table-hover mt-5">
                     <thead>
                         <tr>
@@ -324,9 +329,9 @@
                     <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Status
                     </label>
                     <select class="form-input flex-1" name="status" style="text-transform: capitalize">
-                        <option value="warehouse">In Warehouse</option>
-                        <option value="use">In Use</option>
-                        <option value="mechanic">In Mechanic</option>
+                        <option value="In Warehouse">In Warehouse</option>
+                        <option value="In Use">In Use</option>
+                        <option value="In Mechanic">In Mechanic</option>
                     </select>
                     <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Condition
                     </label>
@@ -335,22 +340,11 @@
                         <option value="Good">Good</option>
                         <option value="Bad">Bad</option>
                     </select>
-                    <label for="area" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Expiration Date
-                    </label>
 
                 </div>
                 <div class="flex justify-center items-center mt-8">
                     <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>
                 </div>
-                @if ($errors->any())
-                <div class="panel">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li><i>* {{ $error }}</i></li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
             </form>
         </div>
     </div>

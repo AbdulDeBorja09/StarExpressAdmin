@@ -26,8 +26,8 @@ class ServiceManagerController extends Controller
     public function getBranches($serviceId)
     {
         $branches = CargoBoxes::where('service_id', $serviceId)->get();
-
         return response()->json($branches);
+
     }
     public function getAreas($serviceId)
     {
@@ -54,7 +54,7 @@ class ServiceManagerController extends Controller
 
             $service = CargoService::with(['originBranch', 'destinationBranch'])
                 ->whereHas('originBranch', function ($query) use ($branchId) {
-                    $query->where('id', $branchId); // Adjust the condition based on your needs
+                    $query->where('id', $branchId);
                 })
                 ->get();
             $cargoboxes = CargoBoxes::with(['branch', 'service.originBranch', 'service.destinationBranch'])
@@ -341,8 +341,6 @@ class ServiceManagerController extends Controller
         }
     }
 
-
-
     public function deleteregion(Request $request)
     {
         $request->validate([
@@ -352,6 +350,7 @@ class ServiceManagerController extends Controller
         CargoLocations::where('region', $request->region)->where('branch_id', $request->branch_id)->delete();
         return redirect()->route('servicelocations');
     }
+    
     public function deletearea(Request $request)
     {
         $request->validate([
@@ -373,90 +372,7 @@ class ServiceManagerController extends Controller
         return redirect()->back()->with('success', 'Area updated successfully.');
     }
 
-    public function trucklist(): View
-    {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
-        $role = $user->type;
-        $branchid = $user->branch_id;
-
-        if ($user->type === 'admin') {
-            $trucks = CargoTruck::with('branch')->orderBy('branch_id', 'asc')
-                ->get()
-                ->groupBy('branch_id');
-            $countries = Branches::orderBy('country', 'asc')
-                ->orderBy('branch', 'asc')
-                ->get();
-
-            return view('servicemanager.trucklist',  compact('trucks', 'role', 'countries'));
-        } else {
-            $branchs = Branches::where('id', $branchid)->first();
-            $trucks = CargoTruck::with('branch')->where('branch_id', $branchid)->orderBy('branch_id', 'asc')
-                ->get()
-                ->groupBy('branch_id');
-        }
-        return view('servicemanager.trucklist', compact('trucks', 'role', 'branchid', 'branchs'));
-    }
-
-    public function addnewtruck(Request $request)
-    {
-        $request->validate([
-            'branch_id' => 'required|max:255',
-            'model' => 'required|max:255',
-            'plate' => 'required|max:255',
-            'status' => 'required|max:255',
-            'condition' => 'required|max:255',
-        ]);
-
-        $plate = CargoTruck::where('plate', $request->plate)->first();
-        if ($plate) {
-            return redirect()->back()->with('error', 'Truck Already Exists.');
-        } else {
-            try {
-                CargoTruck::create([
-                    'branch_id' => $request->branch_id,
-                    'model' => $request->model,
-                    'plate' => $request->plate,
-                    'status' => $request->status,
-                    'condition' => $request->condition,
-                ]);
-                return redirect()->route('trucklist');
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-            }
-        }
-
-        return redirect()->route('trucklist');
-    }
-    public function deletetruck(Request $request)
-    {
-        $request->validate([
-            'id' => 'required',
-        ]);
-        CargoTruck::where('id', $request->id)->delete();
-        return redirect()->route('trucklist');
-    }
-    public function edittruck(Request $request)
-    {
-        $request->validate([
-            'id' => 'required',
-            'model' => 'required|max:255',
-            'plate' => 'required|max:255',
-            'status' => 'required|max:255',
-            'condition' => 'required|max:255',
-        ]);
-        try {
-            CargoTruck::where('id', $request->id)->update([
-                'model' => $request->model,
-                'plate' => $request->plate,
-                'status' => $request->status,
-                'condition' => $request->condition,
-            ]);
-            return redirect()->route('trucklist');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
+    
     public function createdelivery(Request $request)
     {
         $request->validate([
@@ -465,6 +381,7 @@ class ServiceManagerController extends Controller
             'note' => 'required|string',
         ]);
 
+        
         try {
             Delivery::create([
                 'trip_id' => 'ID-' . uniqid(),
@@ -479,8 +396,6 @@ class ServiceManagerController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
-
 
     public function alldeliveries(Request $request)
     {
@@ -541,7 +456,6 @@ class ServiceManagerController extends Controller
             } else {
                 return response()->json(['message' => 'error error error!']);
             }
-            // 
             return response()->json([
                 'message' => 'Delivery submitted successfully!',
                 'data' => $submittedOrder
@@ -562,14 +476,12 @@ class ServiceManagerController extends Controller
 
     public function DeliveryDetails($id)
     {
-        // Retrieve orders that are ready for delivery
         $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
             ->where('state', 'ReadyForDelivery')
             ->orderBy('created_at', 'desc')->get();
 
 
         $delivery = Delivery::with(['manager', 'driver'])->where('id', $id)->first();
-
         $deliveryIds = [];
         if ($delivery && $delivery->items) {
             $items = json_decode($delivery->items, true);
@@ -577,18 +489,10 @@ class ServiceManagerController extends Controller
                 $deliveryIds = array_merge($deliveryIds, $items);
             }
         }
-
-        // Remove duplicates if necessary
         $deliveryIds = array_unique($deliveryIds);
-
-        // Retrieve detailed orders using the delivery IDs
         $orderDetails = Orders::whereIn('id', $deliveryIds)->get();
-
-        // Get all drivers and trucks
         $driver = TruckDriver::get();
         $truck = CargoTruck::get();
-
-        // Pass everything to the view
         return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails'));
     }
 }

@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
             @php
-            $firstBox = $services->first()->first(); // Access the first box in this group
+            $firstBox = $services->first()->first(); 
             @endphp
 
             <div class="flex justify-between">
@@ -39,7 +39,7 @@
             @foreach($services as $serviceId => $boxes)
             <div class="table-responsive mt-5">
                 @php
-                $firstServiceBox = $boxes->first(); // Get the first box in this service group
+                $firstServiceBox = $boxes->first(); 
                 @endphp
                 <h1 class="sub-title">Service: {{ $firstServiceBox->service->originBranch->branch }} ({{
                     $firstServiceBox->service->originBranch->country }}) To {{

@@ -182,7 +182,7 @@
                                         @foreach ($items as $item)
                                         <tr>
                                             <td>{{ $item['qty'] }}</td>
-                                            <td>    </td>
+                                            <td> </td>
                                             <td>{{ $item['area'] }}</td>
                                             <td>{{ $item['type'] }}</td>
                                             <td class="ltr:text-right rtl:text-left">{{ number_format($item['price'], 2)
@@ -211,7 +211,7 @@
                                     </div>
                                     <div class="flex items-center">
                                         <div class="flex-1">Discount</div>
-                                        <div class="w-[37%]">{{$details->voucher?? '0'}}</div>
+                                        <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
                                     </div>
                                     <div class="flex items-center text-lg font-semibold">
                                         <div class="flex-1">Grand Total</div>
@@ -221,11 +221,10 @@
                                 </div>
                             </div>
                         </div>
-
                     </template>
 
                     <template x-if="tab === 'details'">
-                        <div style="padding-left:30px">
+                        <div style="padding-left:30px" class="order-details-packinglist">
                             <div>
                                 <div class="text-2xl font-semibold uppercase">Packing List</div>
                                 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -238,21 +237,88 @@
                                             $item['qty']
                                             }}x {{ $item['name'] }} ({{ $item['area'] }})</h1>
                                         <h3
-                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-2">
+                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-3">
                                             Packing List:</h3>
-                                        Clothing: {{ $list[$index]['Clothing'] ?? 0 }}x<br>
-                                        Utensils: {{ $list[$index]['Utensils'] ?? 0 }}x<br>
-                                        Consumables: {{ $list[$index]['Consumables'] ?? 0 }}x<br>
-                                        Footware: {{ $list[$index]['Footware'] ?? 0 }}x<br>
-                                        Toiletries: {{ $list[$index]['Toiletries'] ?? 0 }}x<br>
-                                        Toys: {{ $list[$index]['Toys'] ?? 0 }}x<br>
-                                        Canned Goods: {{ $list[$index]['CannedGoods'] ?? 0 }}x<br>
-                                        Electronics: {{ $list[$index]['Electronics'] ?? 0 }}x<br>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr class="mt-3">
+                                                    <th>
+                                                        Name
+                                                    </th>
+                                                    <th>Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tr>
+                                                <td>
+                                                    Clothing:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Clothing'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Utensils:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Utensils'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Consumables:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Consumables'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Footware:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Footware'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Toiletries:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Toiletries'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Toys:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Toys'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Canned Goods:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['CannedGoods'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Electronics:
+                                                </td>
+                                                <td>
+                                                    {{ $list[$index]['Electronics'] ?? 0 }}x
+                                                </td>
+                                            </tr>
+
+                                        </table>
                                         <h2
-                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-1">
+                                            class="title text-[#3b3f5c] dark:text-white-light font-semibold text-[13px] mt-5">
                                             Others:</h2>
-                                        <h2>{{
-                                            $list[$index]['others'] ?? 'None' }}</h2>
+                                        <h3>{{
+                                            $list[$index]['others'] ?? 'None' }}</h3>
                                     </div>
                                     @endforeach
                                     @else
@@ -262,11 +328,92 @@
                             </div>
                         </div>
                     </template>
+
                     <template x-if="tab === 'payment'">
                         <div style="padding-left:30px">
-                            <div class="text-2xl font-semibold uppercase">Payment Status</div>
+                            <div class="text-2xl font-semibold uppercase">Payment Details</div>
+                            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
+                                <div class="w-100">
+                                    <h1 class="title  dark:text-white-light font-semibold text-[17px] mt-5">
+                                        PAYMENT PLAN</h1>
+                                    <h2 class="title  font-semibold text-[15px] mt-2">
+                                        @if($details->payment === "half")
+                                        Half Payment
+                                        @else
+                                        Full Payment
+                                        @endif
+                                    </h2>
+                                    <hr class="mt-2">
+                                    <h1 class="title  dark:text-white-light font-semibold text-[17px] mt-5">
+                                        PAYMENT STATUS</h1>
+                                    <h2 class="title  font-semibold text-[15px] mt-2">
+                                        {{$details->payment_status}}
+                                    </h2>
+                                    <hr class="mt-2">
+                                    <h1 class="title  dark:text-white-light font-semibold text-[17px] mt-5">
+                                        PAYMENT METHOD</h1>
+                                    <h2 class="title  font-semibold text-[15px] mt-2">
+                                        {{$details->method}}
+                                    </h2>
+                                    <hr class="mt-2">
+                                    @if($details->payment_reference)
+                                    <h1 class="title  dark:text-white-light font-semibold text-[17px] mt-5">
+                                        PAYMENT REFERENCE</h1>
+                                    <h2 class="title  font-semibold text-[15px] mt-2">
+                                        {{$details->payment_reference}}
+                                    </h2>
+                                    <hr class="mt-2">
+                                    @endif
+
+                                    @if($details->voucher)
+                                    <h1 class="title  dark:text-white-light font-semibold text-[17px] mt-5">
+                                        VOUCHER USED</h1>
+                                    <h2 class="title  font-semibold text-[15px] mt-2 uppercase">
+                                        {{$details->voucher}}
+                                    </h2>
+                                    <hr class="mt-2">
+                                    @endif
+                                    <div class="flex justify-between mt-5">
+                                        <h1 class="title dark:text-white-light font-semibold text-[16px] mt-1">
+                                            SUB TOTAL :</h1>
+                                        <h2 class="title text-end font-semibold text-[14px] mt-1 uppercase">
+                                            {{ number_format($details->total + 500, 2) }}
+                                        </h2>
+                                    </div>
+                                    <div class="flex justify-between mt-1">
+                                        <h1 class="title dark:text-white-light font-semibold text-[16px] mt-1">
+                                            VOUCHER DISCOUNT :</h1>
+                                        <h2 class="title text-end font-semibold text-[14px] mt-1 uppercase">
+                                            {{ number_format($details->discount, 2) }}
+                                        </h2>
+                                    </div>
+                                    <div class="flex justify-between mt-1">
+                                        <h1 class="title dark:text-white-light font-semibold text-[16px] mt-1">
+                                            BALANCE AMOUNT :</h1>
+                                        <h2 class="title text-end font-semibold text-[14px] mt-1 uppercase">
+                                            {{$details->balance}}
+                                        </h2>
+                                    </div>
+                                    <div class="flex justify-between mt-2">
+                                        <h1 style="font-size: 18px"
+                                            class="title dark:text-white-light font-semibold text-[14px] mt-1">
+                                            TOTAL AMOUNT :</h1>
+                                        <h2 style="font-size: 18px"
+                                            class="title text-end font-semibold text-[16px] mt-1 uppercase">
+                                            {{$details->total}}
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos dolore nam nemo.
+                                        Corrupti beatae veritatis minima voluptatibus. Perferendis, architecto. Voluptas
+                                        commodi ab non iure aliquam quisquam autem suscipit exercitationem delectus?
+                                    </h1>
+                                </div>
+                            </div>
                         </div>
                     </template>
+
                     <template x-if="tab === 'status'">
                         <div style="padding-left:30px">
                             <div class="text-2xl font-semibold uppercase">Order Status</div>
@@ -274,7 +421,6 @@
                                 <div class="max-w-[900px]">
                                     @foreach ($statuses as $index => $statusEntry)
                                     <div class="flex">
-                                        <!-- Time -->
                                         <p style="min-width: 100px"
                                             class="text-[#3b3f5c] dark:text-white-light min-w-[58px] max-w-[100px] text-base font-semibold py-2.5">
                                             {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->format('h:i A') }}
@@ -285,45 +431,32 @@
                                         </div>
 
                                         <div class="p-2.5 self-center ltr:ml-2.5 rtl:ltr:mr-2.5 rtl:ml-2.5">
-                                            <!-- Date -->
                                             <p>{{ \Carbon\Carbon::parse($statusEntry['timestamp'])->format('F j, Y') }}
                                             </p>
-
-                                            <!-- Status -->
                                             <p class="text-[#3b3f5c] dark:text-white-light font-semibold text-[13px]"
                                                 style="text-transform:capitalize;">
                                                 Status: {{ $statusEntry['status'] }}
                                             </p>
-
-                                            <!-- Logs -->
                                             <p class="{{ Str::contains($statusEntry['logs'], 'Edited By:' ) ? 'text-warning'
                                                 : 'text-[#3b3f5c] dark:text-white-light' }}">{{ $statusEntry['logs'] }}
                                             </p>
-
-                                            <!-- Time since -->
                                             <p
                                                 class="status-time text-white-dark text-xs font-bold self-center min-w-[100px] max-w-[100px]">
                                                 {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->diffForHumans() }}
                                             </p>
-
-                                            <!-- Edit Button -->
                                             <button type="button" class="edit-btn my-2"
                                                 style="text-decoration: underline"
                                                 onclick="showEditForm({{ $loop->index }})">Edit Status</button>
-
-                                            <!-- Hidden Edit Form -->
                                             <form id="editForm{{ $loop->index }}"
                                                 action="{{ route('statuses.edit', ['order' => $details->id, 'index' => $loop->index]) }}"
                                                 method="POST" style="display: none;">
                                                 @csrf
                                                 @method('PUT')
-
-                                                <!-- Editable Status -->
                                                 <select id="status" name="status" class="form-input flex-1">
                                                     <option value="{{ $statusEntry['status'] }}" selected>{{
                                                         $statusEntry['status'] }}</option>
                                                     <option value="To Deliver Cargo Box">To Deliver Cargo Box</option>
-                                                    <option value="To Pickup">To Pickup</option>
+                                                    <option value="To Pickup">To Pickup</optio n>
                                                     <option value="In Warehouse">In Warehouse</option>
                                                     <option value="In Transit To">In Transit To</option>
                                                     <option value="Cargo Is Loaded In The Container">Cargo Is Loaded In
@@ -340,7 +473,6 @@
                                                     <option value="On The Way">On The Way</option>
                                                     <option value="Delivered">Delivered</option>
                                                 </select>
-                                                <!-- Editable Logs -->
                                                 <button type="submit" class="badge badge-outline-success">Save</button>
                                                 <button type="button" class="badge badge-outline-danger"
                                                     onclick="hideEditForm({{ $loop->index }})">Cancel</button>
@@ -348,23 +480,9 @@
                                         </div>
                                     </div>
                                     @endforeach
-
-                                    <script>
-                                        function showEditForm(index) {
-                                            document.getElementById('editForm' + index).style.display = 'block';
-                                        }
-                                    
-                                        function hideEditForm(index) {
-                                            document.getElementById('editForm' + index).style.display = 'none';
-                                        }
-                                    </script>
-
-
-
                                 </div>
                                 <div>
-                                    <!-- Form to add a new status -->
-                                    @if ($details->state === "pending")
+                                    @if ($details->state === "pending" || $details->state === "Processing")
                                     <form action="{{ route('updateStatus')}}" method="POST">
                                         @csrf
                                         <input class="form-input flex-1" type="hidden" name="id"
@@ -394,13 +512,12 @@
                                             style="width:100%">Add
                                             Status</button>
                                     </form>
-
                                     @endif
                                 </div>
                             </div>
                         </div>
-
                     </template>
+
                 </div>
             </div>
         </div>
@@ -413,36 +530,12 @@
         localStorage.setItem('activeTab', tab);
         this.tab = tab;     
     }
+    function showEditForm(index) {
+        document.getElementById('editForm' + index).style.display = 'block';
+    }
+    function hideEditForm(index) {
+        document.getElementById('editForm' + index).style.display = 'none';
+    }
 </script>
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get the last selected tab from local storage
-        const lastTab = localStorage.getItem('selectedTab') || 'overall';
-
-        // Set the active tab class based on the last selected tab
-        document.querySelectorAll('a').forEach(link => {
-            if (link.id === lastTab + 'Tab') {
-                link.classList.add('text-secondary');
-                link.classList.add('before:!h-[80%]');
-            }
-        });
-
-        // Function to update the selected tab
-        window.selectTab = function(tab) {
-            localStorage.setItem('selectedTab', tab);
-            // Update active tab style
-            document.querySelectorAll('a').forEach(link => {
-                link.classList.remove('text-secondary', 'before:!h-[80%]');
-            });
-            const selectedLink = document.getElementById(tab + 'Tab');
-            selectedLink.classList.add('text-secondary');
-            selectedLink.classList.add('before:!h-[80%]');
-            console.log('Last Tab:', lastTab);
-            console.log('Selected Tab:', tab);
-        };
-     
-
-    });
-</script> --}}
 
 @endsection

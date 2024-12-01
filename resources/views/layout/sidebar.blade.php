@@ -161,6 +161,13 @@
                             <a href="{{route('allorders')}}"
                                 class="{{ Route::currentRouteName() == 'allorders' ? 'active' : '' }}">All
                                 Orders</a>
+                            <a href="{{route('pendingorders')}}"
+                                class="{{ Route::currentRouteName() == 'pendingorders' ? 'active' : '' }}">Processing
+                                Orders</a>
+                            <a href="{{route('outfordelivery')}}"
+                                class="{{ Route::currentRouteName() == 'outfordelivery' ? 'active' : '' }}">Out for
+                                Delivery
+                            </a>
                         </li>
 
                     </ul>

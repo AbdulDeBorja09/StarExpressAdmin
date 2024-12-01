@@ -18,7 +18,7 @@ use Laravel\Ui\Presets\Vue;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 
-class GlobalController extends Controller
+class OrdersController extends Controller
 {
     public function allorders(Request $request)
     {
@@ -31,36 +31,53 @@ class GlobalController extends Controller
         $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
-
-
-        return view('global.vieworders', compact('orders', 'perPage', 'currentPage'));
+        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
     }
+    public function pendingorders(Request $request)
+    {
+        $id = Auth::id();
+        $user = User::where('id', $id)->first();
+        $role = $user->type;
+        $branchid = $user->branch_id;
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('state', "Processing")
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
+    }
+    public function outfordelivery(Request $request)
+    {
+        $id = Auth::id();
+        $user = User::where('id', $id)->first();
+        $role = $user->type;
+        $branchid = $user->branch_id;
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('state', "OutForDelivery")
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+        return view('global.outfordelivery', compact('orders', 'perPage', 'currentPage'));
+    }
+
     public function orderdetails($reference_number)
     {
-
-
         $details = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('reference_number', $reference_number)->first();
         $statuses = json_decode($details->status, true);
-
         $items = json_decode($details->items, true);
-
         $list = json_decode($details->packing_list, true);
         return view('global.orderdetails', compact('details', 'statuses', 'items', 'list'));
     }
 
     public function updateStatus(Request $request)
     {
-        // Validate the input
+
         $request->validate([
             'status' => 'required|string',
             'location' => 'nullable|string',
         ]);
-
-
-
         $status = implode(' ', [$request->status, $request->location ?? '',]);
         $id = $request->id;
-        // Find the order
         $order = Orders::find($id);
         $id = Auth::id();
         $user = User::where('id', $id)->first();
@@ -71,6 +88,10 @@ class GlobalController extends Controller
                 $order->update([
                     'state' => "ReadyForDelivery",
                 ]);
+            } else {
+                $order->update([
+                    'state' => "Processing",
+                ]);
             }
             $newStatusWithTimestamp = [
                 'status' => $status,
@@ -80,36 +101,27 @@ class GlobalController extends Controller
 
             $existingStatuses = $order->status ? json_decode($order->status, true) : [];
             $existingStatuses[] = $newStatusWithTimestamp;
-
             $order->status = json_encode($existingStatuses);
             $order->save();
-
             return redirect()->back()->with('success', 'Order status updated successfully!');
         } else {
             return redirect()->back()->with('error', 'Order not found.');
         }
     }
+
     public function editStatus(Request $request, $orderId, $index)
     {
-        // Find the order
         $order = Orders::find($orderId);
         $user = Auth::user();
 
         if ($order) {
-            // Get existing statuses
             $statuses = $order->status ? json_decode($order->status, true) : [];
-
-            // Check if the index exists
             if (isset($statuses[$index])) {
-                // Update the specific status
                 $statuses[$index]['status'] = implode(' ', [$request->status, $request->location ?? '']);
                 $statuses[$index]['logs'] = 'Edited By: ' . $user->lname . ', ' . $user->fname;
-                $statuses[$index]['timestamp'] = now()->toDateTimeString(); // Optional: You could allow timestamp editing if needed
-
-                // Save the updated statuses back to the order
+                $statuses[$index]['timestamp'] = now()->toDateTimeString();
                 $order->status = json_encode($statuses);
                 $order->save();
-
                 return redirect()->back()->with('success', 'Order status updated successfully!');
             } else {
                 return redirect()->back()->with('error', 'Status not found.');

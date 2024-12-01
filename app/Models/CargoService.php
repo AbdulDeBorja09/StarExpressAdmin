@@ -11,17 +11,17 @@ class CargoService extends Model
     protected $fillable = [
         'origin',
         'destination',
-        'active',
+        'status',
     ];
 
     public function originBranch()
     {
-        return $this->belongsTo(Branches::class, 'origin'); 
+        return $this->belongsTo(Branches::class, 'origin');
     }
 
     public function destinationBranch()
     {
-        return $this->belongsTo(Branches::class, 'destination'); 
+        return $this->belongsTo(Branches::class, 'destination');
     }
     use HasFactory;
 }

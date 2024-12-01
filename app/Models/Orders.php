@@ -14,9 +14,11 @@ class Orders extends Model
         'reference_number',
         'items',
         'note',
+        'sender_email',
         'sender_name',
         'sender_number',
         'sender_address',
+        'receiver_email',
         'receiver_name',
         'receiver_number',
         'receiver_address',
@@ -27,9 +29,13 @@ class Orders extends Model
         'payment',
         'method',
         'voucher',
+        'discount',
         'status',
         'state',
         'total',
+        'balance',
+        'latitude',
+        'longitude',
     ];
     public function cargoService()
     {

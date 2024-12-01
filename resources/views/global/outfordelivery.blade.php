@@ -25,7 +25,7 @@
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
             <div class="table-responsive">
-                <table class="orders-table table table-bordered">
+                <table class="orders-table table table-bordered" style="text-transform: capitalize">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -50,9 +50,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>{{ $order->reference_number }}</td>
-                            <td></td>
-                            <td></td>
-                            <td style="text-transform:capitalize;">{{ $latestStatus }}</td>
+                            <td>{{ $order->cargoService->originBranch->branch ??
+                                'N/A' }}, {{
+                                $order->cargoService->originBranch->country ?? '' }}</td>
+                            <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
+                            <td>{{ $latestStatus }}</td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
                                     <a href="{{ url('details/' . $order->reference_number) }}"
@@ -70,7 +72,6 @@
                                 </div>
                             </td>
                         </tr>
-
                         @endforeach
                     </tbody>
                 </table>
@@ -153,82 +154,7 @@
                 </div>
             </form>
         </div>
-        {{-- <div class="panel">
-            <h1>Orders</h1>
-
-            <div id="orders">
-                @foreach($orders as $order)
-                <div class="order" draggable="true" ondragstart="drag(event)">
-                    {{ $order->order_name }} (Sender: {{ $order->sender_name }})
-                </div>
-                @endforeach
-            </div>
-
-            <div id="submitted-orders" ondragover="allowDrop(event)" ondrop="drop(event)">
-                <p>Drag orders here</p>
-            </div>
-
-            <button onclick="submitOrders()">Submit</button>
-
-            <script>
-                function allowDrop(event) {
-                    event.preventDefault();
-                }
-        
-                function drag(event) {
-                    event.dataTransfer.setData("text", event.target.innerText);
-                    event.dataTransfer.setData("id", event.target.dataset.id); // Store the order ID if needed
-                }
-        
-                function drop(event) {
-                    event.preventDefault();
-                    const orderText = event.dataTransfer.getData("text");
-                    const ordersList = document.getElementById('orders');
-                    const orderElements = ordersList.getElementsByClassName('order');
-        
-                    // Find and remove the dragged order from the orders list
-                    for (let i = 0; i < orderElements.length; i++) {
-                        if (orderElements[i].innerText === orderText) {
-                            ordersList.removeChild(orderElements[i]); // Remove the order from the list
-                            break;
-                        }
-                    }
-        
-                    // Create a new order element for the submitted orders
-                    const newOrder = document.createElement("div");
-                    newOrder.className = "order";
-                    newOrder.innerText = orderText;
-                    newOrder.setAttribute("draggable", "true");
-                    newOrder.setAttribute("ondragstart", "drag(event)");
-                    document.getElementById("submitted-orders").appendChild(newOrder);
-                }
-        
-                function submitOrders() {
-                    const submittedOrders = Array.from(document.querySelectorAll('#submitted-orders .order')).map(order => order.innerText);
-                    fetch('', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ orders: submittedOrders })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Orders submitted successfully!');
-                            location.reload(); // Reload the page to reset the orders
-                        } else {
-                            alert('Error submitting orders.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-            </script>
-        </div> --}}
     </div>
-
-
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -241,20 +167,16 @@
             tableRows.forEach(row => {
                 const cells = row.getElementsByTagName('td');
                 let found = false;
-
-                // Loop through the cells in each row
-                for (let i = 1; i < cells.length; i++) { // Start from index 1 to skip the index column
+                for (let i = 1; i < cells.length; i++) { 
                     const cell = cells[i];
                     if (cell) {
                         const textValue = cell.textContent || cell.innerText;
                         if (textValue.toLowerCase().indexOf(filter) > -1) {
                             found = true;
-                            break; // Stop searching if a match is found
+                            break; 
                         }
                     }
                 }
-
-                // Toggle the row's visibility
                 if (found) {
                     row.style.display = "";
                 } else {
