@@ -20,7 +20,7 @@
         </li>
     </ol>
     <div>
-        <div class="mt-5" x-data="sales">
+        <div class="mt-5">
             <div class="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
                 <!-- Users Visit -->
                 <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
@@ -238,20 +238,29 @@
             </div>
 
             <div class="mb-6 grid gap-6 xl:grid-cols-3" x-data="chart">
-                {{-- <div class="panel xl:col-span-2">
-                    <div class=" mb-5 flex items-center justify-between">
-                        <h5 class="text-lg font-semibold dark:text-white">Website Visit Analytics</h5><br>
 
+                {{-- <div class="panel h-full">
+                    <div class="mb-5 flex justify-center">
+                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
                     </div>
-                    <h5 class="text-lg font-semibold dark:text-white">Total: {{ number_format(array_sum($data)) }}</h5>
-                    <div x-ref="areaChart" class="bg-white dark:bg-black rounded-lg mr-3"></div>
+                    <div class="overflow-hidden">
+                        <div x-ref="suspendeds" class="rounded-lg bg-white dark:bg-black">
+                            <!-- loader -->
+                            <div
+                                class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                                <span
+                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div> --}}
+
                 <div class="panel h-full">
                     <div class="mb-5 flex justify-center">
                         <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
                     </div>
                     <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
+                        <div x-ref="suspendeds" class="rounded-lg bg-white dark:bg-black">
                             <!-- loader -->
                             <div
                                 class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
@@ -263,25 +272,10 @@
                 </div>
                 <div class="panel h-full">
                     <div class="mb-5 flex justify-center">
-                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
+                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Employees Accounts</h5>
                     </div>
                     <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
-                            <!-- loader -->
-                            <div
-                                class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                <span
-                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel h-full">
-                    <div class="mb-5 flex justify-center">
-                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
-                    </div>
-                    <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
+                        <div x-ref="employees" class="rounded-lg bg-white dark:bg-black">
                             <!-- loader -->
                             <div
                                 class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
@@ -294,7 +288,7 @@
             </div>
 
             <div class="mb-6 grid gap-6 xl:grid-cols-1" x-data="chart">
-                <div class="panel xl:col-span-2">
+                <div class="panel xl:col-span-2 ">
                     <div class=" mb-5 flex items-center justify-between">
                         <h5 class="text-lg font-semibold dark:text-white">Website Visit Analytics</h5><br>
 
@@ -310,11 +304,7 @@
 </div>
 <script>
     document.addEventListener('alpine:init', () => {
-                // main section
-               
-        
                 Alpine.data('chart', () => ({
-                    // highlightjs
                     codeArr: [],
                     toggleCode(name) {
                         if (this.codeArr.includes(name)) {
@@ -329,22 +319,25 @@
                             });
                         }
                     },
-        
-                    
+    
                     areaChart: null,
-                    salesByCategory = null,
-        
                     init() {
                         isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
                         isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
-        
                         setTimeout(() => {
-                            let areaChart = new ApexCharts(this.$refs.areaChart, this.areaChartOptions);
-                            areaChart.render();
+                           
+        
+                            this.areaChart = new ApexCharts(this.$refs.areaChart, this.areaChartOptions);
+                            this.areaChart.render();
 
-                            this.salesByCategory = new ApexCharts(this.$refs.salesByCategory, this.salesByCategoryOptions);
-                            this.$refs.salesByCategory.innerHTML = '';
-                            this.salesByCategory.render();
+
+                            this.suspendeds = new ApexCharts(this.$refs.suspendeds, this.suspendedsOptions);
+                            this.$refs.suspendeds.innerHTML = '';
+                            this.suspendeds.render();
+
+                            this.employees = new ApexCharts(this.$refs.employees, this.EmployeesOptions);
+                            this.$refs.employees.innerHTML = '';
+                            this.employees.render();
                         }, 300);
         
                         this.$watch('$store.app.theme', () => {
@@ -359,12 +352,12 @@
                     refreshOptions() {
                         isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
                         isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
+                 
                         this.areaChart.updateOptions(this.areaChartOptions);
-                        this.salesByCategory.updateOptions(this.salesByCategory);
-                        
+                        this.suspendeds.updateOptions(this.suspendedsOptions);
+                        this.employees.updateOptions(this.EmployeesOptions);
                     },
-        
-                    
+
                     get areaChartOptions() {
                         const rawData = @json($data);
                         const data = rawData.map(value => Math.round(value)); 
@@ -419,10 +412,12 @@
                             }
                         }
                     },
-                  
-                    get salesByCategoryOptions() {
+                       
+
+                    get suspendedsOptions() {
+                        const data = @json($totalsuspendeds);
                         return {
-                            series: [1, 0, 5],
+                            series: data,
                             chart: {
                                 type: 'donut',
                                 height: 460,
@@ -485,7 +480,91 @@
                                     },
                                 },
                             },
-                            labels: ['New Orders', 'Processing', 'To Deliver'],
+                            labels: ['Customer', 'Employee', 'Drivers'],
+                            states: {
+                                hover: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                                active: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                            },
+                        };
+                    },
+
+                    get EmployeesOptions() {
+                        const datas = @json($totalemployees);
+                        return {
+                            series: datas,
+                            chart: {
+                                type: 'donut',
+                                height: 460,
+                                fontFamily: 'Nunito, sans-serif',
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            stroke: {
+                                show: true,
+                                width: 25,
+                                colors: isDark ? '#0e1726' : '#fff',
+                            },
+                            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#00ab55'] : ['#e2a03f', '#5c1ac3', '#e7515a', '#00ab55'],
+                            legend: {
+                                position: 'bottom',
+                                horizontalAlign: 'center',
+                                fontSize: '14px',
+                                markers: {
+                                    width: 10,
+                                    height: 10,
+                                    offsetX: -2,
+                                },
+                                height: 50,
+                                offsetY: 20,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '65%',
+                                        background: 'transparent',
+                                        labels: {
+                                            show: true,
+                                            name: {
+                                                show: true,
+                                                fontSize: '29px',
+                                                offsetY: -10,
+                                            },
+                                            value: {
+                                                show: true,
+                                                fontSize: '26px',
+                                                color: isDark ? '#bfc9d4' : undefined,
+                                                offsetY: 16,
+                                                formatter: (val) => {
+                                                    return val;
+                                                },
+                                            },
+                                            total: {
+                                                show: true,
+                                                label: 'Total',
+                                                color: '#888ea8',
+                                                fontSize: '29px',
+                                                formatter: (w) => {
+                                                    return w.globals.seriesTotals.reduce(function (a, b) {
+                                                        return a + b;
+                                                    }, 0);
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            labels: ['Human Resource', 'Accountant', 'Service Manager', 'Drivers'],
                             states: {
                                 hover: {
                                     filter: {

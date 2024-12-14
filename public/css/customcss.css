@@ -1,3 +1,7 @@
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #707070 #f8f9fa;
+}
 .truck-table tr th:first-child {
     width: 10px;
 }
@@ -89,4 +93,12 @@
 .order-details-packinglist h6 {
     margin-top: 10px;
     font-size: 18px;
+}
+.employee-counts {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.employee-counts h5 {
+    margin-top: 10px;
 }

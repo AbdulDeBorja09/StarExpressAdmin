@@ -7,7 +7,16 @@ use App\Models\TruckDriver;
 use App\Models\Branches;
 use Illuminate\View\View;
 use App\Models\User;
+use App\Models\Customer;
+use App\Models\CustomerVisits;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SuspensionMail;
+use App\Mail\DeleteAccountMail;
+use App\Models\Orders;
+use App\Models\Suspendeds;
+use Illuminate\Contracts\Concurrency\Driver;
+use Illuminate\Support\Facades\Auth;
 
 class HrController extends Controller
 {
@@ -17,6 +26,12 @@ class HrController extends Controller
         $employees = User::with('branch')->get();
 
         return view('Humanresources.displayemployee', compact('employees'));
+    }
+    public function allDriver(): View
+    {
+
+        $employees = TruckDriver::with('branch')->get();
+        return view('Humanresources.displaydrivers', compact('employees'));
     }
     public function addEmployees(): View
     {
@@ -190,5 +205,220 @@ class HrController extends Controller
         } else {
             return redirect()->back()->withErrors(['confirm-password' => 'Passwords do not match.']);
         }
+    }
+    public function allcustomer(Request $request)
+    {
+
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $customer = Customer::orderby('created_at', 'desc')->paginate($perPage);
+        foreach ($customer as $item) {
+            $item->order_count = Orders::where('user_id', $item->id)
+                ->count();
+        }
+
+        return view('Humanresources.allcustomer', compact('customer', 'perPage'));
+    }
+    public function customervisit(Request $request)
+    {
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $visits = CustomerVisits::orderby('visited_at', 'desc')->paginate($perPage);
+        return view('Humanresources.websitevisits', compact('visits', 'perPage'));
+    }
+    public function showsuspendeduser(Request $request)
+    {
+        $label = 'Customer';
+        $user = Auth::user();
+        $role = $user->type;
+        $userbranch = $user->branch_id;
+
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $users = Suspendeds::where('user_type', 'user')->where('status', 0)->orderby('created_at', 'desc')->paginate($perPage);
+        return view('Humanresources.suspendedusers', compact('users', 'perPage', 'label'));
+    }
+    public function showsuspenddriver(Request $request)
+    {
+        $label = 'Driver';
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $user = Auth::user();
+        $role = $user->type;
+        $userbranch = $user->branch_id;
+        if ($role === 'admin') {
+            $users = Suspendeds::where('user_type', 'driver')->where('status', 0)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedusers', compact('users', 'perPage', 'label'));
+        } else {
+            $users = Suspendeds::where('branch_id', $userbranch)->where('user_type', 'driver')->where('status', 0)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedusers', compact('users', 'perPage', 'label'));
+        }
+    }
+    public function showsuspendemployee(Request $request)
+    {
+        $label = 'Employee';
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $user = Auth::user();
+        $role = $user->type;
+        $userbranch = $user->branch_id;
+        if ($role === 'admin') {
+            $users = Suspendeds::where('user_type', 'employee')->where('status', 0)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedusers', compact('users', 'perPage', 'label'));
+        } else {
+            $users = Suspendeds::where('branch_id', $userbranch)->where('user_type', 'employee')->where('status', 0)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedusers', compact('users', 'perPage', 'label'));
+        }
+    }
+    public function susppensionuserhistory(Request $request)
+    {
+        $label = 'User';
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $users = Suspendeds::where('user_type', 'user')->where('status', 1)->orderby('created_at', 'desc')->paginate($perPage);
+        return view('Humanresources.suspendedhistory', compact('users', 'perPage', 'label'));
+    }
+    public function susppensionemployeehistory(Request $request)
+    {
+        $label = 'Employee';
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $user = Auth::user();
+        $role = $user->type;
+        $userbranch = $user->branch_id;
+
+        if ($role === 'admin') {
+            $users = Suspendeds::where('user_type', 'employee')->where('status', 1)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedhistory', compact('users', 'perPage', 'label'));
+        } else {
+            $users = Suspendeds::where('branch_id', $userbranch)->where('user_type', 'employee')->where('status', 1)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedhistory', compact('users', 'perPage', 'label'));
+        }
+    }
+    public function susppensiondriverhistory(Request $request)
+    {
+        $label = 'Driver';
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $user = Auth::user();
+        $role = $user->type;
+        $userbranch = $user->branch_id;
+
+        if ($role === 'admin') {
+            $users = Suspendeds::where('user_type', 'driver')->where('status', 1)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedhistory', compact('users', 'perPage', 'label'));
+        } else {
+            $users = Suspendeds::where('branch_id', $userbranch)->where('user_type', 'driver')->where('status', 1)->orderby('created_at', 'desc')->paginate($perPage);
+            return view('Humanresources.suspendedhistory', compact('users', 'perPage', 'label'));
+        }
+    }
+    public function suspend(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+                'email' => 'required|email',
+                'reason' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
+                'type' => 'required|in:driver,employee,user',
+            ]);
+
+            switch ($request->type) {
+                case 'driver':
+                    TruckDriver::where('id', $request->id)->update(['status' => 'suspended']);
+                    break;
+
+                case 'employee':
+                    User::where('id', $request->id)->update(['status' => 'suspended']);
+                    break;
+
+                case 'user':
+                    Customer::where('id', $request->id)->update(['status' => 'suspended']);
+                    break;
+
+                default:
+                    return back()->withErrors(['error' => 'Invalid user type.']);
+            }
+            $details = [
+                'name' => $request->name,
+                'reason' => $request->reason,
+            ];
+
+            $isSuspended = Suspendeds::where('user_id', $request->id)
+                ->where('user_type', $request->type)
+                ->exists();
+
+            Suspendeds::create([
+                'user_id' => $request->id,
+                'email' => $request->email,
+                'user_type' => $request->type,
+                'reason' => $request->reason,
+            ]);
+            Mail::to($request->email)->send(new SuspensionMail($details));
+
+            return back()->with('success', 'User suspended successfully and email sent.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+        }
+    }
+
+
+    public function liftusersuspend(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'user_id' => 'required',
+            'type' => 'required|in:driver,employee,user',
+        ]);
+
+        Suspendeds::where('id',  $request->id)->update([
+            'status' => 1,
+        ]);
+        switch ($request->type) {
+            case 'driver':
+                TruckDriver::where('id', $request->user_id)->update(['status' => 'active']);
+                break;
+
+            case 'employee':
+                User::where('id', $request->user_id)->update(['status' => 'active']);
+                break;
+
+            case 'user':
+                Customer::where('id', $request->user_id)->update(['status' => 'active']);
+                break;
+
+            default:
+                return back()->withErrors(['error' => 'Invalid user type.']);
+        }
+
+
+        return back()->with('success', 'User lifted suspended successfully and email sent.');
+    }
+
+
+    public function deleteuseraccount(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        $user = Customer::where('id',  $request->user_id)->first();
+        $reason = Suspendeds::where('id',  $request->id)->first();
+
+        $details = [
+            'name' => $user->name,
+            'reason' => $reason->reason
+        ];
+        Mail::to($user->email)->send(new DeleteAccountMail($details));
+        Suspendeds::where('id',  $request->id)->update([
+            'status' => 1,
+        ]);
+        Customer::where('id',  $request->user_id)->delete();
+        return redirect()->route('showsuspendeduser');
     }
 }

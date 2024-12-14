@@ -7,14 +7,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="icon" type="image/x-icon" href="favicon.png">
-    <link href="{{asset('/font/css2.css')}}" rel="stylesheet">
+    {{--
+    <link href="{{asset('/font/css2.css')}}" rel="stylesheet"> --}}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/customcss.css')}}">
     <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/style.css')}}">
     <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/perfect-scrollbar.min.css')}}">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/animate.css')}}">
+    <link defer="" rel="stylesheet" type="text/css" media="screen" href="{{asset('/css/animate.css')}}">
     <script src="{{asset('/js/perfect-scrollbar.min.js')}}"></script>
-    <script src="{{asset('/js/popper.min.js')}}"></script>
-    <script src="{{asset('/js/tippy-bundle.umd.min.js')}}"></script>
-    <script src="{{asset('/js/sweetalert.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/popper.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/tippy-bundle.umd.min.js')}}"></script>
+    <script defer="" src="{{asset('/js/sweetalert.min.js')}}"></script>
 
 
 </head>

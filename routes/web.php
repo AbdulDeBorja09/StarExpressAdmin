@@ -10,7 +10,10 @@ use App\Http\Controllers\ServiceManagerController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TruckController;
+use App\Http\Controllers\NotificationController;
+
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -63,6 +66,8 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/areas/{locationID}', [ServiceManagerController::class, 'getAreas']);
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
     Route::get('/Delivery/Packages/{id}', [ServiceManagerController::class, 'DeliveryDetails'])->name('DeliveryDetails');
+    Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
+
 
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');
     Route::post('/Cargo_locations/add_region', [ServiceManagerController::class, 'addregion'])->name('addregion');
@@ -94,15 +99,28 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
 
 // Human Resoureces
 Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(function () {
+    Route::get('/HumanResource', [DashboardController::class, 'humanresourceHome'])->name('humanresourcehome.home');
     Route::get('/Employees', [HrController::class, 'allEmployees'])->name('allEmployees');
     Route::get('/Employees/add', [HrController::class, 'addEmployees'])->name('addEmployees');
+    Route::get('/Drivers', [HrController::class, 'allDriver'])->name('allDriver');
     Route::get('/Driver/add', [HrController::class, 'truckdriveradd'])->name('truckdriveradd');
+    Route::get('/Customer/All', [HrController::class, 'allcustomer'])->name('allcustomer');
+    Route::get('/Customer/Visits', [HrController::class, 'customervisit'])->name('customervisit');
+    Route::get('/Suspended/Users', [HrController::class, 'showsuspendeduser'])->name('showsuspendeduser');
+    Route::get('/Suspended/Driver', [HrController::class, 'showsuspenddriver'])->name('showsuspenddriver');
+    Route::get('/Suspended/Employee', [HrController::class, 'showsuspendemployee'])->name('showsuspendemployee');
+    Route::get('/Suspended/History/User', [HrController::class, 'susppensionuserhistory'])->name('susppensionuserhistory');
+    Route::get('/Suspended/History/Employee', [HrController::class, 'susppensionemployeehistory'])->name('susppensionemployeehistory');
+    Route::get('/Suspended/History/Driver', [HrController::class, 'susppensiondriverhistory'])->name('susppensiondriverhistory');
+
+    Route::post('/Suspend', [HrController::class, 'suspend'])->name('suspend');
+    Route::post('/Suspended/User/Delete', [HrController::class, 'deleteuseraccount'])->name('deleteuseraccount');
+    Route::post('/Suspended/User/Lift', [HrController::class, 'liftusersuspend'])->name('liftusersuspend');
 
     Route::post('/Driver/add', [HrController::class, 'submitadddriver'])->name('submitadddriver');
     Route::post('/Employees/add', [HrController::class, 'submitaddEmployees'])->name('submitaddEmployees');
     Route::post('/Employees/delete', [HrController::class, 'deleteemployee'])->name('deleteemployee');
 });
-
 
 
 
@@ -112,13 +130,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|acc
     Route::get('/AllOrders', [OrdersController::class, 'allorders'])->name('allorders');
     Route::get('/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
     Route::get('/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
-
-
-
-
-
-
-
+    Route::get('/NewOrders', [OrdersController::class, 'neworders'])->name('neworders');
     Route::get('/Chat', [ChatController::class, 'chatpage'])->name('chatpage');
 });
 
@@ -127,3 +139,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
     Route::post('/chat/send', [ChatController::class, 'sendMessage']);
 });
+
+
+
+Route::middleware('auth')->get('/notifications', [NotificationController::class, 'getNotifications']);
+Route::middleware('auth')->put('/notifications/{notificationId}/read', [NotificationController::class, 'markAsRead']);

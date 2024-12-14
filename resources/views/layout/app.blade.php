@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    {{--
+    {{-- 
     <link rel="icon" type="image/x-icon" href="favicon.png"> --}}
 
 
@@ -26,6 +26,13 @@
     <script defer="" src="{{asset('/js/popper.min.js')}}"></script>
     <script defer="" src="{{asset('/js/tippy-bundle.umd.min.js')}}"></script>
     <script defer="" src="{{asset('/js/sweetalert.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pusher-js@7.0.3/dist/web/pusher.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.3/dist/echo.iife.min.js"></script>
+
+
+    @vite('resources/js/app.js')
 
 </head>
 
@@ -34,6 +41,7 @@
     <!-- sidebar menu overlay -->
     <div x-cloak="" class="fixed inset-0 z-50 bg-[black]/60 lg:hidden" :class="{'hidden' : !$store.app.sidebar}"
         @click="$store.app.toggleSidebar()"></div>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
     <!-- screen loader -->
     <div

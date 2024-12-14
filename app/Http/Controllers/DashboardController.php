@@ -13,9 +13,9 @@ use \App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class AdminController extends Controller
+class DashboardController extends Controller
 {
-    public function adminHome(): View
+    public function humanresourceHome(): View
     {
 
         $hr = User::where('type', 'hr')->count();
@@ -56,45 +56,25 @@ class AdminController extends Controller
         }
 
 
+        $user = Customer::where('status', 'suspended')->count();
+        $employee = User::where('status', 'suspended')->count();
+        $driver = TruckDriver::where('status', 'suspended')->count();
 
-        return view('dashboard.admin', compact('hr', 'accountant', 'servicemanager', 'driver', 'data', 'months', 'users', 'suspendeduser', 'suspendedemployee'));
-    }
+        $totalsuspended = [
+            'customer' => $user,
+            'employee' => $employee,
+            'driver' => $driver,
+        ];
 
-    public function accountantHome(): View
-    {
-        return view('dashboard.accountant');
-    }
+        $totalemployee = [
+            'hr' => $hr,
+            'accountant' => $accountant,
+            'servicemanager' => $servicemanager,
+            'driver' => $driver,
+        ];
 
-    public function servicemanagerHome(): View
-    {
-        $currentDate = Carbon::now();
-        $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
-        $endDate = $currentDate->copy()->endOfMonth();
-
-        $monthlyTotals = DB::table('sales')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_ammount) as total')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-            ->get();
-
-        $months = [];
-        $data = [];
-
-        for ($i = 0; $i <= 12; $i++) {
-            $month = $startDate->copy()->addMonths($i);
-            $months[] = $month->format('M Y');
-            $data[] = 0;
-        }
-
-        foreach ($monthlyTotals as $monthly) {
-            $monthLabel = Carbon::create($monthly->year, $monthly->month, 1)->format('M Y');
-            $index = array_search($monthLabel, $months);
-            if ($index !== false) {
-                $data[$index] = $monthly->total;
-            }
-        }
-
-        return view('dashboard.servicemanager', compact('data', 'months'));
+        $totalsuspendeds = array_values($totalsuspended);
+        $totalemployees = array_values($totalemployee);
+        return view('dashboard.humanresource', compact('hr', 'accountant', 'servicemanager', 'driver', 'data', 'months', 'users', 'suspendeduser', 'suspendedemployee', 'totalsuspendeds', 'totalemployees'));
     }
 }

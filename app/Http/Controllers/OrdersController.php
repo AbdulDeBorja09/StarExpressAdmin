@@ -20,44 +20,41 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class OrdersController extends Controller
 {
+    private function fetchOrders(Request $request, ?string $state)
+    {
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $query = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
+            ->orderBy('created_at', 'desc');
+
+        if ($state) {
+            $query->where('state', $state);
+        }
+
+        $orders = $query->paginate($perPage);
+
+        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
+    }
+
     public function allorders(Request $request)
     {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
-        $role = $user->type;
-        $branchid = $user->branch_id;
-        $perPage = $request->input('perPage', 20);
-        $currentPage = $request->input('page', 1);
-        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
-        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
+        return $this->fetchOrders($request, null);
     }
+
     public function pendingorders(Request $request)
     {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
-        $role = $user->type;
-        $branchid = $user->branch_id;
-        $perPage = $request->input('perPage', 20);
-        $currentPage = $request->input('page', 1);
-        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('state', "Processing")
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
-        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
+        return $this->fetchOrders($request, "Processing");
     }
+
     public function outfordelivery(Request $request)
     {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
-        $role = $user->type;
-        $branchid = $user->branch_id;
-        $perPage = $request->input('perPage', 20);
-        $currentPage = $request->input('page', 1);
-        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('state', "OutForDelivery")
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
-        return view('global.outfordelivery', compact('orders', 'perPage', 'currentPage'));
+        return $this->fetchOrders($request, "OutForDelivery");
+    }
+
+    public function neworders(Request $request)
+    {
+        return $this->fetchOrders($request, "pending");
     }
 
     public function orderdetails($reference_number)
@@ -66,7 +63,9 @@ class OrdersController extends Controller
         $statuses = json_decode($details->status, true);
         $items = json_decode($details->items, true);
         $list = json_decode($details->packing_list, true);
-        return view('global.orderdetails', compact('details', 'statuses', 'items', 'list'));
+
+        $branches = Branches::all();
+        return view('global.orderdetails', compact('details', 'statuses', 'items', 'list', 'branches'));
     }
 
     public function updateStatus(Request $request)

@@ -272,84 +272,36 @@
                             <span class="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
                         </span>
                     </a>
+
+                    <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms="">
+                    </ul>
+
                     <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
                         class="top-11 w-[300px] divide-y !py-0 text-dark ltr:-right-2 rtl:-left-2 dark:divide-white/10 dark:text-white-dark sm:w-[350px]">
                         <li>
                             <div
                                 class="flex items-center justify-between px-4 py-2 font-semibold hover:!bg-transparent">
                                 <h4 class="text-lg">Notification</h4>
-                                <template>
-                                    <span class="badge bg-primary/80" x-text="notifications.length + 'New'"></span>
-                                </template>
+
+                                <span class="badge bg-primary/80" id="totalnotifcount"> </span>
                             </div>
                         </li>
-                        <template>
-                            <li class="dark:text-white-light/90">
-                                <div class="group flex items-center px-4 py-2" @click.self="toggle">
-                                    <div class="grid place-content-center rounded">
-                                        <div class="relative h-12 w-12">
-                                            @if (session('avatar') !== null)
-                                            <img class="h-12 w-12 rounded-full object-cover"
-                                                src=" {{ Storage::url(session('avatar')) }}" alt="User Avatar">
-                                            @else
-                                            <img class="h-12 w-12 rounded-full object-cover" src="/images/avatar.png"
-                                                alt="image">
-                                            @endif
-                                            <span
-                                                class="absolute bottom-0 right-[6px] block h-2 w-2 rounded-full bg-success"></span>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-auto ltr:pl-3 rtl:pr-3">
-                                        <div class="ltr:pr-3 rtl:pl-3">
-                                            <h6></h6>
-                                            <span class="block text-xs font-normal dark:text-gray-500"></span>
-                                        </div>
-                                        <button type="button"
-                                            class="text-neutral-300 opacity-0 hover:text-danger group-hover:opacity-100 ltr:ml-auto rtl:mr-auto"
-                                            @click="removeNotification(notification.id)">
-                                            <svg width="20" height="20" viewbox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor"
-                                                    stroke-width="1.5"></circle>
-                                                <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </template>
-                        <template>
-                            <li>
-                                <div class="p-4">
-                                    <button class="btn btn-primary btn-small block w-full" @click="toggle">Read All
-                                        Notifications</button>
-                                </div>
-                            </li>
-                        </template>
-                        <template>
-                            <li>
-                                <div class="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
-                                    <div class="mx-auto mb-4 rounded-full text-primary ring-4 ring-primary/30">
-                                        <svg width="40" height="40" viewbox="0 0 20 20" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path opacity="0.5"
-                                                d="M20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20C15.5228 20 20 15.5228 20 10Z"
-                                                fill="currentColor"></path>
-                                            <path
-                                                d="M10 4.25C10.4142 4.25 10.75 4.58579 10.75 5V11C10.75 11.4142 10.4142 11.75 10 11.75C9.58579 11.75 9.25 11.4142 9.25 11V5C9.25 4.58579 9.58579 4.25 10 4.25Z"
-                                                fill="currentColor"></path>
-                                            <path
-                                                d="M10 15C10.5523 15 11 14.5523 11 14C11 13.4477 10.5523 13 10 13C9.44772 13 9 13.4477 9 14C9 14.5523 9.44772 15 10 15Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                    </div>
-                                    No data available.
-                                </div>
-                            </li>
-                        </template>
+                        <div id="notification-list">
+
+
+
+
+                        </div>
+
+                        <li>
+                            <div class="p-4">
+                                <button class="btn btn-primary btn-small block w-full" @click="toggle">Read All
+                                    Notifications</button>
+                            </div>
+                        </li>
                     </ul>
+
+
                 </div>
                 <div class="dropdown flex-shrink-0" x-data="dropdown" @click.outside="open = false">
                     <a href="javascript:;" class="group relative" @click="toggle()">
@@ -377,8 +329,7 @@
                                 </div>
                                 <div class="truncate ltr:pl-4 rtl:pr-4">
                                     <h4 class="text-base">
-                                        {{Auth::user()->name}}<span
-                                            class="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">Pro</span>
+                                        {{Auth::user()->name}}
                                     </h4>
                                     <a class="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
                                         href="javascript:;">{{Auth::user()->email}}</a>

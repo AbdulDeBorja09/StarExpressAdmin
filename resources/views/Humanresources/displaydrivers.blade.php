@@ -15,15 +15,17 @@
         </li>
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
-                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Employees</a>
+                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
+                Drivers</a>
         </li>
     </ol>
+    @include('layout.components.error')
     <div class="mt-5">
         <div class="panel">
             <div class="px-0">
                 <div class=" md:top-5 ltr:md:left-5 rtl:md:right-5">
                     <div class="mb-5 flex items-center justify-between gap-4">
-                        <a href="{{route('admin.addEmployees')}}" class="btn btn-primary gap-2">
+                        <a href="{{route('truckdriveradd')}}" class="btn btn-primary gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewbox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" class="h-5 w-5">
@@ -67,11 +69,10 @@
                     </div>
                     <div class="relative -mt-2 px-6 pb-24">
                         <div class="rounded-md bg-white px-2 py-4 shadow-md dark:bg-gray-900">
-                            <div class="name text-xl">{{$item->lname}}, {{$item->fname}} {{$item->mname}}</div>
+                            <div class="name text-xl">{{$item->name}}</div>
                             <div class="text-white-dark" style="text-transform: capitalize">{{$item->type}}</div>
                             <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
                                 <div class="flex-auto">
-
                                     <div style="text-transform: capitalize;">@if($item->status === "active")
                                         <span class="badge badge-outline-success">{{ $item->status }}</span>
                                         @else
@@ -123,10 +124,6 @@
                         <div class="mt-6 grid grid-cols-1 gap-4 ltr:text-left rtl:text-right">
 
                             <div class="flex items-center">
-                                <div class="flex-none ltr:mr-2 rtl:ml-2">Employee Id:</div>
-                                <div class="truncate text-white-dark">{{ $item->employee_id }}</div>
-                            </div>
-                            <div class="flex items-center">
                                 <div class="flex-none ltr:mr-2 rtl:ml-2">Branch:</div>
                                 <div class="truncate text-white-dark" style="text-transform: capitalize">{{
                                     $item->branch->country }}, {{
@@ -138,7 +135,7 @@
                             </div>
                             <div class="flex items-center">
                                 <div class="flex-none ltr:mr-2 rtl:ml-2">Phone:</div>
-                                <div class="text-white-dark">{{ $item->contact }}</div>
+                                <div class="text-white-dark">{{ $item->phone }}</div>
                             </div>
                             <div class="flex items-center">
                                 <div class="flex-none ltr:mr-2 rtl:ml-2">
@@ -147,69 +144,84 @@
                                 <div class="text-white-dark" style="text-transform: capitalize">{{ $item->gender }}
                                 </div>
                             </div>
-                            <div class="flex items-center">
-                                <div class="flex-none ltr:mr-2 rtl:ml-2">
-                                    Address:
-                                </div>
-                                <div class="text-white-dark">{{ $item->address }}</div>
-                            </div>
-
                         </div>
                     </div>
                     <div class="absolute bottom-0 mt-6 flex w-full gap-4 p-6 ltr:left-0 rtl:right-0">
-                        <button type="button" class="btn btn-outline-primary w-1/2" @click="editUser(contact)">
+                        <button type="button" class="btn btn-outline-primary w-1/2">
                             Edit
                         </button>
 
-                        <button type="button" class="btn btn-outline-danger w-1/2"
-                            onclick="showAlert(event, 'delete-form-{{ $item->id }}')">
-                            Delete
-                        </button>
-                        <form action="{{ route('deleteemployee') }}" method="POST" id="delete-form-{{ $item->id }}">
-                            @csrf
-                            <input type="hidden" name="deleteid" value="{{ $item->id }}">
-                        </form>
+                        <div x-data="modal" style="width: 50%">
+                            @if($item->status === "active")
+                            <button type=" button" @click="toggle" x-tooltip="Edit"
+                                class="btn btn-outline-danger mx-auto" style="width: 100%">Suspend</button>
+                            @else
+                            <button class="btn btn-outline-danger mx-auto" disabled style="width: 100%">Suspend</button>
+                            @endif
 
-                        <script>
-                            async function showAlert(event, formId) {
-                                event.preventDefault(); 
-                                const swalWithBootstrapButtons = window.Swal.mixin({
-                                    confirmButtonClass: 'btn btn-secondary',
-                                    cancelButtonClass: 'btn btn-dark ltr:mr-3 rtl:ml-3',
-                                    buttonsStyling: false,
-                                });
-                        
-                                swalWithBootstrapButtons
-                                    .fire({
-                                        title: 'Are you sure?',
-                                        text: "You won't be able to revert this!",
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Yes, delete it!',
-                                        cancelButtonText: 'No, cancel!',
-                                        reverseButtons: true,
-                                        padding: '2em',
-                                    })
-                                    .then((result) => {
-                                        if (result.value) {
-                                            document.getElementById(formId).submit(); 
-                                            swalWithBootstrapButtons.fire('Deleted!', 'Employee has been deleted.', 'success');
-                                        } else if (result.dismiss === window.Swal.DismissReason.cancel) {
-                                            swalWithBootstrapButtons.fire('Cancelled', 'Your Employee is safe :)', 'error');
-                                        }
-                                    });
-                            }
-                        </script>
-
-
+                            <!-- modal -->
+                            <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
+                                :class="open && '!block'">
+                                <div class="flex items-center justify-center min-h-screen px-4"
+                                    @click.self="open = false">
+                                    <div x-show="open" x-transition x-transition.duration.300
+                                        class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                        <div
+                                            class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                            <h5 class="font-bold text-lg">Suspend Account</h5>
+                                            <button type="button" class="text-white-dark hover:text-dark"
+                                                @click="toggle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-6 w-6">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="p-5">
+                                            <form action="{{route('suspend')}}" method="POST">
+                                                @csrf
+                                                <div class="mt-0" style="text-align: start">
+                                                    <input type="hidden" name="id">
+                                                    <div class="mt-5">
+                                                        <label for="email" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                            style="font-size:15px">Email:
+                                                        </label>
+                                                        <input type="hidden" name="id" value="{{$item->id}}">
+                                                        <input type="hidden" name="name" value="{{$item->name}}">
+                                                        <input type="hidden" name="type" value="driver">
+                                                        <input name="email" id="email" class=" form-input flex-1"
+                                                            readonly value="{{$item->email}}">
+                                                    </div>
+                                                    <div class="mt-5">
+                                                        <label for="reason" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                            style="font-size:15px">Reason:
+                                                        </label>
+                                                        <input name="reason" id="reason" class=" form-input flex-1"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <div class="flex justify-center items-center mt-8">
+                                                    <button type="submit" class="btn btn-outline-danger"
+                                                        style="width:50%">Suspend</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @endforeach
             </div>
         </div>
     </div>
-    <script>
-        function filterBoxes() {
+</div>
+<script>
+    function filterBoxes() {
             const searchInput = document.getElementById('search').value.toLowerCase();
             const boxes = document.querySelectorAll('.box-container'); 
             
@@ -223,8 +235,8 @@
                 }
             });
         }
-    </script>
+</script>
 
 
 
-    @endsection
+@endsection

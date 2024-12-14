@@ -13,64 +13,102 @@
                 </svg>
             </a>
         </li>
+        <li class="before:px-1.5 before:content-['/']"><a>Suspended</a></li>
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
-                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
-                Orders</a>
+                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">
+                {{$label}}</a>
         </li>
     </ol>
+    @include('layout.components.error')
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
-            <div class="flex justify-end mb-5">
+            <div class=" mb-5">
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
-            <div class="table-responsive">
-                <table class="orders-table table table-bordered" style="text-transform: capitalize">
+            <div class="table-responsive" class="">
+                <table class="orders-table table table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Date Ordered</th>
-                            <th>Reference Number</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
-
-
-                            <th>Status</th>
-                            <th style="text-align: center">Action</th>
+                            <th>Email</th>
+                            <th>Reason</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach ($orders as $index => $order)
+                        @foreach ($users as $index => $item)
                         <tr>
-                            @php
-                            $statuses = json_decode($order->status, true);
-                            $latestStatus = is_array($statuses) ? end($statuses)['status'] : 'N/A';
-                            @endphp
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ $order->reference_number }}</td>
-                            <td>{{ $order->cargoService->originBranch->branch ??
-                                'N/A' }}, {{
-                                $order->cargoService->originBranch->country ?? '' }}</td>
-                            <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
-                            <td>{{ $latestStatus }}</td>
-                            <td>
-                                <div style="display:flex; justify-content: center; ">
-                                    <a href="{{ url('details/' . $order->reference_number) }}"
-                                        class="hover:text-primary">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
-                                            <path opacity="0.5"
-                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                            <path
-                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                        </svg>
-                                    </a>
-                                </div>
+                            <td>{{$item->email}}</td>
+                            <td>{{$item->reason}}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('g:i A') }}</td>
+                            <td style="width: 200px">
+                                <form action="{{route('liftusersuspend')}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{$item->user_id}}">
+                                    <input type="hidden" name="id" value="{{$item->id}}">
+                                    <input type="hidden" name="type" value="{{$item->user_type}}">
+                                    <button type="submit" class="btn btn-outline-success mx-auto"> Lift
+                                        Suspension</button>
+                                </form>
                             </td>
+                            <td style="width: 200px">
+                                <form action="{{route('deleteuseraccount')}}" method="POST"
+                                    id="delete-form-{{ $item->id }}">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{$item->user_id}}">
+                                    <input type="hidden" name="id" value="{{$item->id}}">
+                                    <button type="button" class="btn btn-outline-danger"
+                                        onclick="showAlert(event, 'delete-form-{{ $item->id }}')"> Delete Account
+                                    </button>
+                                    <script>
+                                        async function showAlert(event, formId) {
+                                            event.preventDefault(); 
+                                            const swalWithBootstrapButtons = window.Swal.mixin({
+                                                confirmButtonClass: 'btn btn-secondary',
+                                                cancelButtonClass: 'btn btn-dark ltr:mr-3 rtl:ml-3',
+                                                buttonsStyling: false,
+                                            });
+                                            swalWithBootstrapButtons
+                                            .fire({
+                                                title: 'Are you sure?',
+                                                html: `<div class="mt-3"> You won't be able to revert this! </div>`,
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Yes, delete it!',
+                                                cancelButtonText: 'No, cancel!',
+                                                reverseButtons: true,
+                                                padding: '2em',
+                                            })
+                                            .then((result) => {
+                                                if (result.value) {
+                                                    document.getElementById(formId).submit(); 
+                                                    swalWithBootstrapButtons.fire({
+                                                        title: 'Deleted!',
+                                                        html: '<div class="text-center mt-3">Service Has Been Deleted.</div>', 
+                                                        icon: 'success',
+                                                        confirmButtonText: 'OK', 
+                                                    });
+                                                
+                                                } else if (result.dismiss === window.Swal.DismissReason.cancel) {
+                                                    swalWithBootstrapButtons.fire({
+                                                        title: 'Cancelled',
+                                                        html: '<div class="text-center mt-3">Your Service Is Safe.</div>', 
+                                                        icon: 'error',
+                                                        confirmButtonText: 'OK', 
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </form>
+                            </td>
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -80,7 +118,7 @@
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} Orders
+                        Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} Visits
                     </div>
                     <div class="dataTable-dropdown"><label>
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">
@@ -95,7 +133,7 @@
 
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
-                            @if ($orders->onFirstPage())
+                            @if ($users->onFirstPage())
                             <li class="pager disabled"><a href="#" aria-disabled="true"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                         class="w-4.5 h-4.5 rtl:rotate-180">
@@ -106,7 +144,7 @@
                                     </svg></a></li>
                             @else
                             <li class="pager"><a
-                                    href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() - 1]) }}"><svg
+                                    href="{{ request()->fullUrlWithQuery(['page' => $users->currentPage() - 1]) }}"><svg
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                         <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5"
@@ -117,17 +155,17 @@
                             </li>
                             @endif
 
-                            @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                                @if ($i == $orders->currentPage())
+                            @for ($i = 1; $i <= $users->lastPage(); $i++)
+                                @if ($i == $users->currentPage())
                                 <li class="active"><a href="#">{{ $i }}</a></li>
                                 @else
                                 <li><a href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endif
                                 @endfor
 
-                                @if ($orders->hasMorePages())
+                                @if ($users->hasMorePages())
                                 <li class="pager"><a
-                                        href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() + 1]) }}"><svg
+                                        href="{{ request()->fullUrlWithQuery(['page' => $users->currentPage() + 1]) }}"><svg
                                             width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                             <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5"
@@ -150,7 +188,6 @@
                                 @endif
                         </ul>
                     </nav>
-
                 </div>
             </form>
         </div>

@@ -1625,26 +1625,20 @@
                                         i,
                                         function (r) {
                                             "horizontalLines" === t
-                                                ? r
-                                                      .line(0, 0, i, 0)
-                                                      .stroke({
-                                                          color: a,
-                                                          width: s + 1,
-                                                      })
+                                                ? r.line(0, 0, i, 0).stroke({
+                                                      color: a,
+                                                      width: s + 1,
+                                                  })
                                                 : "verticalLines" === t
-                                                ? r
-                                                      .line(0, 0, 0, e)
-                                                      .stroke({
-                                                          color: a,
-                                                          width: s + 1,
-                                                      })
+                                                ? r.line(0, 0, 0, e).stroke({
+                                                      color: a,
+                                                      width: s + 1,
+                                                  })
                                                 : "slantedLines" === t
-                                                ? r
-                                                      .line(0, 0, e, i)
-                                                      .stroke({
-                                                          color: a,
-                                                          width: s,
-                                                      })
+                                                ? r.line(0, 0, e, i).stroke({
+                                                      color: a,
+                                                      width: s,
+                                                  })
                                                 : "squares" === t
                                                 ? r
                                                       .rect(e, i)
@@ -23467,17 +23461,15 @@
                                 })),
                                 t.forEach(function (t, n) {
                                     var l = t.length === a.globals.dataPoints,
-                                        h = i.graphics
-                                            .group()
-                                            .attr({
-                                                class: "apexcharts-series",
-                                                "data:longestSeries": l,
-                                                seriesName: x.escapeString(
-                                                    a.globals.seriesNames[n]
-                                                ),
-                                                rel: n + 1,
-                                                "data:realIndex": n,
-                                            });
+                                        h = i.graphics.group().attr({
+                                            class: "apexcharts-series",
+                                            "data:longestSeries": l,
+                                            seriesName: x.escapeString(
+                                                a.globals.seriesNames[n]
+                                            ),
+                                            rel: n + 1,
+                                            "data:realIndex": n,
+                                        });
                                     (i.dataRadiusOfPercent[n] = []),
                                         (i.dataRadius[n] = []),
                                         (i.angleArr[n] = []),
@@ -29142,15 +29134,13 @@
                 })),
                 a.extend(a.Defs, {
                     pattern: function (t, e, i) {
-                        return this.put(new a.Pattern())
-                            .update(i)
-                            .attr({
-                                x: 0,
-                                y: 0,
-                                width: t,
-                                height: e,
-                                patternUnits: "userSpaceOnUse",
-                            });
+                        return this.put(new a.Pattern()).update(i).attr({
+                            x: 0,
+                            y: 0,
+                            width: t,
+                            height: e,
+                            patternUnits: "userSpaceOnUse",
+                        });
                     },
                 }),
                 (a.Shape = a.invent({

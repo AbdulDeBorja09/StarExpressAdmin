@@ -27,7 +27,6 @@ class ServiceManagerController extends Controller
     {
         $branches = CargoBoxes::where('service_id', $serviceId)->get();
         return response()->json($branches);
-
     }
     public function getAreas($serviceId)
     {
@@ -350,7 +349,7 @@ class ServiceManagerController extends Controller
         CargoLocations::where('region', $request->region)->where('branch_id', $request->branch_id)->delete();
         return redirect()->route('servicelocations');
     }
-    
+
     public function deletearea(Request $request)
     {
         $request->validate([
@@ -372,7 +371,7 @@ class ServiceManagerController extends Controller
         return redirect()->back()->with('success', 'Area updated successfully.');
     }
 
-    
+
     public function createdelivery(Request $request)
     {
         $request->validate([
@@ -381,7 +380,7 @@ class ServiceManagerController extends Controller
             'note' => 'required|string',
         ]);
 
-        
+
         try {
             Delivery::create([
                 'trip_id' => 'ID-' . uniqid(),
@@ -494,5 +493,11 @@ class ServiceManagerController extends Controller
         $driver = TruckDriver::get();
         $truck = CargoTruck::get();
         return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails'));
+    }
+    public function vouchers()
+    {
+
+
+        return view('servicemanager.vouchers');
     }
 }

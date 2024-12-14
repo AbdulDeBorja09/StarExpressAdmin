@@ -39,29 +39,29 @@
                         <div class="text-lg font-semibold">Driver Info</div>
                         <div class="mt-4 flex items-center">
                             <label for="fname" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Frist Name</label>
-                            <input id="fname" type="text" name="fname" class="form-input flex-1"
-                                placeholder="Enter First Name">
+                            <input id="fname" type="text" name="fname" value="{{old('fname')}}"
+                                class="form-input flex-1" placeholder="Enter First Name">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="mname" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Middle Name</label>
-                            <input id="mname" type="text" name="mname" class="form-input flex-1"
-                                placeholder="Enter Middle Name">
+                            <input id="mname" type="text" name="mname" value="{{old('mname')}}"
+                                class="form-input flex-1" placeholder="Enter Middle Name">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="lname" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Last Name</label>
-                            <input id="lname" type="text" name="lname" class="form-input flex-1"
-                                placeholder="Enter Last Name">
+                            <input id="lname" type="text" name="lname" value="{{old('lname')}}"
+                                class="form-input flex-1" placeholder="Enter Last Name">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="gender" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Gender</label>
-                            <input id="gender" type="text" name="gender" class="form-input flex-1"
-                                placeholder="Enter Gender">
+                            <input id="gender" type="text" name="gender" value="{{old('gender')}}"
+                                class="form-input flex-1" placeholder="Enter Gender">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="contact" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Contact
                                 Number</label>
-                            <input id="contact" type="number" name="contact" class="form-input flex-1"
-                                placeholder="Enter Contact">
+                            <input id="contact" type="number" name="contact" value="{{old('contact')}}"
+                                class="form-input flex-1" placeholder="Enter Contact">
                         </div>
                     </div>
                     <div class="w-full lg:w-1/2">
@@ -87,17 +87,18 @@
 
                         <div class="mt-4 flex items-center">
                             <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Emaill</label>
-                            <input id="acno" type="text" name="email" class="form-input flex-1"
+                            <input id="acno" type="text" name="email" value="{{old('email')}}" class="form-input flex-1"
                                 placeholder="Enter Email Address">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="bank-name" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Password</label>
-                            <input id="bank-name" type="text" name="password" class="form-input flex-1"
-                                placeholder="Enter Password">
+                            <input id="bank-name" type="text" name="password" value="{{old('password')}}"
+                                class="form-input flex-1" placeholder="Enter Password">
                         </div>
                         <div class="mt-4 flex items-center">
                             <label for="swift-code" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Confirm Password</label>
-                            <input id="swift-code" type="text" name="confirm-password" class="form-input flex-1"
+                            <input id="swift-code" type="text" name="confirm-password"
+                                value="{{old('confirm-password')}}" class="form-input flex-1"
                                 placeholder="Enter Password Again">
                         </div>
                     </div>

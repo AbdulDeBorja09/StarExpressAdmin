@@ -15,91 +15,33 @@
         </li>
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
-                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
-                Orders</a>
+                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Website
+                Visits</a>
         </li>
     </ol>
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
-            <div class="flex mb-5">
-                <div><button>EDIT STATUS</button></div>
+            <div class="flex justify-end mb-5">
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
             <div class="table-responsive" class="">
                 <table class="orders-table table table-bordered" style="text-transform: capitalize;">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="select-all" class="form-checkbox" /></th>
-                            <th style="width: 60px">#</th>
-                            <th>Date Ordered</th>
-                            <th>Reference Number</th>
-                            <th>Sender Name</th>
-
-                            @if(Auth::user()->type === 'servicemanager' || Auth::user()->type === 'admin')
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Latest Status</th>
-
-                            @else
-                            <th>Origin</th>
-                            <th>Payment Status</th>
-                            <th>Total</th>
-                            <th>Balance</th>
-                            <th>Latest Status</th>
-                            @endif
-                            <th style="text-align: center">Action</th>
+                            <th>#</th>
+                            <th>Ip Address</th>
+                            <th>Date</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($orders as $index => $order)
+                        @foreach ($visits as $index => $item)
                         <tr>
-                            @php
-                            $statuses = json_decode($order->status, true);
-                            $latestStatus = is_array($statuses) ? end($statuses)['status'] : 'N/A';
-                            @endphp
-                            <td style="text-align: center;"><input type="checkbox"
-                                    class="form-checkbox child-checkbox" />
-                            </td>
-                            <td style="text-align: center;width: 60px">{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ $order->reference_number }}</td>
-                            <td>{{$order->sender_name}}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{$item->visitor_ip}}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('g:i A') }}</td>
 
-                            @if(Auth::user()->type === 'servicemanager' || Auth::user()->type === 'admin')
-                            <td>{{ $order->cargoService->originBranch->branch ??
-                                'N/A' }}, {{
-                                $order->cargoService->originBranch->country ?? '' }}</td>
-                            <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
-                            <td>{{ $latestStatus }}</td>
-
-                            @else
-                            <td>{{ $order->cargoService->originBranch->branch ??
-                                'N/A' }}, {{
-                                $order->cargoService->originBranch->country ?? '' }}</td>
-
-                            <td>{{ $order->payment_status }}</td>
-                            <td>{{ $order->total }}</td>
-                            <td>{{ $order->balance }}</td>
-                            <td>{{ $latestStatus }}</td>
-                            @endif
-
-
-                            <td>
-                                <div style="display:flex; justify-content: center; ">
-                                    <a href="{{ url('details/' . $order->reference_number) }}"
-                                        class="hover:text-primary">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
-                                            <path opacity="0.5"
-                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                            <path
-                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -109,7 +51,7 @@
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} Orders
+                        Showing {{ $visits->firstItem() }} to {{ $visits->lastItem() }} of {{ $visits->total() }} Visits
                     </div>
                     <div class="dataTable-dropdown"><label>
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">
@@ -124,7 +66,7 @@
 
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
-                            @if ($orders->onFirstPage())
+                            @if ($visits->onFirstPage())
                             <li class="pager disabled"><a href="#" aria-disabled="true"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                         class="w-4.5 h-4.5 rtl:rotate-180">
@@ -135,7 +77,7 @@
                                     </svg></a></li>
                             @else
                             <li class="pager"><a
-                                    href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() - 1]) }}"><svg
+                                    href="{{ request()->fullUrlWithQuery(['page' => $visits->currentPage() - 1]) }}"><svg
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                         <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5"
@@ -146,17 +88,17 @@
                             </li>
                             @endif
 
-                            @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                                @if ($i == $orders->currentPage())
+                            @for ($i = 1; $i <= $visits->lastPage(); $i++)
+                                @if ($i == $visits->currentPage())
                                 <li class="active"><a href="#">{{ $i }}</a></li>
                                 @else
                                 <li><a href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endif
                                 @endfor
 
-                                @if ($orders->hasMorePages())
+                                @if ($visits->hasMorePages())
                                 <li class="pager"><a
-                                        href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() + 1]) }}"><svg
+                                        href="{{ request()->fullUrlWithQuery(['page' => $visits->currentPage() + 1]) }}"><svg
                                             width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                             <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5"
@@ -187,9 +129,9 @@
             <h1>Orders</h1>
 
             <div id="orders">
-                @foreach($orders as $order)
+                @foreach($visits as $item)
                 <div class="order" draggable="true" ondragstart="drag(event)">
-                    {{ $order->order_name }} (Sender: {{ $order->sender_name }})
+                    {{ $item->order_name }} (Sender: {{ $item->sender_name }})
                 </div>
                 @endforeach
             </div>
@@ -288,28 +230,4 @@
         });
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('select-all');
-        const childCheckboxes = document.querySelectorAll('.child-checkbox');
-
-        selectAllCheckbox.addEventListener('change', function () {
-            childCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
-
-      
-        childCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                if (!this.checked) {
-                    selectAllCheckbox.checked = false;
-                } else if (Array.from(childCheckboxes).every(cb => cb.checked)) {
-                    selectAllCheckbox.checked = true;
-                }
-            });
-        });
-    });
-</script>
-
 @endsection

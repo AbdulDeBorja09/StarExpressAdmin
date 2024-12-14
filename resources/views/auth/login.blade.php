@@ -1,91 +1,9 @@
 @extends('auth.layouts.app')
 
 @section('content')
-{{-- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address')
-                                }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password')
-                                }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid @enderror" name="password"
-                                    required autocomplete="current-password">
-
-                                @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{
-                                        old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
---}}
-
-
-
 <div class="main-container min-h-screen text-black dark:text-white-dark">
     <!-- start main content section -->
-    <div x-data="auth">
+    <div>
         <div class="absolute inset-0">
             <img src="{{asset('/images/auth/bg-gradient.png')}}" alt="image" class="h-full w-full object-cover">
         </div>
@@ -118,9 +36,9 @@
                     class="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6 lg:max-w-[667px]">
                     <div
                         class="flex w-full max-w-[440px] items-center gap-2 lg:absolute lg:end-6 lg:top-6 lg:max-w-full">
-                        <a href="index.html" class="block w-8 lg:hidden">
+                        {{-- <a href="index.html" class="block w-8 lg:hidden">
                             <img src="{{asset('/images/star/Logo2.png')}}" alt="Logo" class="w-full">
-                        </a>
+                        </a> --}}
                         {{-- <div class="dropdown ms-auto w-max" x-data="dropdown" @click.outside="open = false">
                             <a href="javascript:;"
                                 class="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
@@ -240,26 +158,5 @@
             </div>
         </div>
     </div>
-    <!-- end main content section -->
 </div>
-{{-- <script>
-    // main section
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('auth', () => ({
-            languages: [
-                {
-                    id: 1,
-                    key: 'Philippines',
-                    value: 'PH',
-                },
-                {
-                    id: 2,
-                    key: 'China',
-                    value: 'CH',
-                }
-            ],
-        }));
-    });
-
-</script> --}}
 @endsection
