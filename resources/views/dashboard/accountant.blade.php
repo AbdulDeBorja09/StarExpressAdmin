@@ -20,287 +20,195 @@
         </li>
     </ol>
     <div>
-        <div class="mt-5" x-data="sales">
+        <div class="mt-5">
             <div class="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
                 <!-- Users Visit -->
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                <div class="panel bg-gradient-to-r from-blue-500 to-blue-400">
                     <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Human Resources
+                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Revenue</div>
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <a href="javascript:;" @click="toggle">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 hover:opacity-80">
+                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
+                                        stroke-width="1.5"></circle>
+                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg>
+                            </a>
+                            <ul x-show="open" x-transition="" x-transition.duration.300ms=""
+                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark" style="display: none;">
+                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$hr}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
+                    <div class="mt-5 flex items-center">
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">${{ number_format($revenueCurrentMonth, 2) }}
+                        </div>
+                        <div class="badge bg-white/30">{{$revenueGrowthPercentage}}%</div>
+                    </div>
+                    <div class="mt-5 flex items-center font-semibold">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                             <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                            <path
+                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
                         </svg>
+                        Last Week ${{ number_format($revenueLastMonth, 2) }}
                     </div>
                 </div>
 
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                <!-- Sessions -->
+                <div class="panel bg-gradient-to-r from-blue-500 to-blue-400">
                     <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Accountant
+                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Income</div>
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <a href="javascript:;" @click="toggle">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 hover:opacity-80">
+                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
+                                        stroke-width="1.5"></circle>
+                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg>
+                            </a>
+                            <ul x-show="open" x-transition="" x-transition.duration.300ms=""
+                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark" style="display: none;">
+                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$accountant}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
+                    <div class="mt-5 flex items-center">
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">${{ number_format($currentMonthTotal, 2) }}
+                        </div>
+                        <div class="badge bg-white/30">{{$growthPercentage}}%</div>
+                    </div>
+                    <div class="mt-5 flex items-center font-semibold">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                             <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                            <path
+                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
                         </svg>
+                        Last Month ${{ number_format($lastMonthTotal, 2) }}
                     </div>
                 </div>
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                <div class="panel bg-gradient-to-r from-blue-500 to-blue-400">
                     <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Service Manager
+                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Expenses</div>
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <a href="javascript:;" @click="toggle">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 hover:opacity-80">
+                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
+                                        stroke-width="1.5"></circle>
+                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg>
+                            </a>
+                            <ul x-show="open" x-transition="" x-transition.duration.300ms=""
+                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark" style="display: none;">
+                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$servicemanager}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
+                    <div class="mt-5 flex items-center">
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">${{ number_format($ExpensescurrentMonthTotal,
+                            2) }}</div>
+                        <div class="badge bg-white/30">{{$ExpensesgrowthPercentage}}%</div>
+                    </div>
+                    <div class="mt-5 flex items-center font-semibold">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                             <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                            <path
+                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
                         </svg>
+                        Last Month ${{ number_format($ExpenseslastMonthTotal, 2) }}
                     </div>
                 </div>
 
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                <div class="panel bg-gradient-to-r from-blue-500 to-blue-400">
                     <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Driver
+                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Unpaid Balance</div>
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                            <a href="javascript:;" @click="toggle">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-70 hover:opacity-80">
+                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
+                                        stroke-width="1.5"></circle>
+                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg>
+                            </a>
+                            <ul x-show="open" x-transition="" x-transition.duration.300ms=""
+                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark" style="display: none;">
+                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$driver}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
+                    <div class="mt-5 flex items-center">
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">${{$unpaid}}</div>
+                    </div>
+                    <div class="mt-5 flex items-center font-semibold">
+                        {{-- <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                             <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                    <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Total Employees
-                        </div>
-                    </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$hr + $accountant +
-                            $servicemanager + $driver}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
-                            <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                    <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Suspended Employees
-                        </div>
-                    </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$suspendedemployee}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
-                            <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                    <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Total Users
-                        </div>
-                    </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$users}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
-                            <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                    <div class="flex justify-between">
-                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">Suspended Users
-                        </div>
-                    </div>
-                    <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$suspendeduser}}</div>
-                        <svg width="10" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            style="height: 50px; width: 50px;">
-                            <circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
-                            <path opacity="0.5" d="M18 9C19.6569 9 21 7.88071 21 6.5C21 5.11929 19.6569 4 18 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5" d="M6 9C4.34315 9 3 7.88071 3 6.5C3 5.11929 4.34315 4 6 4"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <ellipse cx="12" cy="17" rx="6" ry="4" stroke="currentColor" stroke-width="1.5">
-                            </ellipse>
-                            <path opacity="0.5"
-                                d="M20 19C21.7542 18.6153 23 17.6411 23 16.5C23 15.3589 21.7542 14.3847 20 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                            <path opacity="0.5"
-                                d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div class="mb-6 grid gap-6 xl:grid-cols-3" x-data="chart">
-                {{-- <div class="panel xl:col-span-2">
-                    <div class=" mb-5 flex items-center justify-between">
-                        <h5 class="text-lg font-semibold dark:text-white">Website Visit Analytics</h5><br>
-
-                    </div>
-                    <h5 class="text-lg font-semibold dark:text-white">Total: {{ number_format(array_sum($data)) }}</h5>
-                    <div x-ref="areaChart" class="bg-white dark:bg-black rounded-lg mr-3"></div>
-                </div> --}}
-                <div class="panel h-full">
-                    <div class="mb-5 flex justify-center">
-                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
-                    </div>
-                    <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
-                            <!-- loader -->
-                            <div
-                                class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                <span
-                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel h-full">
-                    <div class="mb-5 flex justify-center">
-                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
-                    </div>
-                    <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
-                            <!-- loader -->
-                            <div
-                                class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                <span
-                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel h-full">
-                    <div class="mb-5 flex justify-center">
-                        <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
-                    </div>
-                    <div class="overflow-hidden">
-                        <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
-                            <!-- loader -->
-                            <div
-                                class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                <span
-                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                            </div>
-                        </div>
+                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                            <path
+                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                        </svg> --}}
                     </div>
                 </div>
             </div>
-
             <div class="mb-6 grid gap-6 xl:grid-cols-1" x-data="chart">
-                <div class="panel xl:col-span-2">
-                    <div class=" mb-5 flex items-center justify-between">
-                        <h5 class="text-lg font-semibold dark:text-white">Website Visit Analytics</h5><br>
-
+                <div class="panel h-full ">
+                    <div class="mb-5 flex items-center dark:text-white-light">
+                        <h5 class="text-lg font-semibold">Revenue</h5>
+                        <div x-data="dropdown" @click.outside="open = false" class="dropdown ltr:ml-auto rtl:mr-auto">
+                            <a href="javascript:;" @click="toggle">
+                                <svg class="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
+                                    viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
+                                        stroke-width="1.5"></circle>
+                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg>
+                            </a>
+                            <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
+                                class="ltr:right-0 rtl:left-0">
+                                <li><a href="javascript:;" @click="toggle">Weekly</a></li>
+                                <li><a href="javascript:;" @click="toggle">Monthly</a></li>
+                                <li><a href="javascript:;" @click="toggle">Yearly</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <h5 class="text-lg font-semibold dark:text-white">Total: {{ number_format(array_sum($data)) }}</h5>
-                    <div x-ref="areaChart" class="bg-white dark:bg-black rounded-lg mr-3"></div>
+                    <p class="text-lg dark:text-white-light/90">Total Profit <span
+                            class="ml-2 text-primary">${{number_format($totalRevenue, 2)}}</span></p>
+                    <div class="relative overflow-hidden" style="padding-right: 70px">
+                        <div x-ref="revenueChart" class="rounded-lg bg-white dark:bg-black">
+                            <div
+                                class="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                                <span
+                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,202 +218,193 @@
 </div>
 <script>
     document.addEventListener('alpine:init', () => {
-                // main section
-               
-        
-                Alpine.data('chart', () => ({
-                    // highlightjs
-                    codeArr: [],
-                    toggleCode(name) {
-                        if (this.codeArr.includes(name)) {
-                            this.codeArr = this.codeArr.filter((d) => d != name);
-                        } else {
-                            this.codeArr.push(name);
-        
-                            setTimeout(() => {
-                                document.querySelectorAll('pre.code').forEach((el) => {
-                                    hljs.highlightElement(el);
-                                });
-                            });
-                        }
-                    },
-        
-                    
-                    areaChart: null,
-                    salesByCategory = null,
-        
-                    init() {
-                        isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
-                        isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
-        
-                        setTimeout(() => {
-                            let areaChart = new ApexCharts(this.$refs.areaChart, this.areaChartOptions);
-                            areaChart.render();
 
-                            this.salesByCategory = new ApexCharts(this.$refs.salesByCategory, this.salesByCategoryOptions);
-                            this.$refs.salesByCategory.innerHTML = '';
-                            this.salesByCategory.render();
-                        }, 300);
-        
-                        this.$watch('$store.app.theme', () => {
-                            this.refreshOptions();
-                        });
-        
-                        this.$watch('$store.app.rtlClass', () => {
-                            this.refreshOptions();
-                        });
-                    },
-        
-                    refreshOptions() {
-                        isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
-                        isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
-                        this.areaChart.updateOptions(this.areaChartOptions);
-                        this.salesByCategory.updateOptions(this.salesByCategory);
-                        
-                    },
-        
-                    
-                    get areaChartOptions() {
-                        const rawData = @json($data);
-                        const data = rawData.map(value => Math.round(value)); 
-                        const labels = @json($months); 
 
-                        return {
-                            series: [{
-                                name: 'Visits',
-                                data: data
-                            }],
-                            chart: {
-                                type: 'area',
-                                height: 300,
-                                zoom: {
-                                    enabled: false
-                                },
-                                toolbar: {
-                                    show: false
-                                }
-                            },
-                            colors: ['#805dca'],
-                            dataLabels: {
-                                enabled: false
-                            },
-                            stroke: {
-                                width: 2,
-                                curve: 'smooth'
-                            },
-                            xaxis: {
-                                axisBorder: {
-                                    color: isDark ? '#191e3a' : '#e0e6ed'
-                                },
-                            },
-                            yaxis: {
-                                opposite: isRtl ? true : false,
-                                labels: {
-                                    offsetX: isRtl ? -40 : 0,
-                                }
-                            },
-                            labels: labels,
-                            legend: {
-                                horizontalAlign: 'left'
-                            },
-                            grid: {
-                                borderColor: isDark ? '#191e3a' : '#e0e6ed',
-                            },
-                            tooltip: {
-                                theme: isDark ? 'dark' : 'light',
-                                y: {
-                                    formatter: value => parseInt(value) // Format tooltip values as integers
-                                }
-                            }
-                        }
-                    },
+        Alpine.data('chart', () => ({
+            init() {
+                const revenueChart = null;
+
+                isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
+                isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
+
+                setTimeout(() => {
+                    // revenue
+                    this.revenueChart = new ApexCharts(this.$refs.revenueChart, this.revenueChartOptions);
+                    this.$refs.revenueChart.innerHTML = '';
+                    this.revenueChart.render();
+
                   
-                    get salesByCategoryOptions() {
-                        return {
-                            series: [1, 0, 5],
-                            chart: {
-                                type: 'donut',
-                                height: 460,
-                                fontFamily: 'Nunito, sans-serif',
-                            },
-                            dataLabels: {
-                                enabled: false,
-                            },
-                            stroke: {
-                                show: true,
-                                width: 25,
-                                colors: isDark ? '#0e1726' : '#fff',
-                            },
-                            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
-                            legend: {
-                                position: 'bottom',
-                                horizontalAlign: 'center',
-                                fontSize: '14px',
-                                markers: {
-                                    width: 10,
-                                    height: 10,
-                                    offsetX: -2,
-                                },
-                                height: 50,
-                                offsetY: 20,
-                            },
-                            plotOptions: {
-                                pie: {
-                                    donut: {
-                                        size: '65%',
-                                        background: 'transparent',
-                                        labels: {
-                                            show: true,
-                                            name: {
-                                                show: true,
-                                                fontSize: '29px',
-                                                offsetY: -10,
-                                            },
-                                            value: {
-                                                show: true,
-                                                fontSize: '26px',
-                                                color: isDark ? '#bfc9d4' : undefined,
-                                                offsetY: 16,
-                                                formatter: (val) => {
-                                                    return val;
-                                                },
-                                            },
-                                            total: {
-                                                show: true,
-                                                label: 'Total',
-                                                color: '#888ea8',
-                                                fontSize: '29px',
-                                                formatter: (w) => {
-                                                    return w.globals.seriesTotals.reduce(function (a, b) {
-                                                        return a + b;
-                                                    }, 0);
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                            labels: ['New Orders', 'Processing', 'To Deliver'],
-                            states: {
-                                hover: {
-                                    filter: {
-                                        type: 'none',
-                                        value: 0.15,
-                                    },
-                                },
-                                active: {
-                                    filter: {
-                                        type: 'none',
-                                        value: 0.15,
-                                    },
-                                },
-                            },
-                        };
+                }, 300);
+
+                this.$watch('$store.app.theme', () => {
+                    isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
+
+                    this.revenueChart.updateOptions(this.revenueChartOptions);
+                  
+                });
+
+                this.$watch('$store.app.rtlClass', () => {
+                    isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
+                    this.revenueChart.updateOptions(this.revenueChartOptions);
+                    
+                });
+            },
+
+            // revenue
+            get revenueChartOptions() {
+                const income = @json($salesDataArray);
+                const expenses = @json($expensesDataArray);
+                const months = @json($months);
+                return {
+                    series: [
+                        {
+                            name: 'Income',
+                            data: income,
+                        },
+                        {
+                            name: 'Expenses',
+                            data: expenses,
+                        },
+                    ],
+                    chart: {
+                        height: 325,
+                        type: 'area',
+                        fontFamily: 'Nunito, sans-serif',
+                        zoom: {
+                            enabled: false,
+                        },
+                        toolbar: {
+                            show: false,
+                        },
                     },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        curve: 'smooth',
+                        width: 2,
+                        lineCap: 'square',
+                    },
+                    dropShadow: {
+                        enabled: true,
+                        opacity: 0.2,
+                        blur: 10,
+                        left: -7,
+                        top: 22,
+                    },
+                    colors: isDark ? ['#2196f3', '#e7515a'] : ['#1b55e2', '#e7515a'],
+                    markers: {
+                        discrete: [
+                            {
+                                seriesIndex: 0,
+                                dataPointIndex: 6,
+                                fillColor: '#1b55e2',
+                                strokeColor: 'transparent',
+                                size: 1,
+                            },
+                            {
+                                seriesIndex: 1,
+                                dataPointIndex: 5,
+                                fillColor: '#e7515a',
+                                strokeColor: 'transparent',
+                                size: 1,
+                            },
+                        ],
+                    },
+                    labels: months,
+                    xaxis: {
+                        axisBorder: {
+                            show: false,
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        crosshairs: {
+                            show: true,
+                        },
+                        labels: {
+                            offsetX: isRtl ? 2 : 0,
+                            offsetY: 5,
+                            style: {
+                                fontSize: '12px',
+                                cssClass: 'apexcharts-xaxis-title',
+                            },
+                        },
+                    },
+                    yaxis: {
+                        tickAmount: 7,
+                        labels: {
+                            formatter: (value) => {
+                                return value / 1000 + 'K';
+                            },
+                            offsetX: isRtl ? -30 : -10,
+                            offsetY: 0,
+                            style: {
+                                fontSize: '12px',
+                                cssClass: 'apexcharts-yaxis-title',
+                            },
+                        },
+                        opposite: isRtl ? true : false,
+                    },
+                    grid: {
+                        borderColor: isDark ? '#191e3a' : '#e0e6ed',
+                        strokeDashArray: 5,
+                        xaxis: {
+                            lines: {
+                                show: true,
+                            },
+                        },
+                        yaxis: {
+                            lines: {
+                                show: false,
+                            },
+                        },
+                        padding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+                        },
+                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'right',
+                        fontSize: '16px',
+                        markers: {
+                            width: 10,
+                            height: 10,
+                            offsetX: -2,
+                        },
+                        itemMargin: {
+                            horizontal: 10,
+                            vertical: 5,
+                        },
+                    },
+                    tooltip: {
+                        marker: {
+                            show: true,
+                        },
+                        x: {
+                            show: false,
+                        },
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            inverseColors: !1,
+                            opacityFrom: isDark ? 0.19 : 0.28,
+                            opacityTo: 0.05,
+                            stops: isDark ? [100, 100] : [45, 100],
+                        },
+                    },
+                };
+            },
 
-
-                }));
-            });
+           
+        }));
+    });
 </script>
 
 

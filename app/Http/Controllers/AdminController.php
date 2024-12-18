@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 use \App\Models\User;
 use \App\Models\TruckDriver;
 use \App\Models\Customer;
+use App\Models\Expenses;
+use \App\Models\Income;
+use App\Models\Orders;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +65,116 @@ class AdminController extends Controller
 
     public function accountantHome(): View
     {
-        return view('dashboard.accountant');
+        $currentMonthTotal = Income::whereMonth('created_at', now()->month)
+            ->sum('ammount');
+
+        $lastMonthTotal = Income::whereMonth('created_at', now()->subMonth()->month)
+            ->sum('ammount');
+
+        if ($lastMonthTotal > 0) {
+            $growthPercentage = (($currentMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
+        } else {
+            $growthPercentage = 0;
+        }
+        $growthPercentage = round($growthPercentage, 2);
+
+
+        $ExpensescurrentMonthTotal = Expenses::whereMonth('created_at', now()->month)
+            ->sum('amount');
+
+        $ExpenseslastMonthTotal = Expenses::whereMonth('created_at', now()->subMonth()->month)
+            ->sum('amount');
+
+        if ($ExpenseslastMonthTotal > 0) {
+            $ExpensesgrowthPercentage = (($ExpensescurrentMonthTotal - $ExpenseslastMonthTotal) / $ExpenseslastMonthTotal) * 100;
+        } else {
+            $ExpensesgrowthPercentage = 0;
+        }
+        $ExpensesgrowthPercentage = round($ExpensesgrowthPercentage, 2);
+
+
+        $revenueCurrentMonth = $currentMonthTotal - $ExpensescurrentMonthTotal;
+        $revenueLastMonth = $lastMonthTotal - $ExpenseslastMonthTotal;
+
+        if ($revenueLastMonth > 0) {
+            $revenueGrowthPercentage = (($revenueCurrentMonth - $revenueLastMonth) / $revenueLastMonth) * 100;
+        } else {
+            $revenueGrowthPercentage = 0;
+        }
+        $revenueGrowthPercentage = round($revenueGrowthPercentage, 2);
+
+        $currentDate = Carbon::now();
+        $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
+        $endDate = $currentDate->copy()->endOfMonth();
+
+        $salesData = Income::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(ammount) as total_sales')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+            ->get();
+
+        $expensesData = Expenses::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(amount) as total_expenses')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+            ->get();
+
+        $months = [];
+        $salesDataArray = [];
+        $expensesDataArray = [];
+        $revenueArray = [];
+
+        for ($month = $startDate; $month->lte($endDate); $month->addMonth()) {
+            $months[] = $month->format('M Y');
+            $salesDataArray[] = 0;
+            $expensesDataArray[] = 0;
+            $revenueArray[] = 0;
+        }
+
+        foreach ($salesData as $sale) {
+            $saleMonth = Carbon::create($sale->year, $sale->month, 1);
+            $index = array_search($saleMonth->format('M Y'), $months);
+            if ($index !== false) {
+                $salesDataArray[$index] = $sale->total_sales;
+            }
+        }
+
+        foreach ($expensesData as $expense) {
+            $expenseMonth = Carbon::create($expense->year, $expense->month, 1);
+            $index = array_search($expenseMonth->format('M Y'), $months);
+            if ($index !== false) {
+                $expensesDataArray[$index] = $expense->total_expenses;
+            }
+        }
+
+        for ($i = 0; $i < count($salesDataArray); $i++) {
+            $revenueArray[$i] = $salesDataArray[$i] - $expensesDataArray[$i];
+        }
+
+        $salesDataArray = array_reverse($salesDataArray);
+        $expensesDataArray = array_reverse($expensesDataArray);
+        $revenueArray = array_reverse($revenueArray);
+        $totalRevenue = array_sum($revenueArray);
+
+        $unpaid = Orders::where('state', '!=', 'delivered')->sum('balance');
+
+
+        return view('dashboard.accountant', compact(
+            'growthPercentage',
+            'currentMonthTotal',
+            'lastMonthTotal',
+            'ExpensesgrowthPercentage',
+            'ExpenseslastMonthTotal',
+            'ExpensescurrentMonthTotal',
+            'revenueGrowthPercentage',
+            'revenueCurrentMonth',
+            'revenueLastMonth',
+            'months',
+            'salesDataArray',
+            'expensesDataArray',
+            'totalRevenue',
+            'unpaid'
+        ));
     }
 
     public function servicemanagerHome(): View
@@ -94,6 +206,11 @@ class AdminController extends Controller
                 $data[$index] = $monthly->total;
             }
         }
+
+
+
+
+
 
         return view('dashboard.servicemanager', compact('data', 'months'));
     }

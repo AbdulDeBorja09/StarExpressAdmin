@@ -50,8 +50,7 @@
                                             <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px; text-align:start">Select Date:
                                             </label>
-                                            <input id="price" type="date" name="date" class="form-input flex-1"
-                                                required>
+                                            <input type="date" name="date" class="form-input flex-1" required>
 
                                             <label for="status" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px; text-align:start">Status
@@ -64,8 +63,7 @@
                                             <label for="note" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px; text-align:start">Note:
                                             </label>
-                                            <input id="price" type="text" name="note" class="form-input flex-1" required
-                                                value="">
+                                            <input type="text" name="note" class="form-input flex-1" required>
                                         </div>
                                         <div class="flex justify-center items-center mt-8">
                                             <button type="submit" class="btn btn-outline-success"
@@ -84,14 +82,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Date</th>
                             <th>Created By</th>
                             <th>Trip ID</th>
-                            <th>Date</th>
                             <th>Driver</th>
                             <th>Truck</th>
+                            <th>Note</th>
                             <th style="width: 200px; text-align:center">Package Count</th>
                             <th style="text-align: center;">Status</th>
-
                             <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
@@ -100,16 +98,29 @@
                         @foreach ($delivery as $num => $item)
                         <tr>
                             <td>{{$num + 1}}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->date)->format('F j, Y') }}</td>
                             <td>{{$item->manager->lname}}, {{$item->manager->fname}}</td>
                             <td>{{$item->trip_id}}</td>
-                            <td>{{$item->date}}</td>
-                            <td>{{$item->driver->name ?? 'N/A'}}</td>
-                            <td>{{$item->truck_id ?? 'N/A'}} </td>
+
+                            <td>{{$item->driver->name ?? 'Not Set'}}</td>
+                            <td>{{ implode(' ', [$item->truck->model ?? 'Not', $item->truck->plate ?? 'Set']) }}</td>
+
+                            <td>{{$item->note}}</td>
                             <td style="width: 180px; text-align:center">{{ is_array(json_decode($item->items, true)) ?
                                 count(json_decode($item->items, true)) : 0 }}
 
                             </td>
-                            <td style="text-transform: capitalize; text-align: center;">{{$item->status}}</td>
+                            <td style="text-transform: capitalize; text-align: center;">
+                                @if($item->status === 'pending')
+                                <span class="badge badge-outline-warning">Pending</span>
+                                @elseif($item->status === 'ready')
+                                <span class="badge badge-outline-success">Ready</span>
+                                @elseif($item->status === 'deployed')
+                                <span class="badge bg-success">Deployed</span>
+                                @else
+                                <span class="badge badge-outline-danger">Error</span>
+                                @endif
+                            </td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
                                     <a href="{{ url('Delivery/Packages/' . $item->id) }}" class="hover:text-primary">
@@ -222,19 +233,16 @@
                 const cells = row.getElementsByTagName('td');
                 let found = false;
 
-                // Loop through the cells in each row
-                for (let i = 1; i < cells.length; i++) { // Start from index 1 to skip the index column
+                for (let i = 1; i < cells.length; i++) { 
                     const cell = cells[i];
                     if (cell) {
                         const textValue = cell.textContent || cell.innerText;
                         if (textValue.toLowerCase().indexOf(filter) > -1) {
                             found = true;
-                            break; // Stop searching if a match is found
+                            break; 
                         }
                     }
                 }
-
-                // Toggle the row's visibility
                 if (found) {
                     row.style.display = "";
                 } else {
@@ -243,69 +251,6 @@
             });
         });
     });
-</script>
-<script>
-    let selectedOrders = [];
-    
-    function allowDrop(event) {
-        event.preventDefault(); // Prevent default behavior to allow drop
-    }
-    
-    function drag(event) {
-        // Set the id of the dragged element
-        event.dataTransfer.setData("text/plain", event.target.dataset.id);
-    }
-    
-    function drop(event, dropZone) {
-        event.preventDefault(); // Prevent default behavior
-    
-        // Get the id of the dragged element
-        const orderId = event.dataTransfer.getData("text/plain");
-    
-        // Find the dragged order element
-        const orderElement = document.querySelector(`.order[data-id='${orderId}']`);
-    
-        if (dropZone === 'submitted-orders') {
-            // Append order to the drop zone
-            document.getElementById(dropZone).appendChild(orderElement);
-            selectedOrders.push(orderId); // Store the selected order ID
-        } else if (dropZone === 'orders') {
-            // Move order back to the original orders section
-            document.getElementById(dropZone).appendChild(orderElement);
-            selectedOrders = selectedOrders.filter(id => id !== orderId); // Remove from selected orders
-        }
-    }
-    function submitOrders() {
-    if (selectedOrders.length === 0) {
-        alert("No orders selected for submission!");
-        return;
-    }
-
-
-    fetch('{{ route('submitdelivery') }}', { 
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    },
-    body: JSON.stringify({ order_ids: selectedOrders })
-    
-})
-.then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Parse JSON response
-    })
-    .then(data => {
-        console.log(data.message); // Optionally log the success message
-        location.reload(); // Refresh the page
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-  
-}
 </script>
 
 @endsection

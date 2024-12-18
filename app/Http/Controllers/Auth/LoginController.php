@@ -64,13 +64,15 @@ class LoginController extends Controller
             $user = Auth::user();
             if ($user->status === 'active') {
                 Session::put('avatar', $user->avatar);
-                
+
                 if ($user->type === 'accountant') {
                     return redirect()->route('accountant.home');
                 } elseif ($user->type === 'admin') {
                     return redirect()->route('admin.home');
                 } elseif ($user->type === 'servicemanager') {
                     return redirect()->route('servicemanager.home');
+                } elseif ($user->type === 'hr') {
+                    return redirect()->route('humanresourcehome.home');
                 } else {
                     Auth::logout();
                     return redirect()->route('login')->withErrors(['unauthorized' => 'Unauthorized user type.']);

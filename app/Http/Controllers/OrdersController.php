@@ -51,6 +51,10 @@ class OrdersController extends Controller
     {
         return $this->fetchOrders($request, "OutForDelivery");
     }
+    public function readyfordelivery(Request $request)
+    {
+        return $this->fetchOrders($request, "ReadyForDelivery");
+    }
 
     public function neworders(Request $request)
     {
@@ -73,9 +77,8 @@ class OrdersController extends Controller
 
         $request->validate([
             'status' => 'required|string',
-            'location' => 'nullable|string',
         ]);
-        $status = implode(' ', [$request->status, $request->location ?? '',]);
+        $status = implode(' ', [$request->status ?? '',]);
         $id = $request->id;
         $order = Orders::find($id);
         $id = Auth::id();
@@ -116,7 +119,7 @@ class OrdersController extends Controller
         if ($order) {
             $statuses = $order->status ? json_decode($order->status, true) : [];
             if (isset($statuses[$index])) {
-                $statuses[$index]['status'] = implode(' ', [$request->status, $request->location ?? '']);
+                $statuses[$index]['status'] = implode(' ', [$request->status ?? '']);
                 $statuses[$index]['logs'] = 'Edited By: ' . $user->lname . ', ' . $user->fname;
                 $statuses[$index]['timestamp'] = now()->toDateTimeString();
                 $order->status = json_encode($statuses);

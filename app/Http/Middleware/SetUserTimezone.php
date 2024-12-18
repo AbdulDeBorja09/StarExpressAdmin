@@ -22,7 +22,7 @@ class SetUserTimezone
             // Set the timezone if the country exists in the timezone mapping
             if (array_key_exists($country, $timezones)) {
                 date_default_timezone_set($timezones[$country]);
-                Log::info("Timezone set to: {$country} for user ID: " . Auth::id());
+                // Log::info("Timezone set to: {$country} for user ID: " . Auth::id());
             }
         }
 

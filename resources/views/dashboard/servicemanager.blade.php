@@ -244,6 +244,7 @@
                 get revenueChartOptions() {
                     const data = @json($data);  
                     const labels = @json($months);
+                   
                     return {
                         series: [
                             {

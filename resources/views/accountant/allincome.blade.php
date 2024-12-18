@@ -16,78 +16,45 @@
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
-                Orders</a>
+                Income</a>
         </li>
     </ol>
+    @include('layout.components.error')
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
-            <div class="flex mb-5">
-                {{-- <div><button>EDIT STATUS</button></div> --}}
+            <div class="flex  mb-5" style="justify-content: space-between">
                 <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
             </div>
-            <div class="table-responsive" class="">
-                <table class="orders-table table table-bordered" style="text-transform: capitalize;">
+            <div class="table-responsive">
+                <table class="orders-table table table-bordered">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="select-all" class="form-checkbox" /></th>
-                            <th style="width: 60px">#</th>
-                            <th>Date Ordered</th>
-                            <th>Reference Number</th>
-                            <th>Sender Name</th>
-
-                            @if(Auth::user()->type === 'servicemanager' || Auth::user()->type === 'admin')
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Latest Status</th>
-
-                            @else
-                            <th>Origin</th>
-                            <th>Payment Status</th>
-                            <th>Total</th>
-                            <th>Balance</th>
-                            <th>Latest Status</th>
-                            @endif
+                            <th>#</th>
+                            <th>Date/th>
+                            <th>Type</th>
+                            <th>Reference</th>
+                            <th style="text-align: center">Amount</th>
                             <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($orders as $index => $order)
+
+                        @foreach ($income as $num => $item)
                         <tr>
-                            @php
-                            $statuses = json_decode($order->status, true);
-                            $latestStatus = is_array($statuses) ? end($statuses)['status'] : 'N/A';
-                            @endphp
-                            <td style="text-align: center;"><input type="checkbox"
-                                    class="form-checkbox child-checkbox" />
+                            <td>{{$num + 1}}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
+                            <td>{{$item->category}}</td>
+                            <td>{{$item->reference}}</td>
+                            <td style="width: 180px; text-align:center">
+                                {{ number_format($item->ammount,
+                                2) }}
                             </td>
-                            <td style="text-align: center;width: 60px">{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ $order->reference_number }}</td>
-                            <td>{{$order->sender_name}}</td>
-
-                            @if(Auth::user()->type === 'servicemanager' || Auth::user()->type === 'admin')
-                            <td>{{ $order->cargoService->originBranch->branch ??
-                                'N/A' }}, {{
-                                $order->cargoService->originBranch->country ?? '' }}</td>
-                            <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
-                            <td>{{ $latestStatus }}</td>
-
-                            @else
-                            <td>{{ $order->cargoService->originBranch->branch ??
-                                'N/A' }}, {{
-                                $order->cargoService->originBranch->country ?? '' }}</td>
-
-                            <td>{{ $order->payment_status }}</td>
-                            <td>{{ $order->total }}</td>
-                            <td>{{ $order->balance }}</td>
-                            <td>{{ $latestStatus }}</td>
-                            @endif
 
 
+                            </td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
-                                    <a href="{{ url('details/' . $order->reference_number) }}"
-                                        class="hover:text-primary">
+                                    <a class="hover:text-primary">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                                             <path opacity="0.5"
@@ -109,7 +76,9 @@
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} Orders
+                        Showing {{ $income->firstItem() }} to {{ $income->lastItem() }} of {{ $income->total()
+                        }}
+                        Items
                     </div>
                     <div class="dataTable-dropdown"><label>
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">
@@ -121,10 +90,9 @@
                             </select>
                         </label>
                     </div>
-
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
-                            @if ($orders->onFirstPage())
+                            @if ($income->onFirstPage())
                             <li class="pager disabled"><a href="#" aria-disabled="true"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                         class="w-4.5 h-4.5 rtl:rotate-180">
@@ -135,7 +103,7 @@
                                     </svg></a></li>
                             @else
                             <li class="pager"><a
-                                    href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() - 1]) }}"><svg
+                                    href="{{ request()->fullUrlWithQuery(['page' => $income->currentPage() - 1]) }}"><svg
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                         <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5"
@@ -146,17 +114,17 @@
                             </li>
                             @endif
 
-                            @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                                @if ($i == $orders->currentPage())
+                            @for ($i = 1; $i <= $income->lastPage(); $i++)
+                                @if ($i == $income->currentPage())
                                 <li class="active"><a href="#">{{ $i }}</a></li>
                                 @else
                                 <li><a href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endif
                                 @endfor
 
-                                @if ($orders->hasMorePages())
+                                @if ($income->hasMorePages())
                                 <li class="pager"><a
-                                        href="{{ request()->fullUrlWithQuery(['page' => $orders->currentPage() + 1]) }}"><svg
+                                        href="{{ request()->fullUrlWithQuery(['page' => $income->currentPage() + 1]) }}"><svg
                                             width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                             <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5"
@@ -179,83 +147,9 @@
                                 @endif
                         </ul>
                     </nav>
-
                 </div>
             </form>
         </div>
-        {{-- <div class="panel">
-            <h1>Orders</h1>
-
-            <div id="orders">
-                @foreach($orders as $order)
-                <div class="order" draggable="true" ondragstart="drag(event)">
-                    {{ $order->order_name }} (Sender: {{ $order->sender_name }})
-                </div>
-                @endforeach
-            </div>
-
-            <div id="submitted-orders" ondragover="allowDrop(event)" ondrop="drop(event)">
-                <p>Drag orders here</p>
-            </div>
-
-            <button onclick="submitOrders()">Submit</button>
-
-            <script>
-                function allowDrop(event) {
-                    event.preventDefault();
-                }
-        
-                function drag(event) {
-                    event.dataTransfer.setData("text", event.target.innerText);
-                    event.dataTransfer.setData("id", event.target.dataset.id); // Store the order ID if needed
-                }
-        
-                function drop(event) {
-                    event.preventDefault();
-                    const orderText = event.dataTransfer.getData("text");
-                    const ordersList = document.getElementById('orders');
-                    const orderElements = ordersList.getElementsByClassName('order');
-        
-                    // Find and remove the dragged order from the orders list
-                    for (let i = 0; i < orderElements.length; i++) {
-                        if (orderElements[i].innerText === orderText) {
-                            ordersList.removeChild(orderElements[i]); // Remove the order from the list
-                            break;
-                        }
-                    }
-        
-                    // Create a new order element for the submitted orders
-                    const newOrder = document.createElement("div");
-                    newOrder.className = "order";
-                    newOrder.innerText = orderText;
-                    newOrder.setAttribute("draggable", "true");
-                    newOrder.setAttribute("ondragstart", "drag(event)");
-                    document.getElementById("submitted-orders").appendChild(newOrder);
-                }
-        
-                function submitOrders() {
-                    const submittedOrders = Array.from(document.querySelectorAll('#submitted-orders .order')).map(order => order.innerText);
-                    fetch('', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ orders: submittedOrders })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Orders submitted successfully!');
-                            location.reload(); // Reload the page to reset the orders
-                        } else {
-                            alert('Error submitting orders.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-            </script>
-        </div> --}}
     </div>
 </div>
 <script>
@@ -269,6 +163,7 @@
             tableRows.forEach(row => {
                 const cells = row.getElementsByTagName('td');
                 let found = false;
+
                 for (let i = 1; i < cells.length; i++) { 
                     const cell = cells[i];
                     if (cell) {
@@ -283,29 +178,6 @@
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
-                }
-            });
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('select-all');
-        const childCheckboxes = document.querySelectorAll('.child-checkbox');
-
-        selectAllCheckbox.addEventListener('change', function () {
-            childCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
-
-      
-        childCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                if (!this.checked) {
-                    selectAllCheckbox.checked = false;
-                } else if (Array.from(childCheckboxes).every(cb => cb.checked)) {
-                    selectAllCheckbox.checked = true;
                 }
             });
         });

@@ -16,6 +16,7 @@ class Delivery extends Model
         'date',
         'items',
         'status',
+        'note',
     ];
     public function driver()
     {
@@ -24,6 +25,10 @@ class Delivery extends Model
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+    public function truck()
+    {
+        return $this->belongsTo(CargoTruck::class, 'truck_id');
     }
 
     use HasFactory;

@@ -13,7 +13,8 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TruckController;
 use App\Http\Controllers\NotificationController;
-
+use App\Http\Controllers\AllowanceController;
+use App\Http\Controllers\ExpensesController;
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -28,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('admin.home');
         } elseif ($user->type === 'servicemanager') {
             return redirect()->route('servicemanager.home');
+        } elseif ($user->type === 'hr') {
+            return redirect()->route('humanresourcehome.home');
         } else {
             Auth::logout();
         }
@@ -37,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Admin
 Route::middleware(['auth', 'set.timezone', 'user-access:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'adminHome'])->name('admin.home');
+    Route::get('/admin', [AdminController::class, 'accountantHome'])->name('admin.home');
     Route::get('/Branches', [ManagementController::class, 'Branches'])->name('admin.Branches');
     Route::get('/Services', [ManagementController::class, 'services'])->name('admin.Services');
 
@@ -50,8 +53,23 @@ Route::middleware(['auth', 'set.timezone', 'user-access:admin'])->group(function
     Route::post('/Services/edit', [ManagementController::class, 'editservices'])->name('editservices');
 });
 
+
+// Accountant
 Route::middleware(['auth', 'set.timezone', 'user-access:accountant|admin'])->group(function () {
     Route::get('/Accountant', [AdminController::class, 'accountantHome'])->name('accountant.home');
+    Route::get('/Reports/Allowance', [AllowanceController::class, 'allowancerequest'])->name('allowancerequest');
+    Route::get('/Reports/Allowance/{id}', [AllowanceController::class, 'allowancedetails'])->name('allowancedetails');
+    Route::get('/Reports/New', [ExpensesController::class, 'newreport'])->name('newreport');
+    Route::get('/Income/All', [ExpensesController::class, 'allincome'])->name('allincome');
+    Route::get('/Allowance/All', [ExpensesController::class, 'allallowance'])->name('allallowance');
+    Route::get('/Expenses/All', [ExpensesController::class, 'allexpenses'])->name('allexpenses');
+
+
+    Route::post('/Reports/Allowance/Approve', [AllowanceController::class, 'allowanceapprove'])->name('allowanceapprove');
+    Route::post('/Reports/Allowance/Reject', [AllowanceController::class, 'allowancereject'])->name('allowancereject');
+    Route::post('/Reports/Allowance/Complete', [AllowanceController::class, 'allowanceacomplete'])->name('allowanceacomplete');
+
+    Route::post('/Reports/New/Submit', [ExpensesController::class, 'createnewreport'])->name('createnewreport');
 });
 
 
@@ -93,6 +111,10 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
 
     Route::post('/submit-orders', [ServiceManagerController::class, 'submitdelivery'])->name('submitdelivery');
     Route::post('/create-delivery', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
+    Route::post('/Delivery/Deploy', [ServiceManagerController::class, 'deploydelivery'])->name('deploydelivery');
+
+    Route::post('/Allowance/Create', [AllowanceController::class, 'createallowance'])->name('createallowance');
+    Route::post('/Allowance/Edit', [AllowanceController::class, 'editallowance'])->name('editallowance');
 });
 
 
@@ -123,13 +145,13 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
 });
 
 
-
-// Global Access
+// All user
 Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
     Route::get('/details/{reference_number}', [OrdersController::class, 'orderdetails']);
     Route::get('/AllOrders', [OrdersController::class, 'allorders'])->name('allorders');
     Route::get('/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
     Route::get('/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
+    Route::get('/ReadyForDelivery', [OrdersController::class, 'readyfordelivery'])->name('readyfordelivery');
     Route::get('/NewOrders', [OrdersController::class, 'neworders'])->name('neworders');
     Route::get('/Chat', [ChatController::class, 'chatpage'])->name('chatpage');
 });

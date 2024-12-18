@@ -20,7 +20,7 @@
                 Details</a>
         </li>
     </ol>
-
+    @include('layout.components.error')
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5" style="min-height: 80vh">
         <div class="panel">
             <div class="mb-5  flex flex-col sm:flex-row" x-data="{ 
@@ -457,50 +457,53 @@
                                         </table>
                                     </div>
 
-                                    <div class="flex items-center text-md font-semibold">
-                                        <div class="flex-1">Payment Method:</div>
-                                        <div class="w-[37%]">{{$details->method}}</div>
-                                    </div>
-                                    <div class="flex items-center  font-semibold">
-                                        <div class="flex-1">Payment Reference:</div>
-                                        <div class="w-[37%]">{{$details->payment_reference}}</div>
-                                    </div>
-                                    <div class="flex items-center font-semibold">
-                                        <div class="flex-1">Payment Plan:</div>
-                                        <div class="w-[37%]" style="text-transform:capitalize ">{{$details->payment}}
+                                    <div class="space-y-4" style="margin-left: 5px">
+                                        <div class="flex items-center text-md font-semibold">
+                                            <div class="flex-1">Payment Method:</div>
+                                            <div class="w-[37%]">{{$details->method}}</div>
                                         </div>
-                                    </div>
+                                        <div class="flex items-center  font-semibold">
+                                            <div class="flex-1">Payment Reference:</div>
+                                            <div class="w-[37%]">{{$details->payment_reference}}</div>
+                                        </div>
+                                        <div class="flex items-center font-semibold">
+                                            <div class="flex-1">Payment Plan:</div>
+                                            <div class="w-[37%]" style="text-transform:capitalize ">
+                                                {{$details->payment}}
+                                            </div>
+                                        </div>
 
-                                    <div class="flex items-center font-semibold">
-                                        <div class="flex-1">Payment Status:</div>
-                                        <div class="w-[37%]" style="text-transform:capitalize ">
-                                            {{$details->payment_status}}</div>
-                                    </div>
+                                        <div class="flex items-center font-semibold">
+                                            <div class="flex-1">Payment Status:</div>
+                                            <div class="w-[37%]" style="text-transform:capitalize ">
+                                                {{$details->payment_status}}</div>
+                                        </div>
 
-                                    <hr>
-                                    <div class="flex items-center text-md">
-                                        <div class="flex-1">Sub Total:</div>
-                                        <div class="w-[37%]">{{ number_format($grandtotal, 2)}}</div>
-                                    </div>
-                                    <div class="flex items-center text-md ">
-                                        <div class="flex-1">Total Items:</div>
-                                        <div class="w-[37%]">{{$totalQuantity}}x</div>
-                                    </div>
-                                    <div class="flex items-center text-md ">
-                                        <div class="flex-1">Voucher:</div>
-                                        <div class="w-[37%]">{{$details->voucher ?? 'N/A'}}</div>
-                                    </div>
-                                    <div class="flex items-center text-md ">
-                                        <div class="flex-1">Discount:</div>
-                                        <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
-                                    </div>
-                                    <div class="flex items-center text-md ">
-                                        <div class="flex-1">Balance:</div>
-                                        <div class="w-[37%]">{{$details->balance}}</div>
-                                    </div>
-                                    <div class="flex items-center text-lg font-semibold">
-                                        <div class="flex-1">Grand Total</div>
-                                        <div class="w-[37%]">{{$details->total}}</div>
+                                        <hr>
+                                        <div class="flex items-center text-md">
+                                            <div class="flex-1">Sub Total:</div>
+                                            <div class="w-[37%]">{{ number_format($grandtotal, 2)}}</div>
+                                        </div>
+                                        <div class="flex items-center text-md ">
+                                            <div class="flex-1">Total Items:</div>
+                                            <div class="w-[37%]">{{$totalQuantity}}x</div>
+                                        </div>
+                                        <div class="flex items-center text-md ">
+                                            <div class="flex-1">Voucher:</div>
+                                            <div class="w-[37%]">{{$details->voucher ?? 'N/A'}}</div>
+                                        </div>
+                                        <div class="flex items-center text-md ">
+                                            <div class="flex-1">Discount:</div>
+                                            <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
+                                        </div>
+                                        <div class="flex items-center text-md ">
+                                            <div class="flex-1">Balance:</div>
+                                            <div class="w-[37%]">{{$details->balance}}</div>
+                                        </div>
+                                        <div class="flex items-center text-lg font-semibold">
+                                            <div class="flex-1">Grand Total</div>
+                                            <div class="w-[37%]">{{$details->total}}</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -615,6 +618,8 @@
                                                 class="status-time text-white-dark text-xs font-bold self-center min-w-[100px] max-w-[100px]">
                                                 {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->diffForHumans() }}
                                             </p>
+                                            @if(Auth::user()->type === 'servicemanger' || Auth::user()->type ===
+                                            'admin')
                                             <button type="button" class="edit-btn my-2"
                                                 style="text-decoration: underline"
                                                 onclick="showEditForm({{ $loop->index }})">Edit Status</button>
@@ -665,10 +670,12 @@
                                                 <button type="button" class="badge badge-outline-danger"
                                                     onclick="hideEditForm({{ $loop->index }})">Cancel</button>
                                             </form>
+                                            @endif
                                         </div>
                                     </div>
                                     @endforeach
                                 </div>
+                                @if(Auth::user()->type === 'servicemanger' || Auth::user()->type === 'admin')
                                 <div>
                                     @if ($details->state === "pending" || $details->state === "Processing")
                                     <form action="{{ route('updateStatus')}}" method="POST">
@@ -713,16 +720,13 @@
                                             <option value="Cleared At Customs">Cleared At Customs</option>
                                             <option value="Processing Cargo">Preparing For Delivery</option>
                                         </select>
-                                        <label for="location" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                                            style="font-size:15px">Location:
-                                        </label>
-                                        <input id="location" class="form-input flex-1" type="text" name="location">
                                         <button type="submit" class="btn btn-outline-success mt-3"
                                             style="width:100%">Add
                                             Status</button>
                                     </form>
                                     @endif
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </template>
