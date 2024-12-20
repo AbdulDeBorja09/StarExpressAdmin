@@ -65,6 +65,10 @@ Route::middleware(['auth', 'set.timezone', 'user-access:accountant|admin'])->gro
     Route::get('/Expenses/All', [ExpensesController::class, 'allexpenses'])->name('allexpenses');
 
 
+    Route::post('/Orders/Approve', [OrdersController::class, 'approveorder'])->name('approveorder');
+    Route::post('/Orders/Delete', [OrdersController::class, 'deleteorder'])->name('deleteorder');
+    Route::post('/Orders/Paid', [OrdersController::class, 'markaspaid'])->name('markaspaid');
+    
     Route::post('/Reports/Allowance/Approve', [AllowanceController::class, 'allowanceapprove'])->name('allowanceapprove');
     Route::post('/Reports/Allowance/Reject', [AllowanceController::class, 'allowancereject'])->name('allowancereject');
     Route::post('/Reports/Allowance/Complete', [AllowanceController::class, 'allowanceacomplete'])->name('allowanceacomplete');

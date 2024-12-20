@@ -39,13 +39,14 @@
                             <th>Origin</th>
                             <th>Destination</th>
                             <th>Latest Status</th>
-
+                            <th style="text-align: center">Order Status</th>
                             @else
                             <th>Origin</th>
                             <th>Payment Status</th>
                             <th>Total</th>
                             <th>Balance</th>
                             <th>Latest Status</th>
+                            <th style="text-align: center">Order Status</th>
                             @endif
                             <th style="text-align: center">Action</th>
                         </tr>
@@ -71,7 +72,12 @@
                                 $order->cargoService->originBranch->country ?? '' }}</td>
                             <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
                             <td>{{ $latestStatus }}</td>
-
+                            <td style="text-align: center">@if ($order->approved === 0)
+                                <span class="badge badge-outline-danger">pending</span>
+                                @else
+                                <span class="badge badge-outline-success">Approved</span>
+                                @endif
+                            </td>
                             @else
                             <td>{{ $order->cargoService->originBranch->branch ??
                                 'N/A' }}, {{
@@ -81,9 +87,14 @@
                             <td>{{ $order->total }}</td>
                             <td>{{ $order->balance }}</td>
                             <td>{{ $latestStatus }}</td>
+                            <td style="text-align: center">@if ($order->approved === '0')
+                                <span class="badge badge-outline-danger">pending</span>
+                                @else
+                                <span class="badge badge-outline-success">Approved</span>
+
+                                @endif
+                            </td>
                             @endif
-
-
                             <td>
                                 <div style="display:flex; justify-content: center; ">
                                     <a href="{{ url('details/' . $order->reference_number) }}"

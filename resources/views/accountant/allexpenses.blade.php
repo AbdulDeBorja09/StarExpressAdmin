@@ -30,7 +30,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Date/th>
+                            <th>Date</th>
                             <th>Type</th>
                             <th>Reference</th>
                             <th style="text-align: center">Amount</th>

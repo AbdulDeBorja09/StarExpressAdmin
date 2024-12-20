@@ -132,4 +132,23 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Order not found.');
         }
     }
+
+
+    public function approveorder(Request $request)
+    {
+        Orders::where('id', $request->id)->update([
+            'approved' => 1
+        ]);
+        return redirect()->back()->with('success', 'Order Approved.');
+    }
+    public function deleteorder(Request $request)
+    {
+        Orders::where('id', $request->id)->delete();
+        return redirect()->back()->with('success', 'Order Deleted.');
+    }
+
+
+
+
+    
 }

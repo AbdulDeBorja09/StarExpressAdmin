@@ -68,7 +68,8 @@
                             value="{{$delivery->note ?? ' N/A '}}">
                         <button type="button" class="btn btn-primary mt-3 gap-2" style="width:100%"
                             onclick="submitOrders()" @if($allowance) @if($allowance->status ===
-                            'approved')
+                            'approved' || allowance->status ===
+                            'completed')
                             disabled
                             @endif
                             @endif><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
