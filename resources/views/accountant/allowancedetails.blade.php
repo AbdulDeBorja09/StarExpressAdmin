@@ -39,9 +39,13 @@
                         <label for="driver" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Driver:</label>
                         <input class="form-input flex-1 mb-2" type="text" value="{{ $delivery->driver->name }}"
                             readonly>
+
                         <label for="driver" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Truck:</label>
                         <input class="form-input flex-1 mb-2" type="text"
                             value="{{ $delivery->truck->model }} - {{ $delivery->truck->plate }}" readonly>
+                        <label for="driver" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Date:</label>
+                        <input class="form-input flex-1 mb-2" id="date" type="text" readonly
+                            value="{{ \Carbon\Carbon::parse($delivery->date)->format('F j, Y') }}">
                         <label for="note" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Note:</label>
                         <input class="form-input flex-1 mb-2" id="note" type="text"
                             value="{{$delivery->note ?? ' N/A '}}" readonly>

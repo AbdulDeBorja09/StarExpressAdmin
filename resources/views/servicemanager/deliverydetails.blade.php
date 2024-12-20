@@ -55,12 +55,13 @@
                             @endforeach
                         </select>
 
+                        <label for="date" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Date:</label>
+                        <input class="form-input flex-1 mb-2" id="date" type="text" readonly
+                            value="{{ \Carbon\Carbon::parse($delivery->date)->format('F j, Y') }}">
+
                         <label for="status" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Status:</label>
-                        <select class="form-input flex-1 mb-2" name="status" id="status">
-                            <option value="pending" {{ $delivery->status == 'pending' ? 'selected' : '' }}>Pending
-                            </option>
-                            <option value="ready" {{ $delivery->status == 'ready' ? 'selected' : '' }}>Ready</option>
-                        </select>
+                        <input class="form-input flex-1 mb-2" id="date" type="text" readonly
+                            value="{{ $delivery->status}}">
 
                         <label for="note" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Note:</label>
                         <input class="form-input flex-1 mb-2" id="note" type="text" name="note"
