@@ -144,6 +144,7 @@
         @endforeach
     </div>
     @endforeach
+    @if(Auth::user()->type === 'admin')
     <div class="panel mt-5">
         <div x-data="modal">
             <!-- button -->
@@ -203,7 +204,7 @@
             </div>
         </div>
     </div>
-
+    @endif
     @else
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
         <div class="panel">

@@ -281,7 +281,7 @@ class ServiceManagerController extends Controller
                 ->get()
                 ->groupBy('branch_id');
 
-            $locations = CargoLocations::with('branch')->orderBy('branch_id', 'asc')
+            $locations = CargoLocations::with('branch')->where('branch_id', $user->branch_id)->orderBy('branch_id', 'asc')
                 ->get()
                 ->groupBy('branch_id');
 

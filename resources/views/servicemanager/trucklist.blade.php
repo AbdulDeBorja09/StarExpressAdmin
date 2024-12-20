@@ -29,11 +29,7 @@
             @endphp
             <h1 style="font-size: 20px; text-transform:capitalize;" class="mt-2">{{$branchs->country}},
                 {{$branchs->branch}}</h1>
-            <div class="flex justify-between">
-
-                {{-- <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text">
-                </div> --}}
-
+            <div class="flex justify-between mt-3">
                 <div class="" x-data="modal">
                     <!-- button -->
                     <div class="flex items-center ">
@@ -119,9 +115,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text">
+                </div>
+
+
             </div>
             <div class="table-responsive">
-                <table class="truck-table table-hover mt-5">
+                <table class="truck-table table table-hover mt-5">
                     <thead>
                         <tr>
                             <th>#</th>
