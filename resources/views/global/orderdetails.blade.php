@@ -677,7 +677,7 @@
                                 </div>
                                 @if(Auth::user()->type === 'servicemanger' || Auth::user()->type === 'admin')
                                 <div>
-                                    @if ($details->state === "pending" || $details->state === "Processing")
+                                    {{-- @if ($details->state === "pending" || $details->state === "Processing") --}}
                                     <form action="{{ route('updateStatus')}}" method="POST">
                                         @csrf
                                         <input class="form-input flex-1" type="hidden" name="id"
@@ -724,7 +724,7 @@
                                             style="width:100%">Add
                                             Status</button>
                                     </form>
-                                    @endif
+                                    {{-- @endif --}}
                                 </div>
                                 @endif
                             </div>

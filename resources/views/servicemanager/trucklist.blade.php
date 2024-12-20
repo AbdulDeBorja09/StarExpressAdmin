@@ -24,12 +24,16 @@
     @foreach ($trucks as $branch => $trucks)
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
+            @php
+            $branchs = \App\Models\Branches::find($branch);
+            @endphp
+            <h1 style="font-size: 20px; text-transform:capitalize;" class="mt-2">{{$branchs->country}},
+                {{$branchs->branch}}</h1>
             <div class="flex justify-between">
-                @php
-                $branchs = \App\Models\Branches::find($branch);
-                @endphp
-                <h1 style="font-size: 20px; text-transform:capitalize;" class="mt-2">{{$branchs->country}},
-                    {{$branchs->branch}}</h1>
+
+                {{-- <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text">
+                </div> --}}
+
                 <div class="" x-data="modal">
                     <!-- button -->
                     <div class="flex items-center ">
@@ -350,4 +354,34 @@
     </div>
     @endif
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.querySelector('.dataTable-input');
+        const tableRows = document.querySelectorAll('.table tbody tr');
+
+        searchInput.addEventListener('keyup', function() {
+            const filter = searchInput.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                let found = false;
+                for (let i = 1; i < cells.length; i++) { 
+                    const cell = cells[i];
+                    if (cell) {
+                        const textValue = cell.textContent || cell.innerText;
+                        if (textValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break; 
+                        }
+                    }
+                }
+                if (found) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
 @endsection

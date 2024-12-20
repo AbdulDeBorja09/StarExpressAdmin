@@ -534,6 +534,10 @@ class ServiceManagerController extends Controller
                 Delivery::where('id', $request->id)->update([
                     'status' => 'deployed'
                 ]);
+                CargoTruck::where('id', $delivery->truck_id)->update([
+                    'status' => 'In Use'
+                ]);
+
                 $orderIds = json_decode($delivery->items, true);
                 $newStatusWithTimestamp = [
                     'status' => "Out for delivery",
@@ -551,6 +555,8 @@ class ServiceManagerController extends Controller
                         $order->save();
                     }
                 }
+
+
                 return redirect()->route('alldeliveries');
             } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['error' => $e->getMessage()]);

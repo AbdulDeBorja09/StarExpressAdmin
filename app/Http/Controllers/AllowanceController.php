@@ -87,10 +87,20 @@ class AllowanceController extends Controller
     public function allowanceapprove(Request $request)
     {
         $fullname = Auth::user()->lname . ', ' . Auth::user()->fname;
-        DeliveryAllowance::where('id', $request->id)->update([
+        $item =  DeliveryAllowance::find($request->id);
+        $delivery = DeliveryAllowance::where('id', $request->id)->update([
             'status' =>  'approved',
             'approved_by' =>  $fullname,
         ]);
+
+        if ($delivery) {
+            Delivery::where('id', $item->delivery_id)->update([
+                'status' =>  'ready',
+            ]);
+        }
+
+
+
         return redirect()->back()->with('success', 'Allowance updated successfully.');
     }
     public function allowancereject(Request $request)

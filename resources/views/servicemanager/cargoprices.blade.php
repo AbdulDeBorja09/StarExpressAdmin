@@ -88,7 +88,7 @@
 
                                             </select>
                                             <label for="name" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                                                style="font-size:15px">Enter Servive Type
+                                                style="font-size:15px">Enter Service Type
                                             </label>
                                             <input id="name" type="text" name="type" class="form-input flex-1" required>
 
