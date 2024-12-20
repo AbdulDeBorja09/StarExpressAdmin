@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    {{-- 
+    {{--
     <link rel="icon" type="image/x-icon" href="favicon.png"> --}}
 
 
@@ -31,8 +31,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.3/dist/echo.iife.min.js"></script>
 
-
-    @vite('resources/js/app.js')
 
 </head>
 
