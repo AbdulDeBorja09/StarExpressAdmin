@@ -25,6 +25,7 @@ use Carbon\Carbon;
 
 class AllowanceController extends Controller
 {
+    // optimize the function below  to use a single function for both create and edit
     public function createallowance(Request $request)
     {
         $request->validate([

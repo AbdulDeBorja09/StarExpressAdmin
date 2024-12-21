@@ -217,14 +217,23 @@
                                         <div class="flex-1">Discount:</div>
                                         <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
                                     </div>
+                                    @if($details->payment === 'half')
                                     <div class="flex items-center">
-                                        <div class="flex-1">Balance:</div>
-                                        <div class="w-[37%]">{{$details->balance}}</div>
+                                        <div class="flex-1">Grand total:</div>
+                                        <div class="w-[37%]">{{$details->total}}</div>
                                     </div>
+                                    <div class="flex items-center text-lg font-semibold">
+                                        <div class="flex-1">Total Balance</div>
+                                        <div class="w-[37%]">${{$details->balance}}</div>
+                                    </div>
+                                    @else
                                     <div class="flex items-center text-lg font-semibold">
                                         <div class="flex-1">Grand Total</div>
                                         <div class="w-[37%]">${{$details->total}}</div>
                                     </div>
+
+
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -419,14 +428,21 @@
                                             <div class="flex-1">Discount:</div>
                                             <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
                                         </div>
+                                        @if($details->payment === 'half')
                                         <div class="flex items-center text-md ">
-                                            <div class="flex-1">Balance:</div>
+                                            <div class="flex-1">Grand Total</div>
+                                            <div class="w-[37%]">{{$details->total}}</div>
+                                        </div>
+                                        <div class="flex items-center text-lg font-semibold">
+                                            <div class="flex-1">Total Balance:</div>
                                             <div class="w-[37%]">{{$details->balance}}</div>
                                         </div>
+                                        @else
                                         <div class="flex items-center text-lg font-semibold">
                                             <div class="flex-1">Grand Total</div>
                                             <div class="w-[37%]">{{$details->total}}</div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
 

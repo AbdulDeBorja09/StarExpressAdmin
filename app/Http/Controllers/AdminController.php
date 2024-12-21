@@ -66,10 +66,10 @@ class AdminController extends Controller
     public function accountantHome(): View
     {
         $currentMonthTotal = Income::whereMonth('created_at', now()->month)
-            ->sum('ammount');
+            ->sum('amount');
 
         $lastMonthTotal = Income::whereMonth('created_at', now()->subMonth()->month)
-            ->sum('ammount');
+            ->sum('amount');
 
         if ($lastMonthTotal > 0) {
             $growthPercentage = (($currentMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100;
@@ -107,7 +107,7 @@ class AdminController extends Controller
         $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
         $endDate = $currentDate->copy()->endOfMonth();
 
-        $salesData = Income::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(ammount) as total_sales')
+        $salesData = Income::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(amount) as total_sales')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
             ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
@@ -184,7 +184,7 @@ class AdminController extends Controller
         $endDate = $currentDate->copy()->endOfMonth();
 
         $monthlyTotals = DB::table('sales')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_ammount) as total')
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as total')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
             ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
