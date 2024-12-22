@@ -31,7 +31,7 @@
                 }
             }">
                 <div class="mr-5 mb-5 sm:mb-0">
-                    <ul class="m-auto w-24 text-start font-semibold" id="tabs">
+                    <ul class=" w-24 text-start font-semibold" id="tabs">
                         <li>
                             <a href="javascript:;" id="overallTab"
                                 class="relative -mb-[1px] block border-white-light p-3.5 py-4 before:absolute before:bottom-0 before:top-0 before:m-auto before:h-0 before:w-[1px] before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:h-[80%] ltr:border-r ltr:before:-right-[1px] rtl:border-l rtl:before:-left-[1px] dark:border-[#191e3a] text-secondary before:!h-[80%]"
@@ -62,7 +62,7 @@
                 </div>
                 <div class="flex-1 text-sm">
                     <template x-if="tab === 'overall'">
-                        <div class="" style="padding-left:30px">
+                        <div class="order-tab">
                             <div class="flex flex-wrap justify-between gap-4 px-0">
                                 <div>
                                     @php
@@ -240,7 +240,8 @@
                     </template>
 
                     <template x-if="tab === 'details'">
-                        <div style="padding-left:30px" class="order-details-packinglist">
+
+                        <div class="order-tab order-details-packinglist">
                             <div>
                                 <div class="text-2xl font-semibold uppercase">Packing List</div>
                                 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -346,7 +347,7 @@
                     </template>
 
                     <template x-if="tab === 'payment'">
-                        <div style="padding-left:30px">
+                        <div class="order-tab">
                             <div class="text-2xl font-semibold uppercase">Payment Details</div>
                             <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
                                 <div class="space-y-4 " style="border-right: 1px solid #698ea8"
@@ -575,7 +576,7 @@
                     </template>
 
                     <template x-if="tab === 'status'">
-                        <div style="padding-left:30px">
+                        <div class="order-tab">
                             <div class="text-2xl font-semibold uppercase">Order Status</div>
                             <div class="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-5">
                                 <div class="max-w-[900px]">

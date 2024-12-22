@@ -102,3 +102,12 @@
 .employee-counts h5 {
     margin-top: 10px;
 }
+.order-tab {
+    padding-left: 30px;
+}
+@media screen and (max-width: 500px) {
+    .order-tab {
+        padding-left: 0px;
+    }
+}
+

@@ -33,7 +33,6 @@
                         @csrf
                         <div class="mt-4 items-center">
                             <input type="hidden" name="id" value="{{ $box->id }}">
-                            inp
                             <label for="name" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter
                                 Box
                                 Name

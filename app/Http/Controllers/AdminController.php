@@ -207,6 +207,7 @@ class AdminController extends Controller
         //         $data[$index] = $monthly->total;
         //     }
         // }
+
         $totalOrders = Orders::where('state', '!=', 'Delivered')->count();
 
         $newOrders = Orders::where('state', 'pending')->count();
