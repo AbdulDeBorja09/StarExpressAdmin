@@ -60,18 +60,28 @@ Route::middleware(['auth', 'set.timezone', 'user-access:accountant|admin'])->gro
     Route::get('/Reports/Allowance', [AllowanceController::class, 'allowancerequest'])->name('allowancerequest');
     Route::get('/Reports/Allowance/{id}', [AllowanceController::class, 'allowancedetails'])->name('allowancedetails');
     Route::get('/Reports/New', [ExpensesController::class, 'newreport'])->name('newreport');
-    Route::get('/Income/All', [ExpensesController::class, 'allincome'])->name('allincome');
-    Route::get('/Allowance/All', [ExpensesController::class, 'allallowance'])->name('allallowance');
-    Route::get('/Expenses/All', [ExpensesController::class, 'allexpenses'])->name('allexpenses');
+    Route::get('/Reports/Pending', [ExpensesController::class, 'submittedreports'])->name('submittedreports');
 
+    Route::get('/Allowance/All', [ExpensesController::class, 'allallowance'])->name('allallowance');
+
+    Route::get('/Income/All', [ExpensesController::class, 'allincome'])->name('allincome');
+    Route::get('/Income/Cargo', [ExpensesController::class, 'cargoincome'])->name('cargoincome');
+    Route::get('/Income/Report', [ExpensesController::class, 'reportincome'])->name('reportincome');
+
+    Route::get('/Expenses/All', [ExpensesController::class, 'allexpenses'])->name('allexpenses');
+    Route::get('/Expenses/Allowance', [ExpensesController::class, 'deliveryexpenses'])->name('deliveryexpenses');
+    Route::get('/Expenses/Report', [ExpensesController::class, 'reportexpenses'])->name('reportexpenses');
 
     Route::post('/Orders/Approve', [OrdersController::class, 'approveorder'])->name('approveorder');
     Route::post('/Orders/Delete', [OrdersController::class, 'deleteorder'])->name('deleteorder');
     Route::post('/Orders/Paid', [OrdersController::class, 'markaspaid'])->name('markaspaid');
-    
+
     Route::post('/Reports/Allowance/Approve', [AllowanceController::class, 'allowanceapprove'])->name('allowanceapprove');
     Route::post('/Reports/Allowance/Reject', [AllowanceController::class, 'allowancereject'])->name('allowancereject');
     Route::post('/Reports/Allowance/Complete', [AllowanceController::class, 'allowanceacomplete'])->name('allowanceacomplete');
+
+    Route::post('/Reports/Approve', [ExpensesController::class, 'approvereport'])->name('approvereport');
+    Route::post('/Reports/Rejmect', [ExpensesController::class, 'rejectreport'])->name('rejectreport');
 
     Route::post('/Reports/New/Submit', [ExpensesController::class, 'createnewreport'])->name('createnewreport');
 });
@@ -89,6 +99,10 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
     Route::get('/Delivery/Packages/{id}', [ServiceManagerController::class, 'DeliveryDetails'])->name('DeliveryDetails');
     Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
+    Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
+    Route::get('/Report/Pending', [ExpensesController::class, 'submittedreports'])->name('allreports');
+    Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
+
 
 
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');
@@ -119,6 +133,8 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
 
     Route::post('/Allowance/Create', [AllowanceController::class, 'createallowance'])->name('createallowance');
     Route::post('/Allowance/Edit', [AllowanceController::class, 'editallowance'])->name('editallowance');
+
+    Route::post('/Reports/Request/New', [ExpensesController::class, 'requestreport'])->name('requestreport');
 });
 
 
@@ -152,12 +168,15 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
 // All user
 Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
     Route::get('/details/{reference_number}', [OrdersController::class, 'orderdetails']);
-    Route::get('/AllOrders', [OrdersController::class, 'allorders'])->name('allorders');
-    Route::get('/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
-    Route::get('/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
-    Route::get('/ReadyForDelivery', [OrdersController::class, 'readyfordelivery'])->name('readyfordelivery');
+    Route::get('/Orders/All', [OrdersController::class, 'allorders'])->name('allorders');
+    Route::get('/Orders/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
+    Route::get('/Orders/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
+    Route::get('/Orders/ReadyForDelivery', [OrdersController::class, 'readyfordelivery'])->name('readyfordelivery');
+    Route::get('/Orders/Delivered', [OrdersController::class, 'deliverdorders'])->name('deliverdorders');
     Route::get('/NewOrders', [OrdersController::class, 'neworders'])->name('neworders');
     Route::get('/Chat', [ChatController::class, 'chatpage'])->name('chatpage');
+
+    Route::get('/Report/Details/{type}/{id}', [ExpensesController::class, 'viewreportdetails'])->name('viewreportdetails');
 });
 
 

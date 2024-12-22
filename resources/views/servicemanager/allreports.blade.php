@@ -16,7 +16,7 @@
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
-                Expenses</a>
+                Reports</a>
         </li>
     </ol>
     @include('layout.components.error')
@@ -30,49 +30,59 @@
                     <thead>
                         <tr>
                             <th>#</th>
+
                             <th>Date</th>
-                            <th>Type</th>
-                            <th>Reference</th>
+                            <th>Category</th>
                             <th>Method</th>
+                            <th>Reference</th>
                             <th>Submitted By</th>
                             <th>Received By</th>
+                            <th>Note</th>
                             <th style="text-align: center">Amount</th>
+                            <th style="text-align: center">Type</th>
+                            <th style="text-align: center">Status</th>
                             <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach ($expenses as $num => $item)
+                        @foreach ($data as $num => $item)
                         <tr>
                             <td>{{$num + 1}}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
-                            <td>{{$item->category}}</td>
-                            <td>{{$item->reference}}</td>
-                            <td>{{$item->method}}</td>
-                            <td>{{$item->submitted_by}}</td>
-                            <td>{{$item->received_by}}</td>
+
+                            <td>{{ \Carbon\Carbon::parse($item['created_at'])->format('F j, Y') }}</td>
+                            <td>{{$item['category']}}</td>
+                            <td>{{$item['method']}}</td>
+                            <td>{{$item['reference']}}</td>
+                            <td>{{$item['submitted_by'] ?? 'N/A'}}</td>
+                            <td>{{$item['received_by'] ?? 'N/A'}}</td>
+                            <td>{{$item['note'] ?? 'None'}}</td>
+
                             <td style="width: 180px; text-align:center">
-                                {{ number_format($item->amount,
-                                2) }}
+                                {{ number_format($item['amount'], 2) }}
                             </td>
+                            <td style="text-align: center">
+                                @if($item['type'] === 'Income')
+                                <span class="badge bg-success">Income</span>
+                                @else
+                                <span class="badge bg-danger">Expenses</span>
+
+                                @endif
+                            </td>
+                            <td style="text-align: center">
+                                @if($item['confirm'] === 0)
+                                <span class="badge badge-outline-warning">Pending</span>
+                                @elseif($item['confirm'] === 1)
+                                <span class="badge badge-outline-success">Approved</span>
+                                @else
+                                <span class="badge badge-outline-danger">Rejected</span>
+                                @endif
+                            </td>
+
                             </td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
-                                    @if ($item->category === ' Delivery Allowance')
-                                    <a class="hover:text-primary">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
-                                            <path opacity="0.5"
-                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                            <path
-                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                        </svg>
-                                    </a>
-                                    @else
                                     <a class="hover:text-primary"
-                                        href="{{ route('viewreportdetails', ['type' => 'Expenses', 'id' => $item['id']]) }}">
+                                        href="{{ route('viewreportdetails', ['type' => $item['type'], 'id' => $item['id']]) }}">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                                             <path opacity="0.5"
@@ -83,7 +93,6 @@
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
                                     </a>
-                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -95,7 +104,7 @@
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $expenses->firstItem() }} to {{ $expenses->lastItem() }} of {{ $expenses->total()
+                        Showing {{ $data->firstItem() }} to {{ $data->lastItem() }} of {{ $data->total()
                         }}
                         Items
                     </div>
@@ -111,7 +120,7 @@
                     </div>
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
-                            @if ($expenses->onFirstPage())
+                            @if ($data->onFirstPage())
                             <li class="pager disabled"><a href="#" aria-disabled="true"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                         class="w-4.5 h-4.5 rtl:rotate-180">
@@ -122,7 +131,7 @@
                                     </svg></a></li>
                             @else
                             <li class="pager"><a
-                                    href="{{ request()->fullUrlWithQuery(['page' => $expenses->currentPage() - 1]) }}"><svg
+                                    href="{{ request()->fullUrlWithQuery(['page' => $data->currentPage() - 1]) }}"><svg
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                         <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5"
@@ -133,17 +142,17 @@
                             </li>
                             @endif
 
-                            @for ($i = 1; $i <= $expenses->lastPage(); $i++)
-                                @if ($i == $expenses->currentPage())
+                            @for ($i = 1; $i <= $data->lastPage(); $i++)
+                                @if ($i == $data->currentPage())
                                 <li class="active"><a href="#">{{ $i }}</a></li>
                                 @else
                                 <li><a href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endif
                                 @endfor
 
-                                @if ($expenses->hasMorePages())
+                                @if ($data->hasMorePages())
                                 <li class="pager"><a
-                                        href="{{ request()->fullUrlWithQuery(['page' => $expenses->currentPage() + 1]) }}"><svg
+                                        href="{{ request()->fullUrlWithQuery(['page' => $data->currentPage() + 1]) }}"><svg
                                             width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                             <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5"

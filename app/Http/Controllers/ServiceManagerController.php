@@ -13,7 +13,10 @@ use App\Models\CargoTruck;
 use App\Models\Orders;
 use App\Models\Delivery;
 use App\Models\TruckDriver;
+use App\Models\Income;
+use App\Models\Expenses;
 use App\Models\DeliveryAllowance;
+use App\Models\Voucher;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +24,8 @@ use Laravel\Ui\Presets\Vue;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ServiceManagerController extends Controller
 {
@@ -516,11 +521,12 @@ class ServiceManagerController extends Controller
 
         return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails', 'allowance'));
     }
-    public function vouchers()
+    public function vouchers(Request $request)
     {
-
-
-        return view('servicemanager.vouchers');
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+        $voucher = Voucher::paginate($perPage);
+        return view('servicemanager.vouchers', compact('voucher', 'perPage', 'currentPage'));
     }
 
     public function deploydelivery(Request $request)
@@ -562,5 +568,10 @@ class ServiceManagerController extends Controller
                 return redirect()->back()->withErrors(['error' => $e->getMessage()]);
             }
         }
+    }
+
+    public function newreport()
+    {
+        return view('servicemanager.addreport');
     }
 }

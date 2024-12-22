@@ -33,20 +33,27 @@
                             <th>Date</th>
                             <th>Type</th>
                             <th>Reference</th>
+                            <th>Method</th>
+                            <th>Plan</th>
+                            <th>Submitted By</th>
+                            <th>Received By</th>
                             <th style="text-align: center">Amount</th>
                             <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($income as $num => $item)
                         <tr>
                             <td>{{$num + 1}}</td>
                             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
                             <td>{{$item->category}}</td>
                             <td>{{$item->reference}}</td>
+                            <td>{{$item->method}}</td>
+                            <td>{{$item->plan ?? 'N/A'}}</td>
+                            <td>{{$item->submitted_by ?? 'N/A'}}</td>
+                            <td>{{$item->received_by ?? 'N/A'}}</td>
                             <td style="width: 180px; text-align:center">
-                                {{ number_format($item->ammount,
+                                {{ number_format($item->amount,
                                 2) }}
                             </td>
 
@@ -54,7 +61,8 @@
                             </td>
                             <td>
                                 <div style="display:flex; justify-content: center; ">
-                                    <a class="hover:text-primary">
+                                    @if ($item->category === 'Cargo Income')
+                                    <a class="hover:text-primary" href="{{ url('details/' . $item->reference) }}">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                                             <path opacity="0.5"
@@ -65,6 +73,21 @@
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
                                     </a>
+                                    @else
+                                    <a class="hover:text-primary"
+                                        href="{{ route('viewreportdetails', ['type' => 'Income', 'id' => $item['id']]) }}">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
+                                            <path opacity="0.5"
+                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                stroke="currentColor" stroke-width="1.5"></path>
+                                            <path
+                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                stroke="currentColor" stroke-width="1.5"></path>
+                                        </svg>
+                                    </a>
+                                    @endif
+
                                 </div>
                             </td>
                         </tr>

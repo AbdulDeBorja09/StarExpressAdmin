@@ -67,11 +67,9 @@
                         <input class="form-input flex-1 mb-2" id="note" type="text" name="note"
                             value="{{$delivery->note ?? ' N/A '}}">
                         <button type="button" class="btn btn-primary mt-3 gap-2" style="width:100%"
-                            onclick="submitOrders()" @if($allowance) @if($allowance->status ===
-                            'approved' || allowance->status ===
-                            'completed')
+                            onclick="submitOrders()" @if($allowance && ($allowance->status === 'approved' ||
+                            $allowance->status === 'completed'))
                             disabled
-                            @endif
                             @endif><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                                 <path

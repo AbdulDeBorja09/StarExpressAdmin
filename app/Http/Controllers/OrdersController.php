@@ -10,6 +10,7 @@ use App\Models\CargoService;
 use App\Models\CargoLocations;
 use App\Models\CargoPrices;
 use App\Models\CargoTruck;
+use App\Models\Income;
 use App\Models\Orders;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -54,6 +55,10 @@ class OrdersController extends Controller
     public function readyfordelivery(Request $request)
     {
         return $this->fetchOrders($request, "ReadyForDelivery");
+    }
+    public function deliverdorders(Request $request)
+    {
+        return $this->fetchOrders($request, "Delivered");
     }
 
     public function neworders(Request $request)
@@ -147,8 +152,33 @@ class OrdersController extends Controller
         return redirect()->back()->with('success', 'Order Deleted.');
     }
 
+    public function markaspaid(Request $request)
+    {
+        try {
+            $info = Orders::find($request->id);
+            if (!$info) {
+                return redirect()->back()->with('error', 'Order not found.');
+            }
+            $orderUpdated = $info->update(['balance' => 0.00]);
 
+            if (!$orderUpdated) {
+                return redirect()->back()->with('error', 'Failed to mark the order as paid.');
+            }
+            Income::create([
+                'branch_id' => Auth::user()->branch_id,
+                'service_id' => $info->service_id,
+                'category' => 'Cargo Income',
+                'reference' => $request->reference,
+                'method' => $request->method,
+                'plan' => 'Balance Payment',
+                'amount' => $request->amount,
+                'submitted_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+                'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+            ]);
 
-
-    
+            return redirect()->back()->with('success', 'Order marked as paid.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
 }

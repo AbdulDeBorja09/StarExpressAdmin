@@ -19,10 +19,14 @@ class Expenses extends Model
         'branch_id',
         'category',
         'reference',
-        'approved_by',
-        'submitted_by',
-        'status',
+        'method',
+        'plan',
         'amount',
+        'submitted_by',
+        'received_by',
+        'confirm',
+        'note',
+        'status'
     ];
 
     /**

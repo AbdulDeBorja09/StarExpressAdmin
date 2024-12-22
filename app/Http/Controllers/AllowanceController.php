@@ -25,7 +25,7 @@ use Carbon\Carbon;
 
 class AllowanceController extends Controller
 {
-    // optimize the function below  to use a single function for both create and edit
+
     public function createallowance(Request $request)
     {
         $request->validate([
@@ -124,13 +124,17 @@ class AllowanceController extends Controller
         ]);
         if ($delivery) {
             $info = DeliveryAllowance::with('delivery')->where('id', $request->id)->first();
+
             Expenses::create([
                 'branch_id' => Auth::user()->branch_id,
                 'category' => 'Delivery Allowance',
                 'reference' => $info->delivery->trip_id,
-                'approved_by' => Auth::user()->id,
-                'submitted_by' => Auth::user()->id,
+                'method' => 'cash',
+                'submitted_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+                'received_by' => $request->received,
                 'amount' => $info->allowance,
+                'confirm' => 1,
+                'note' => $request->note,
             ]);
         }
         return redirect()->back()->with('success', 'Allowance updated successfully.');

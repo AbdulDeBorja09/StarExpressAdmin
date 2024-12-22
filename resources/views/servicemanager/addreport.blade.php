@@ -26,16 +26,16 @@
         <div class="panel">
             <div>
                 <h1 class="text-lg font-semibold dark:text-white-light">ADD NEW REPORT</h1>
-                <form action="{{route('createnewreport')}}" class="mt-5" method="POST">
+                <form action="{{route('requestreport')}}" class="mt-5" method="POST">
                     @csrf
                     <label for="created" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Created By:
                     </label>
                     <input class="form-input flex-1 mb-2" type="text" id="created"
-                        value="{{Auth::user()->lname}}, {{Auth::user()->fname}}">
+                        value="{{Auth::user()->lname}}, {{Auth::user()->fname}}" readonly>
                     <label for="type" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Report Type:</label>
                     <select class="form-input flex-1 mb-2" name="type" id="type">
                         <option value="expenses" selected>Expenses</option>
-                        <option value="income">Income</option>
+                        <option value="income">Return Allowance</option>
                     </select>
                     <label for="method" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Method:</label>
                     <select class="form-input flex-1 mb-2" name="method" id="method">
@@ -47,7 +47,8 @@
                     <label for="amount" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Amount:</label>
                     <input class="form-input flex-1 mb-2" id="amount" type="number" name="amount">
                     <label for="note" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Note:</label>
-                    <textarea class="form-input flex-1 mb-2" name="note" id="note" cols="30" rows="10"></textarea>
+                    <textarea class="form-input flex-1 mb-2" name="note" id="note" cols="30" rows="10"
+                        required></textarea>
                     <button type="submit" class="btn btn-success mt-3 gap-2" style="width:100%"><svg width="24"
                             height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">

@@ -65,10 +65,10 @@ class AdminController extends Controller
 
     public function accountantHome(): View
     {
-        $currentMonthTotal = Income::whereMonth('created_at', now()->month)
+        $currentMonthTotal = Income::where('confirm', 1)->whereMonth('created_at', now()->month)
             ->sum('amount');
 
-        $lastMonthTotal = Income::whereMonth('created_at', now()->subMonth()->month)
+        $lastMonthTotal = Income::where('confirm', 1)->whereMonth('created_at', now()->subMonth()->month)
             ->sum('amount');
 
         if ($lastMonthTotal > 0) {
@@ -179,39 +179,39 @@ class AdminController extends Controller
 
     public function servicemanagerHome(): View
     {
-        $currentDate = Carbon::now();
-        $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
-        $endDate = $currentDate->copy()->endOfMonth();
+        // $currentDate = Carbon::now();
+        // $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
+        // $endDate = $currentDate->copy()->endOfMonth();
 
-        $monthlyTotals = DB::table('sales')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as total')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-            ->get();
+        // $monthlyTotals = DB::table('sales')
+        //     ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as total')
+        //     ->whereBetween('created_at', [$startDate, $endDate])
+        //     ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+        //     ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+        //     ->get();
 
-        $months = [];
-        $data = [];
+        // $months = [];
+        // $data = [];
 
-        for ($i = 0; $i <= 12; $i++) {
-            $month = $startDate->copy()->addMonths($i);
-            $months[] = $month->format('M Y');
-            $data[] = 0;
-        }
+        // for ($i = 0; $i <= 12; $i++) {
+        //     $month = $startDate->copy()->addMonths($i);
+        //     $months[] = $month->format('M Y');
+        //     $data[] = 0;
+        // }
 
-        foreach ($monthlyTotals as $monthly) {
-            $monthLabel = Carbon::create($monthly->year, $monthly->month, 1)->format('M Y');
-            $index = array_search($monthLabel, $months);
-            if ($index !== false) {
-                $data[$index] = $monthly->total;
-            }
-        }
-
-
+        // foreach ($monthlyTotals as $monthly) {
+        //     $monthLabel = Carbon::create($monthly->year, $monthly->month, 1)->format('M Y');
+        //     $index = array_search($monthLabel, $months);
+        //     if ($index !== false) {
+        //         $data[$index] = $monthly->total;
+        //     }
+        // }
 
 
 
 
-        return view('dashboard.servicemanager', compact('data', 'months'));
+
+
+        return view('dashboard.servicemanager');
     }
 }

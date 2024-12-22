@@ -20,21 +20,26 @@ class Income extends Model
         'branch_id',
         'category',
         'reference',
+        'method',
+        'plan',
+        'amount',
         'submitted_by',
-        'ammount',
+        'received_by',
+        'confirm',
+        'note'
     ];
 
     /**
      * Relationships
      */
 
-    // Define the relationship to the CargoService model
+
     public function service()
     {
         return $this->belongsTo(CargoService::class, 'service_id');
     }
 
-    // Define the relationship to the Branch model
+
     public function branch()
     {
         return $this->belongsTo(Branches::class, 'branch_id');

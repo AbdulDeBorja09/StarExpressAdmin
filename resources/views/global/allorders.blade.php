@@ -39,7 +39,9 @@
                             <th>Origin</th>
                             <th>Destination</th>
                             <th>Latest Status</th>
+                            @if(Route::currentRouteName() == 'allorders')
                             <th style="text-align: center">Order Status</th>
+                            @endif
                             @else
                             <th>Origin</th>
                             <th>Payment Status</th>
@@ -48,6 +50,10 @@
                             <th>Latest Status</th>
                             <th style="text-align: center">Order Status</th>
                             @endif
+                            @if(Route::currentRouteName() == 'deliverdorders')
+                            <th>Delivered Date</th>
+                            @endif
+
                             <th style="text-align: center">Action</th>
                         </tr>
                     </thead>
@@ -72,12 +78,16 @@
                                 $order->cargoService->originBranch->country ?? '' }}</td>
                             <td>{{ $order->cargoService->destinationBranch->country ?? 'N/A' }}</td>
                             <td>{{ $latestStatus }}</td>
+                            @if(Route::currentRouteName() == 'allorders')
                             <td style="text-align: center">@if ($order->approved === 0)
                                 <span class="badge badge-outline-danger">pending</span>
                                 @else
                                 <span class="badge badge-outline-success">Approved</span>
+
                                 @endif
                             </td>
+                            @endif
+
                             @else
                             <td>{{ $order->cargoService->originBranch->branch ??
                                 'N/A' }}, {{
@@ -87,13 +97,18 @@
                             <td>{{ $order->total }}</td>
                             <td>{{ $order->balance }}</td>
                             <td>{{ $latestStatus }}</td>
-                            <td style="text-align: center">@if ($order->approved === '0')
+                            @if(Route::currentRouteName() == 'allorders')
+                            <td style="text-align: center">@if ($order->approved === 0)
                                 <span class="badge badge-outline-danger">pending</span>
                                 @else
                                 <span class="badge badge-outline-success">Approved</span>
 
                                 @endif
                             </td>
+                            @endif
+                            @endif
+                            @if(Route::currentRouteName() == 'deliverdorders')
+                            <td>{{ \Carbon\Carbon::parse($order->updated_at)->format('F j, Y h:i A') }}</td>
                             @endif
                             <td>
                                 <div style="display:flex; justify-content: center; ">
