@@ -15,6 +15,7 @@ use \App\Models\Income;
 use App\Models\Orders;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -208,11 +209,13 @@ class AdminController extends Controller
         // }
         $totalOrders = Orders::where('state', '!=', 'Delivered')->count();
 
+        $newOrders = Orders::where('state', 'pending')->count();
+        $delivery = Orders::where('state', 'OutForDelivery')->count();
+        $inwarehouse = Orders::where('location', Auth::user()->branch_id)->count();
 
 
 
 
-
-        return view('dashboard.servicemanager',  compact('totalOrders'));
+        return view('dashboard.servicemanager',  compact('totalOrders', 'newOrders', 'inwarehouse', 'delivery'));
     }
 }
