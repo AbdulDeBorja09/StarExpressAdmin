@@ -77,4 +77,7 @@ class DashboardController extends Controller
         $totalemployees = array_values($totalemployee);
         return view('dashboard.humanresource', compact('hr', 'accountant', 'servicemanager', 'driver', 'data', 'months', 'users', 'suspendeduser', 'suspendedemployee', 'totalsuspendeds', 'totalemployees'));
     }
+
+
+    
 }

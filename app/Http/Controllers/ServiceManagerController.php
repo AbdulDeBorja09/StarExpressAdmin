@@ -270,30 +270,34 @@ class ServiceManagerController extends Controller
 
     public function servicelocations(): View
     {
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
+        $user = Auth::user();
         $role = $user->type;
-        $userbranch = $user->branch_id;
-        if ($user->type === 'admin') {
-            $locations = CargoLocations::with('branch')->orderBy('branch_id', 'asc')
+        $userBranchId = $user->branch_id;
+
+        if ($role === 'admin') {
+            $locations = CargoLocations::with('branch')
+                ->orderBy('branch_id', 'asc')
                 ->get()
                 ->groupBy('branch_id');
 
-            $branchs = Branches::orderBy('country', 'asc')->orderBy('branch', 'asc')->get();
+            $branchs = Branches::orderBy('country', 'asc')
+                ->orderBy('branch', 'asc')
+                ->get();
+
             return view('servicemanager.locations', compact('locations', 'role', 'branchs'));
         } else {
-            $trucks = CargoTruck::with('branch')->orderBy('branch_id', 'asc')
+            $locations = CargoLocations::with('branch')
+                ->where('branch_id', $userBranchId)
+                ->orderBy('branch_id', 'asc')
                 ->get()
                 ->groupBy('branch_id');
 
-            $locations = CargoLocations::with('branch')->where('branch_id', $user->branch_id)->orderBy('branch_id', 'asc')
-                ->get()
-                ->groupBy('branch_id');
+            $branchs = Branches::where('id', $userBranchId)->get();
 
-            $branchs = Branches::where('id', $userbranch)->get();
             return view('servicemanager.locations', compact('locations', 'role', 'branchs'));
         }
     }
+
     public function addnewlocations(Request $request)
     {
         $request->validate([

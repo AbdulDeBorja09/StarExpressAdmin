@@ -223,10 +223,10 @@
                         @endforeach
                     </select>
                     @else
-                    <input i type="text" readonly class="form-input flex-1"
-                        value="{{$branchs->country}}, {{$branchs->branch}}" required style="text-transform: capitalize">
-                    <input id="branch" type="hidden" name="branch_id" class="form-input flex-1"
-                        value="{{$branchs->id}}">
+                    <input type="text" readonly class="form-input flex-1"
+                        value="{{ $branchs->first()->country }}, {{ $branchs->first()->branch }}" required
+                        style="text-transform: capitalize;">
+                    <input type="hidden" name="branch_id" class="form-input flex-1" value="{{ $branchs->first()->id }}">
                     @endif
                     <label for="region" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Add Region
                     </label>

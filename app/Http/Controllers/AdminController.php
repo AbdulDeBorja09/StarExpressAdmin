@@ -206,12 +206,13 @@ class AdminController extends Controller
         //         $data[$index] = $monthly->total;
         //     }
         // }
+        $totalOrders = Orders::where('state', '!=', 'Delivered')->count();
 
 
 
 
 
 
-        return view('dashboard.servicemanager');
+        return view('dashboard.servicemanager',  compact('totalOrders'));
     }
 }
