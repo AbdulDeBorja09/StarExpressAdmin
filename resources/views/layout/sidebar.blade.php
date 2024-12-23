@@ -159,21 +159,20 @@
                             </svg>
                         </div>
                     </button>
-                    {{-- <ul x-show="activeDropdown === 'adminLogs'" x-collapse="" class="sub-menu text-gray-500">
+                    <ul x-show="activeDropdown === 'adminLogs'" x-collapse="" class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{route('allorders')}}"
-                                class="{{ Route::currentRouteName() == 'allorders' ? 'active' : '' }}">All
-                                Orders</a>
-                            <a href="{{route('pendingorders')}}"
-                                class="{{ Route::currentRouteName() == 'pendingorders' ? 'active' : '' }}">Processing
-                                Orders</a>
-                            <a href="{{route('outfordelivery')}}"
-                                class="{{ Route::currentRouteName() == 'outfordelivery' ? 'active' : '' }}">Out for
-                                Delivery
-                            </a>
+                            <a href="{{route('admin.alllogs')}}"
+                                class="{{ Route::currentRouteName() == 'admin.alllogs' ? 'active' : '' }}">All
+                                Logs</a>
+                            <a href="{{route('admin.editlogs')}}"
+                                class="{{ Route::currentRouteName() == 'admin.editlogs' ? 'active' : '' }}">Edit
+                                Logs</a>
+                            <a href="{{route('admin.deletelogs')}}"
+                                class="{{ Route::currentRouteName() == 'admin.deletelogs' ? 'active' : '' }}">Delete
+                                Logs</a>
                         </li>
 
-                    </ul> --}}
+                    </ul>
                 </li>
                 @endif
                 @if(Auth::user()->type === 'accountant' || Auth::user()->type === 'admin' )
@@ -399,9 +398,9 @@
                             <a href="{{route('allowancerequest')}}"
                                 class="{{ Route::currentRouteName() == 'allowancerequest' ? 'active' : '' }}">Allowance
                                 Request</a>
+                            <a href="{{route('allowancehistory')}}"
+                                class="{{ Route::currentRouteName() == 'allowancehistory' ? 'active' : '' }}">History</a>
                         </li>
-
-
                     </ul>
                 </li>
                 <li class="menu nav-item">
@@ -689,19 +688,12 @@
                     <ul x-show="activeDropdown === 'dallowance'" x-collapse="" class="sub-menu text-gray-500"
                         style="height: 0px; overflow: hidden; display: none;" hidden="">
                         <li>
-
+                            <a href="{{route('allowancerequest')}}"
+                                class="{{ Route::currentRouteName() == 'allowancerequest' ? 'active' : '' }}">Allowance
+                                Request</a>
+                            <a href="{{route('allowancehistory')}}"
+                                class="{{ Route::currentRouteName() == 'allowancehistory' ? 'active' : '' }}">History</a>
                         </li>
-
-                        {{-- <li>
-                            <a href="{{route('trucklist')}}">Approved</a>
-                        </li>
-                        <li>
-                            <a href="{{route('trucklist')}}">Rejected</a>
-                        </li>
-                        <li>
-                            <a href="{{route('trucklist')}}">History</a>
-                        </li> --}}
-
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -1048,6 +1040,45 @@
                             <a href="{{route('truckdriveradd')}}"
                                 class="{{ Route::currentRouteName() == 'truckdriveradd' ? 'active' : '' }}">Driver
                             </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu nav-item">
+                    <button type="button" class="nav-link group" :class="{'active' : activeDropdown === 'loginlogs'}"
+                        @click="activeDropdown === 'loginlogs' ? activeDropdown = null : activeDropdown = 'loginlogs'">
+                        <div class="flex items-center">
+                            <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.5"
+                                    d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M18.75 8C18.75 8.41421 18.4142 8.75 18 8.75H6C5.58579 8.75 5.25 8.41421 5.25 8C5.25 7.58579 5.58579 7.25 6 7.25H18C18.4142 7.25 18.75 7.58579 18.75 8Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M18.75 12C18.75 12.4142 18.4142 12.75 18 12.75H6C5.58579 12.75 5.25 12.4142 5.25 12C5.25 11.5858 5.58579 11.25 6 11.25H18C18.4142 11.25 18.75 11.5858 18.75 12Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M18.75 16C18.75 16.4142 18.4142 16.75 18 16.75H6C5.58579 16.75 5.25 16.4142 5.25 16C5.25 15.5858 5.58579 15.25 6 15.25H18C18.4142 15.25 18.75 15.5858 18.75 16Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                            <span
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Logins</span>
+                        </div>
+                        <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'loginlogs'}">
+                            <svg width="16" height="16" viewbox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <ul x-show="activeDropdown === 'loginlogs'" x-collapse="" class="sub-menu text-gray-500">
+                        <li>
+                            <a href="{{route('truckdriveradd')}}"
+                                class="{{ Route::currentRouteName() == 'truckdriveradd' ? 'active' : '' }}">Login logs
+                            </a>
+
                         </li>
                     </ul>
                 </li>

@@ -147,9 +147,10 @@
                         </div>
                     </div>
                     <div class="absolute bottom-0 mt-6 flex w-full gap-4 p-6 ltr:left-0 rtl:right-0">
-                        <button type="button" class="btn btn-outline-primary w-1/2">
+                        <a href="{{url('/Driver/Edit/'. $item->id)}}" type="button"
+                            class="btn btn-outline-primary w-1/2">
                             Edit
-                        </button>
+                        </a>
 
                         <div x-data="modal" style="width: 50%">
                             @if($item->status === "active")

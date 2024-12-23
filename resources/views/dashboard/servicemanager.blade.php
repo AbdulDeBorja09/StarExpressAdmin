@@ -98,10 +98,8 @@
                     </svg>
                 </div>
             </div>
-
-
         </div>
-        <div class="mb-6 grid gap-6 xl:grid-cols-3">
+        <div class="mb-6 grid gap-6 xl:grid-cols-3" x-data="sales">
             <div class="panel h-full">
                 <div class="mb-5 flex items-center">
                     <h5 class="text-lg font-semibold dark:text-white-light">Total Reports</h5>
@@ -117,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel h-full">
+            {{-- <div class="panel h-full">
                 <div class="mb-5 flex items-center">
                     <h5 class="text-lg font-semibold dark:text-white-light">Total Deliveries</h5>
                 </div>
@@ -146,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="mb-6 grid gap-6 xl:grid-cols-1">
             <div x-ref="areaChart" class="bg-white dark:bg-black rounded-lg">

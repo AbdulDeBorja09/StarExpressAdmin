@@ -14,6 +14,7 @@ use App\Models\Orders;
 use App\Models\Delivery;
 use App\Models\DeliveryAllowance;
 use App\Models\Expenses;
+use App\Models\Logs;
 use App\Models\TruckDriver;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,28 @@ use Carbon\Carbon;
 
 class AllowanceController extends Controller
 {
+    private function logs($action, $table, $recordId, $oldData, $newData)
+    {
+        $changes = [];
+        foreach ($oldData as $key => $oldValue) {
+            if (array_key_exists($key, $newData) && $newData[$key] != $oldValue) {
+                $changes[$key] = [
+                    'old' => $oldValue,
+                    'new' => $newData[$key]
+                ];
+            }
+        }
+        Logs::create([
+            'branch_id' => Auth::user()->branch_id,
+            'action' => $action,
+            'table' => $table,
+            'record_id' => $recordId,
+            'old_data' => $oldData ? json_encode($oldData) : null,
+            'new_data' => $newData ? json_encode($newData) : null,
+            'user_id' => Auth::user()->id,
+        ]);
+    }
+
 
     public function createallowance(Request $request)
     {
@@ -55,13 +78,33 @@ class AllowanceController extends Controller
 
     public function allowancerequest(Request  $request)
     {
-
-
         $perPage = $request->input('perPage', 20);
         $currentPage = $request->input('page', 1);
 
-        $allowance  = DeliveryAllowance::with(['branch', 'driver', 'delivery'])->whereIn('status', ['pending', 'approved'])
-            ->orderBy('created_at', 'desc')->paginate($perPage);
+        $fullname = Auth::user()->lname . ', ' . Auth::user()->fname;
+        if (Auth::user()->type === 'accountant' || Auth::user()->type === 'admin') {
+            $allowance  = DeliveryAllowance::with(['branch', 'driver', 'delivery'])->whereIn('status', ['pending', 'approved'])
+                ->orderBy('created_at', 'desc')->paginate($perPage);
+        } else {
+            $allowance  = DeliveryAllowance::with(['branch', 'driver', 'delivery'])->where('requested_by',  $fullname)->whereIn('status', ['pending', 'approved'])
+                ->orderBy('created_at', 'desc')->paginate($perPage);
+        }
+
+        return view('accountant.allowances', compact('perPage', 'currentPage', 'allowance'));
+    }
+    public function allowancehistory(Request  $request)
+    {
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $fullname = Auth::user()->lname . ', ' . Auth::user()->fname;
+        if (Auth::user()->type === 'accountant' || Auth::user()->type === 'admin') {
+            $allowance  = DeliveryAllowance::with(['branch', 'driver', 'delivery'])->whereIn('status', ['completed', 'rejected'])
+                ->orderBy('created_at', 'desc')->paginate($perPage);
+        } else {
+            $allowance  = DeliveryAllowance::with(['branch', 'driver', 'delivery'])->where('requested_by',  $fullname)->whereIn('status', ['completed', 'rejected'])
+                ->orderBy('created_at', 'desc')->paginate($perPage);
+        }
 
         return view('accountant.allowances', compact('perPage', 'currentPage', 'allowance'));
     }
@@ -89,10 +132,15 @@ class AllowanceController extends Controller
     {
         $fullname = Auth::user()->lname . ', ' . Auth::user()->fname;
         $item =  DeliveryAllowance::find($request->id);
+        $oldData = $item->toArray();
         $delivery = DeliveryAllowance::where('id', $request->id)->update([
             'status' =>  'approved',
             'approved_by' =>  $fullname,
         ]);
+
+        $newData = DeliveryAllowance::find($request->id)->toArray();
+
+        $this->logs('Edit', 'Allowance', $request->id, $oldData, $newData);
 
         if ($delivery) {
             Delivery::where('id', $item->delivery_id)->update([

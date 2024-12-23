@@ -470,7 +470,7 @@
                                         <form action="{{route('deleteorder')}}" method="POST">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$details->id}}">
-                                            <button type="button" class="btn btn-danger w-full gap-2">
+                                            <button type="submit" class="btn btn-danger w-full gap-2">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">

@@ -421,4 +421,77 @@ class HrController extends Controller
         Customer::where('id',  $request->user_id)->delete();
         return redirect()->route('showsuspendeduser');
     }
+    public function editdriveraccount($id)
+    {
+        $branch = Branches::all();
+        $item =  TruckDriver::where('id', $id)->first();
+        return view('Humanresources.editdriver', compact('item', 'branch'));
+    }
+
+    public function editemployee($id)
+    {
+        $branch = Branches::all();
+        $item = User::where('id', $id)->first();
+        return view('Humanresources.editemployee', compact('item', 'branch'));
+    }
+
+
+    public function submitdriveredit(Request $request)
+    {
+        $request->validate([
+            'fname' => 'required|string|max:255',
+            'mname' => 'nullable|string|max:255',
+            'lname' => 'required|string|max:255',
+            'gender' => 'required|string|max:50',
+            'contact' => 'required|numeric',
+            'branch_id' => 'required|exists:branches,id',
+            'type' => 'required|string',
+            'email' => 'required|email|max:255',
+        ]);
+        try {
+            Truckdriver::where('id', $request->id)->update([
+                'name' => $request->fname . ' ' . $request->mname . ' ' . $request->lname,
+                'gender' => $request->gender,
+                'phone' => $request->contact,
+                'branch_id' => $request->branch_id,
+                'position' => $request->type,
+                'email' => $request->email,
+            ]);
+            return redirect()->route('allDriver');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public function submitemployeeedit(Request $request)
+    {
+        $request->validate([
+            'fname' => 'required|string|max:255',
+            'mname' => 'nullable|string|max:255',
+            'lname' => 'required|string|max:255',
+            'gender' => 'required|string|max:50',
+            'address' => 'required|string|max:255',
+            'contact' => 'required|numeric',
+            'branch_id' => 'required|exists:branches,id',
+            'type' => 'required|string',
+            'email' => 'required|email|max:255',
+        ]);
+        try {
+            User::where('id', $request->id)->update([
+                'fname' => $request->fname,
+                'mname' => $request->mname,
+                'lname' => $request->lname,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'contact' => $request->contact,
+                'branch_id' => $request->branch_id,
+                'type' => $request->type,
+                'email' => $request->email,
+            ]);
+            return redirect()->route('allEmployees');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
 }

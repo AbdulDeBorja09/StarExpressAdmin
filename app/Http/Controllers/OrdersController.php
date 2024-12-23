@@ -11,6 +11,7 @@ use App\Models\CargoLocations;
 use App\Models\CargoPrices;
 use App\Models\CargoTruck;
 use App\Models\Income;
+use App\Models\Logs;
 use App\Models\Orders;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,27 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class OrdersController extends Controller
 {
+    private function logs($action, $table, $recordId, $oldData, $newData)
+    {
+        $changes = [];
+        // foreach ($oldData as $key => $oldValue) {
+        //     if (array_key_exists($key, $newData) && $newData[$key] != $oldValue) {
+        //         $changes[$key] = [
+        //             'old' => $oldValue,
+        //             'new' => $newData[$key]
+        //         ];
+        //     }
+        // }
+        Logs::create([
+            'branch_id' => Auth::user()->branch_id,
+            'action' => $action,
+            'table' => $table,
+            'record_id' => $recordId,
+            'old_data' => $oldData ? json_encode($oldData) : null,
+            'new_data' => $newData ? json_encode($newData) : null,
+            'user_id' => Auth::user()->id,
+        ]);
+    }
     private function fetchOrders(Request $request, ?string $state)
     {
         $perPage = $request->input('perPage', 20);
@@ -144,18 +166,25 @@ class OrdersController extends Controller
         Orders::where('id', $request->id)->update([
             'approved' => 1
         ]);
+        $newData = NULL;
+        $oldData = Orders::find($request->id)->toArray();
+        $this->logs('New', 'Approve Order', $request->id, $oldData, $newData);
         return redirect()->back()->with('success', 'Order Approved.');
     }
     public function deleteorder(Request $request)
     {
+        $oldData = Orders::find($request->id)->toArray();
         Orders::where('id', $request->id)->delete();
-        return redirect()->back()->with('success', 'Order Deleted.');
+        $newData = NULL;
+        $this->logs('Delete', 'Order Delete', $request->id, $oldData, $newData);
+        return redirect()->route('allorders')->with('success', 'Order Deleted.');
     }
 
     public function markaspaid(Request $request)
     {
         try {
             $info = Orders::find($request->id);
+            $oldData = Orders::find($request->id)->toArray();
             if (!$info) {
                 return redirect()->back()->with('error', 'Order not found.');
             }
@@ -175,7 +204,8 @@ class OrdersController extends Controller
                 'submitted_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
                 'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
             ]);
-
+            $newData = Orders::find($request->id)->toArray();
+            $this->logs('Edit', 'Mark Order Paid', $request->id, $oldData, $newData);
             return redirect()->back()->with('success', 'Order marked as paid.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());

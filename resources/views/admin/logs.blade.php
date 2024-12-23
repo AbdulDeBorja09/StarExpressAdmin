@@ -15,8 +15,8 @@
         </li>
         <li class="before:px-1.5 before:content-['/']">
             <a href="javascript:;"
-                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Allowance
-                Request</a>
+                class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">All
+                Income</a>
         </li>
     </ol>
     @include('layout.components.error')
@@ -29,56 +29,34 @@
                 <table class="orders-table table table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Trip ID</th>
-                            <th>Request By</th>
-                            <th>Delivery Date</th>
-                            <th>Note</th>
-
-                            @if(Route::currentRouteName() == 'allowancehistory')
-                            <th>Given By</th>
-                            <th>Received By</th>
-                            @endif
-                            <th style="text-align: center">Items</th>
-                            <th style="text-align: center">Amount</th>
-                            <th style="text-align: center">Status</th>
-                            <th style="text-align: center">Action</th>
+                            <th>ID</th>
+                            <th style="text-align:center;width: 150px;">Action</th>
+                            <th>User</th>
+                            <th>Table</th>
+                            <th>Date</th>
+                            <th style="text-align:center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($allowance as $num => $item)
+                        @foreach ($logs as $log)
                         <tr>
-                            <td>{{$num + 1}}</td>
-                            <td>{{$item->delivery->trip_id}}</td>
-                            <td>{{$item->requested_by}}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->delivery->date)->format('F j, Y') }}</td>
-                            <td>{{$item->delivery->note}}</td>
-                            @if(Route::currentRouteName() == 'allowancehistory')
-                            <td>{{$item->given_by}}</td>
-                            <td>{{$item->received_by}}</td>
-                            @endif
-                            <td style="width: 180px; text-align:center">{{ is_array(json_decode($item->delivery->items,
-                                true)) ?
-                                count(json_decode($item->delivery->items, true)) : 0 }}
-                            </td>
-                            <td style="text-align: center">{{$item->allowance}}</td>
-                            <td style="text-align: center">
-                                @if($item->status === 'pending')
-                                <span class="badge badge-outline-warning">Waitin
-                                    g For Approval</span>
-                                @elseif($item->status === 'approved')
-                                <span class="badge badge-outline-success">Approved</span>
-                                @elseif($item->status === 'rejected')
-                                <span class="badge badge-outline-danger">Error</span>
-                                @elseif($item->status === 'completed')
-                                <span class="badge bg-success">Completed</span>
+                            <td>{{ $log->id }}</td>
+                            <td style="text-align:center; width: 150px;">
+                                @if($log->action === 'Edit')
+                                <span class="badge bg-warning">Edit</span>
+                                @elseif($log->action === 'New')
+                                <span class="badge bg-success">New</span>
+                                @elseif($log->action === 'Delete')
+                                <span class="badge bg-danger">Delete</span>
                                 @endif
                             </td>
-                            <td>
-                                @if(Auth::user()->type == 'accountant' || Auth::user()->type == 'admin')
-                                <div style="display:flex; justify-content: center; ">
-                                    <a href="{{ url('/Reports/Allowance/' . $item->delivery->id) }}"
-                                        class="hover:text-primary">
+                            <td>{{ optional($log->user)->lname . ' ' . optional($log->user)->fname ?: 'System' }}</td>
+                            <td>{{ $log->table }}</td>
+                            <td>{{ \Carbon\Carbon::parse($log->updated_at)->format('F j, Y h:i A') }}</td>
+                            <td style="text-align:center">
+                                <div x-data="modal">
+                                    <!-- button -->
+                                    <button type="button" class="hover:text-primary" @click="toggle" x-tooltip="View">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                                             <path opacity="0.5"
@@ -88,36 +66,107 @@
                                                 d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
-                                    </a>
-                                </div>
-                                @else
-                                <div style="display:flex; justify-content: center; ">
-                                    <a href="{{ url('/Delivery/Packages/' . $item->delivery->id) }}"
-                                        class="hover:text-primary">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
-                                            <path opacity="0.5"
-                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                            <path
-                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                                                stroke="currentColor" stroke-width="1.5"></path>
-                                        </svg>
-                                    </a>
-                                </div>
+                                    </button>
+                                    <!-- modal -->
+                                    <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
+                                        :class="open && '!block'">
+                                        <div class="flex items-center justify-center min-h-screen px-4"
+                                            @click.self="open = false">
+                                            <div x-show="open" x-transition x-transition.duration.300
+                                                class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-6xl my-8">
+                                                <div
+                                                    class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                                    <h5 class="font-bold text-lg">Audit Logs</h5>
+                                                    <button type="button" class="text-white-dark hover:text-dark"
+                                                        @click="toggle">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px"
+                                                            height="24px" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="h-6 w-6">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="p-5">
+                                                    <div class="mb-6 flex flex-wrap justify-between gap-6">
+                                                        <!-- Old Data Table -->
+                                                        <div class="flex-1 min-w-[45%]">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colspan="2">Old Data</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Field</th>
+                                                                        <th>Value</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if ($log->old_data)
+                                                                    @php
+                                                                    $oldData = json_decode($log->old_data, true);
+                                                                    @endphp
+                                                                    @if (is_array($oldData))
+                                                                    @foreach ($oldData as $key => $value)
+                                                                    <tr>
+                                                                        <td>{{ ucfirst($key) }}</td>
+                                                                        <td>{{ $value ?? 'N/A' }}</td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                    @endif
+                                                                    @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
 
-                                @endif
+                                                        <!-- New Data Table -->
+                                                        <div class="flex-1 min-w-[45%]">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colspan="2">New Data</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Field</th>
+                                                                        <th>Value</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @php
+                                                                    $newData = json_decode($log->new_data, true);
+                                                                    @endphp
+                                                                    @if (is_array($newData))
+                                                                    @foreach ($newData as $key => $value)
+                                                                    <tr>
+                                                                        <td>{{ ucfirst($key) }}</td>
+                                                                        <td>{{ $value ?? 'N/A' }}</td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                    @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
+
                 </table>
             </div>
             <form action="{{ url()->current() }}" method="GET" id="paginationForm">
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $allowance->firstItem() }} to {{ $allowance->lastItem() }} of {{ $allowance->total()
+                        Showing {{ $logs->firstItem() }} to {{ $logs->lastItem() }} of {{ $logs->total()
                         }}
                         Items
                     </div>
@@ -133,7 +182,7 @@
                     </div>
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
-                            @if ($allowance->onFirstPage())
+                            @if ($logs->onFirstPage())
                             <li class="pager disabled"><a href="#" aria-disabled="true"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                         class="w-4.5 h-4.5 rtl:rotate-180">
@@ -144,7 +193,7 @@
                                     </svg></a></li>
                             @else
                             <li class="pager"><a
-                                    href="{{ request()->fullUrlWithQuery(['page' => $allowance->currentPage() - 1]) }}"><svg
+                                    href="{{ request()->fullUrlWithQuery(['page' => $logs->currentPage() - 1]) }}"><svg
                                         width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                         <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5"
@@ -155,17 +204,17 @@
                             </li>
                             @endif
 
-                            @for ($i = 1; $i <= $allowance->lastPage(); $i++)
-                                @if ($i == $allowance->currentPage())
+                            @for ($i = 1; $i <= $logs->lastPage(); $i++)
+                                @if ($i == $logs->currentPage())
                                 <li class="active"><a href="#">{{ $i }}</a></li>
                                 @else
                                 <li><a href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a></li>
                                 @endif
                                 @endfor
 
-                                @if ($allowance->hasMorePages())
+                                @if ($logs->hasMorePages())
                                 <li class="pager"><a
-                                        href="{{ request()->fullUrlWithQuery(['page' => $allowance->currentPage() + 1]) }}"><svg
+                                        href="{{ request()->fullUrlWithQuery(['page' => $logs->currentPage() + 1]) }}"><svg
                                             width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180">
                                             <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5"

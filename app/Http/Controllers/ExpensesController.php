@@ -16,6 +16,7 @@ use App\Models\DeliveryAllowance;
 use App\Models\TruckDriver;
 use App\Models\Expenses;
 use App\Models\Income;
+use App\Models\logs;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -28,15 +29,33 @@ use Illuminate\Support\Facades\DB;
 
 class ExpensesController extends Controller
 {
+
+    private function logs($action, $table, $recordId, $oldData, $newData)
+    {
+        $changes = [];
+        foreach ($oldData as $key => $oldValue) {
+            if (array_key_exists($key, $newData) && $newData[$key] != $oldValue) {
+                $changes[$key] = [
+                    'old' => $oldValue,
+                    'new' => $newData[$key]
+                ];
+            }
+        }
+        Logs::create([
+            'branch_id' => Auth::user()->branch_id,
+            'action' => $action,
+            'table' => $table,
+            'record_id' => $recordId,
+            'old_data' => $oldData ? json_encode($oldData) : null,
+            'new_data' => $newData ? json_encode($newData) : null,
+            'user_id' => Auth::user()->id,
+        ]);
+    }
+    
     public function expensestable()
     {
         return view('servicemanager.report');
     }
-
-
-
-
-
 
     public function newreport()
     {
@@ -282,15 +301,24 @@ class ExpensesController extends Controller
     {
 
         if ($request->type === 'Income') {
+            $item =  Income::find($request->id);
+            $oldData = $item->toArray();
             Income::where('id', $request->id)->update([
                 'confirm' => 1,
                 'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
             ]);
+            $newData = Income::find($request->id)->toArray();
+
+            $this->logs('Edit', 'Approve Income', $request->id, $oldData, $newData);
         } else {
+            $item =  Expenses::find($request->id);
+            $oldData = $item->toArray();
             Expenses::where('id', $request->id)->update([
                 'confirm' => 1,
                 'received_by' => $request->received_by,
             ]);
+            $newData = Expenses::find($request->id)->toArray();
+            $this->logs('Edit', 'Approve Expenses', $request->id, $oldData, $newData);
         }
 
         return redirect()->back()->with('success', 'Report approved successfully.');
@@ -300,15 +328,23 @@ class ExpensesController extends Controller
     {
 
         if ($request->type === 'Income') {
+            $item =  Income::find($request->id);
+            $oldData = $item->toArray();
             Income::where('id', $request->id)->update([
                 'confirm' => 2,
                 'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
             ]);
+            $newData = Income::find($request->id)->toArray();
+            $this->logs('Edit', 'Reject Income', $request->id, $oldData, $newData);
         } else {
+            $item =  Expenses::find($request->id);
+            $oldData = $item->toArray();
             Expenses::where('id', $request->id)->update([
                 'confirm' => 2,
                 'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
             ]);
+            $newData = Expenses::find($request->id)->toArray();
+            $this->logs('Edit', 'Reject Expenses', $request->id, $oldData, $newData);
         }
 
         return redirect()->back()->with('success', 'Report approved successfully.');
