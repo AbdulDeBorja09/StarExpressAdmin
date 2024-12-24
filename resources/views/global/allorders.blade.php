@@ -22,8 +22,43 @@
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
             <div class="flex mb-5">
-                {{-- <div><button>EDIT STATUS</button></div> --}}
-                <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
+                <div class="" x-data="modal">
+                    <!-- button -->
+                    <div class="flex items-center ">
+                        <button type="button" class="btn btn-outline-success" @click="toggle">SCAN QR</button>
+                    </div>
+
+                    <!-- modal -->
+                    <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto" :class="open && '!block'">
+                        <div class="flex items-center justify-center min-h-screen px-4" @click.self="open = false">
+                            <div x-show="open" x-transition x-transition.duration.300
+                                class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                    <h5 class="font-bold text-lg">Scan QR Code</h5>
+                                    <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="p-5">
+                                    <div class="subtitle" style="text-align: center">
+                                        <h2 id="result">No qr code scanned yet</h2>
+                                        <p id="error" style="display: none;">Error! Unable to access the camera.</p>
+                                    </div>
+                                    <div class="main">
+                                        <video id="video" autoplay></video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text">
+                </div>
             </div>
             <div class="table-responsive" class="">
                 <table class="orders-table table table-bordered" style="text-transform: capitalize;">
@@ -135,7 +170,8 @@
                 @csrf
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} Orders
+                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }}
+                        Orders
                     </div>
                     <div class="dataTable-dropdown"><label>
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">
@@ -284,6 +320,13 @@
         </div> --}}
     </div>
 </div>
+<style>
+    #video {
+        width: 100%;
+        height: auto;
+        border: 1px solid black;
+    }
+</style>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.querySelector('.dataTable-input');
@@ -336,6 +379,47 @@
             });
         });
     });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"></script>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const result = document.getElementById('result');
+    const error = document.getElementById('error');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => {
+            video.srcObject = stream;
+            video.setAttribute("playsinline", true); 
+            video.play();
+            requestAnimationFrame(scan);
+        })
+        .catch(err => {
+            console.error("Error accessing the camera: ", err);
+            error.style.display = 'block'; 
+    });
+
+    function scan() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+            if (code) {
+                result.innerText = `Scanned: ${code.data}`;
+                video.pause(); 
+                const scannedRef = code.data;
+                window.location.href = `/details/${scannedRef}`;
+            } else {
+                requestAnimationFrame(scan); 
+            }
+        } else {
+            requestAnimationFrame(scan); 
+        }
+    }
 </script>
 
 @endsection
