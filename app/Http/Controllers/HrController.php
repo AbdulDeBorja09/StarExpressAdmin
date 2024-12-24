@@ -354,6 +354,7 @@ class HrController extends Controller
                 ->exists();
 
             Suspendeds::create([
+                'branch_id' => Auth::user()->branch_id,
                 'user_id' => $request->id,
                 'email' => $request->email,
                 'user_type' => $request->type,

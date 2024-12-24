@@ -90,6 +90,7 @@
                                 <label for="type" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Position</label>
                                 <select id="type" name="type" class="form-select flex-1"
                                     style="text-transform: capitalize">
+                                    <option value="hr">Admin</option>
                                     <option value="hr">Human Resources</option>
                                     <option value="servicemanager">Service Manager</option>
                                     <option value="accountant">Accountant</option>

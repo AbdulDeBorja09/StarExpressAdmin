@@ -641,7 +641,7 @@ class ServiceManagerController extends Controller
 
     public function newreport()
     {
-        return view('servicemanager.addreport');
+        return view('accountant.addreport');
     }
 
     public function warehouse()

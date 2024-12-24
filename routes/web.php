@@ -16,6 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\WarehouseController;
 use app\Models\CargoService;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -63,7 +64,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:admin'])->group(function
 Route::middleware(['auth', 'set.timezone', 'user-access:accountant|admin'])->group(function () {
     Route::get('/Accountant', [AdminController::class, 'accountantHome'])->name('accountant.home');
     Route::get('/Reports/Allowance/{id}', [AllowanceController::class, 'allowancedetails'])->name('allowancedetails');
-    Route::get('/Reports/New', [ExpensesController::class, 'newreport'])->name('newreport');
+
     Route::get('/Reports/Pending', [ExpensesController::class, 'submittedreports'])->name('submittedreports');
 
     Route::get('/Allowance/All', [ExpensesController::class, 'allallowance'])->name('allallowance');
@@ -103,13 +104,13 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
     Route::get('/Delivery/Packages/{id}', [ServiceManagerController::class, 'DeliveryDetails'])->name('DeliveryDetails');
     Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
-    Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
+
     Route::get('/Report/Pending', [ExpensesController::class, 'submittedreports'])->name('allreports');
     Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
-    Route::get('/Warehouse', [ServiceManagerController::class, 'warehouse'])->name('warehouse');
+    Route::get('/Warehouse', [WarehouseController::class, 'warehouse'])->name('warehouse');
 
-
-
+    
+    Route::post('/Warehouse/Setlimit', [WarehouseController::class, 'savelimit'])->name('savelimit');
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');
     Route::post('/Cargo_locations/add_region', [ServiceManagerController::class, 'addregion'])->name('addregion');
     Route::post('/Cargo_locations/delete_region', [ServiceManagerController::class, 'deleteregion'])->name('deleteregion');
@@ -183,6 +184,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
 // All user
 Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|accountant'])->group(function () {
     Route::get('/details/{reference_number}', [OrdersController::class, 'orderdetails']);
+    Route::get('/Reports/New', [ExpensesController::class, 'newreport'])->name('newreport');
     Route::get('/Orders/All', [OrdersController::class, 'allorders'])->name('allorders');
     Route::get('/Orders/PendingOrders', [OrdersController::class, 'pendingorders'])->name('pendingorders');
     Route::get('/Orders/OutForDelivery', [OrdersController::class, 'outfordelivery'])->name('outfordelivery');
@@ -192,6 +194,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|acc
     Route::get('/Reports/Allowance', [AllowanceController::class, 'allowancerequest'])->name('allowancerequest');
     Route::get('/Allowance/History', [AllowanceController::class, 'allowancehistory'])->name('allowancehistory');
     Route::get('/Report/Details/{type}/{id}', [ExpensesController::class, 'viewreportdetails'])->name('viewreportdetails');
+    Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
 });
 
 

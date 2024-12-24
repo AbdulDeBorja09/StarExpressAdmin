@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Suspendeds extends Model
+class WarehouseLimit extends Model
 {
-
-    protected $table = 'suspendeds';
+    use HasFactory;
+    protected $table = 'warehouse_limit';
     protected $fillable = [
         'branch_id',
-        'user_id',
-        'email',
-        'user_type',
-        'reason',
+        'box_id',
+        'limit',
     ];
-    use HasFactory;
 }
