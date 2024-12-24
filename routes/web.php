@@ -138,6 +138,10 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::post('/Allowance/Edit', [AllowanceController::class, 'editallowance'])->name('editallowance');
 
     Route::post('/Reports/Request/New', [ExpensesController::class, 'requestreport'])->name('requestreport');
+
+    Route::post('/Voucher/New', [ServiceManagerController::class, 'newvoucher'])->name('newvoucher');
+    Route::post('/Voucher/Edit', [ServiceManagerController::class, 'editvoucher'])->name('editvoucher');
+    Route::post('/Voucher/Delete', [ServiceManagerController::class, 'deletevoucher'])->name('deletevoucher');
 });
 
 
@@ -159,6 +163,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:hr|admin'])->group(funct
     Route::get('/Suspended/History/User', [HrController::class, 'susppensionuserhistory'])->name('susppensionuserhistory');
     Route::get('/Suspended/History/Employee', [HrController::class, 'susppensionemployeehistory'])->name('susppensionemployeehistory');
     Route::get('/Suspended/History/Driver', [HrController::class, 'susppensiondriverhistory'])->name('susppensiondriverhistory');
+    Route::get('/Logins/Logs', [HrController::class, 'loginlogs'])->name('loginlogs');
 
     Route::post('/Suspend', [HrController::class, 'suspend'])->name('suspend');
     Route::post('/Suspended/User/Delete', [HrController::class, 'deleteuseraccount'])->name('deleteuseraccount');

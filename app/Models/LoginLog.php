@@ -18,7 +18,7 @@ class LoginLog extends Model
     // Relationship with the User model
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'star_id');
     }
     use HasFactory;
 }

@@ -530,7 +530,72 @@ class ServiceManagerController extends Controller
         $perPage = $request->input('perPage', 20);
         $currentPage = $request->input('page', 1);
         $voucher = Voucher::paginate($perPage);
-        return view('servicemanager.vouchers', compact('voucher', 'perPage', 'currentPage'));
+
+        $service = CargoService::with(['destinationBranch', 'originBranch'])->where('origin', Auth::user()->branch_id)->get();
+        $allservice  = CargoService::with(['destinationBranch', 'originBranch'])->get();
+        return view('servicemanager.vouchers', compact('voucher', 'perPage', 'currentPage', 'service', 'allservice'));
+    }
+    public function editVoucher(Request $request)
+    {
+
+        $request->validate([
+            'id' => 'required',
+            'service' => 'required',
+            'code' => 'required|string|max:255',
+            'count' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0',
+            'valid' => 'required|date|after_or_equal:today',
+            'status' => 'required|in:active,inactive',
+        ]);
+        try {
+            $voucher = Voucher::where('id', $request->id)->update([
+                'service_id' => $request->service,
+                'code' => $request->code,
+                'count' => $request->count,
+                'amount' => $request->amount,
+                'validity' => $request->valid,
+                'status' => $request->status,
+                'edited_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+            ]);
+
+            return redirect()->back()->with('success', 'Voucher updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the voucher: ' . $e->getMessage());
+        }
+    }
+
+    public function newvoucher(Request $request)
+    {
+
+        $request->validate([
+            'service' => 'required',
+            'code' => 'required|string|max:255',
+            'count' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0',
+            'valid' => 'required|date|after_or_equal:today',
+            'status' => 'required|in:active,inactive',
+        ]);
+        try {
+            $voucher = Voucher::create([
+                'service_id' => $request->service,
+                'code' => $request->code,
+                'count' => $request->count,
+                'amount' => $request->amount,
+                'validity' => $request->valid,
+                'status' => $request->status,
+                'edited_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+            ]);
+
+            return redirect()->back()->with('success', 'Voucher updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the voucher: ' . $e->getMessage());
+        }
+    }
+
+    public function deletevoucher(Request $request)
+    {
+        Voucher::where('id', $request->id)->delete();
+        return redirect()->back()->with('success', 'Voucher updated successfully.');
     }
 
     public function deploydelivery(Request $request)

@@ -216,7 +216,6 @@ class AdminController extends Controller
 
 
 
-
         return view('dashboard.servicemanager',  compact('totalOrders', 'newOrders', 'inwarehouse', 'delivery'));
     }
 }

@@ -1075,8 +1075,8 @@
                     </button>
                     <ul x-show="activeDropdown === 'loginlogs'" x-collapse="" class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{route('truckdriveradd')}}"
-                                class="{{ Route::currentRouteName() == 'truckdriveradd' ? 'active' : '' }}">Login logs
+                            <a href="{{route('loginlogs')}}"
+                                class="{{ Route::currentRouteName() == 'loginlogs' ? 'active' : '' }}">Login logs
                             </a>
 
                         </li>

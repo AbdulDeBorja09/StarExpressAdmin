@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SuspensionMail;
 use App\Mail\DeleteAccountMail;
 use App\Models\Orders;
+use App\Models\LoginLog;
 use App\Models\Suspendeds;
 use Illuminate\Contracts\Concurrency\Driver;
 use Illuminate\Support\Facades\Auth;
@@ -400,6 +401,7 @@ class HrController extends Controller
     }
 
 
+
     public function deleteuseraccount(Request $request)
     {
         $request->validate([
@@ -493,5 +495,14 @@ class HrController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+    public function loginlogs(Request $request)
+    {
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $logs = LoginLog::with(['user'])->latest()->paginate($perPage);
+
+        return view('Humanresources.loginlogs', compact('perPage', 'currentPage', 'logs'));
     }
 }
