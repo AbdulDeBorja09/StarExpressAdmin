@@ -18,7 +18,7 @@
                 class="text-black hover:text-black/70 dark:text-white-light dark:hover:text-white-light/70">Dashboard</a>
         </li>
     </ol>
-    <div class="p-5" x-data="sales">
+    <div class="p-5">
         <div class="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
             <!-- Users Visit -->
             <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
@@ -43,7 +43,7 @@
 
             <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
                 <div class="flex justify-between">
-                    <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">New Cargo</div>
+                    <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">To Pickup</div>
                 </div>
                 <div class="mt-5 flex items-center" style="display: flex; justify-content: space-between">
                     <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{$newOrders}}</div>
@@ -60,6 +60,7 @@
                     </svg>
                 </div>
             </div>
+
             <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
                 <div class="flex justify-between">
                     <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">In Warehouse</div>
@@ -79,6 +80,7 @@
                     </svg>
                 </div>
             </div>
+
             <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
                 <div class="flex justify-between">
                     <div class="text-md font-semibold ltr:mr-1 rtl:ml-1" style="font-size: 20px">To Deliver</div>
@@ -99,8 +101,8 @@
                 </div>
             </div>
         </div>
-        <div class="mb-6 grid gap-6 xl:grid-cols-3" x-data="sales">
-            <div class="panel h-full">
+        <div class="mb-6 grid gap-6 xl:grid-cols-3">
+            {{-- <div class="panel h-full">
                 <div class="mb-5 flex items-center">
                     <h5 class="text-lg font-semibold dark:text-white-light">Total Reports</h5>
                 </div>
@@ -114,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- <div class="panel h-full">
                 <div class="mb-5 flex items-center">
                     <h5 class="text-lg font-semibold dark:text-white-light">Total Deliveries</h5>
@@ -146,284 +148,390 @@
                 </div>
             </div> --}}
         </div>
-        <div class="mb-6 grid gap-6 xl:grid-cols-1">
-            <div x-ref="areaChart" class="bg-white dark:bg-black rounded-lg">
-                <div
-                    class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                    <span
-                        class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+        <div class="mb-6 grid gap-6 xl:grid-cols-3" x-data="chart">
+
+            {{-- <div class="panel h-full">
+                <div class="mb-5 flex justify-center">
+                    <h5 class="text-lg font-semibold dark:text-white-light ">Total Suspended Accounts</h5>
+                </div>
+                <div class="overflow-hidden">
+                    <div x-ref="suspendeds" class="rounded-lg bg-white dark:bg-black">
+                        <!-- loader -->
+                        <div
+                            class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                            <span
+                                class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
+            <div class="panel h-full">
+                <div class="mb-5 flex justify-center">
+                    <h5 class="text-lg font-semibold dark:text-white-light ">Total Trucks</h5>
+                </div>
+                <div class="overflow-hidden">
+                    <div x-ref="suspendeds" class="rounded-lg bg-white dark:bg-black">
+                        <!-- loader -->
+                        <div
+                            class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                            <span
+                                class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel h-full">
+                <div class="mb-5 flex justify-center">
+                    <h5 class="text-lg font-semibold dark:text-white-light ">Total Deliveries</h5>
+                </div>
+                <div class="overflow-hidden">
+                    <div x-ref="employees" class="rounded-lg bg-white dark:bg-black">
+                        <!-- loader -->
+                        <div
+                            class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                            <span
+                                class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel h-full">
+                <div class="mb-5 flex justify-center">
+                    <h5 class="text-lg font-semibold dark:text-white-light ">Allowance Request</h5>
+                </div>
+                <div class="overflow-hidden">
+                    <div x-ref="allowance" class="rounded-lg bg-white dark:bg-black">
+                        <!-- loader -->
+                        <div
+                            class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
+                            <span
+                                class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-    <script>
-        document.addEventListener('alpine:init', () => {
-           
-            Alpine.data('sales', () => ({
-                init() {
-                    isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
-                    isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
-
-                    const revenueChart = null;
-                    const salesByCategory = null;
-                   
-
-                    // revenue
-                    setTimeout(() => {
-                        this.revenueChart = new ApexCharts(this.$refs.revenueChart, this.revenueChartOptions);
-                        this.$refs.revenueChart.innerHTML = '';
-                        this.revenueChart.render();
-
-                        // sales by category
-                        this.salesByCategory = new ApexCharts(this.$refs.salesByCategory, this.salesByCategoryOptions);
-                        this.$refs.salesByCategory.innerHTML = '';
-                        this.salesByCategory.render();
-
-                
-                    }, 300);
-
-                    this.$watch('$store.app.theme', () => {
+</div>
+<script>
+    document.addEventListener('alpine:init', () => {
+                Alpine.data('chart', () => ({
+                    codeArr: [],
+                    toggleCode(name) {
+                        if (this.codeArr.includes(name)) {
+                            this.codeArr = this.codeArr.filter((d) => d != name);
+                        } else {
+                            this.codeArr.push(name);
+        
+                            setTimeout(() => {
+                                document.querySelectorAll('pre.code').forEach((el) => {
+                                    hljs.highlightElement(el);
+                                });
+                            });
+                        }
+                    },
+    
+                    areaChart: null,
+                    init() {
                         isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
-
-                        this.revenueChart.updateOptions(this.revenueChartOptions);
-                        this.salesByCategory.updateOptions(this.salesByCategoryOptions);
-                       
-                    });
-
-                    this.$watch('$store.app.rtlClass', () => {
                         isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
-                        this.revenueChart.updateOptions(this.revenueChartOptions);
-                    });
-                },
+                        setTimeout(() => {
+                           
+        
+                           
 
-                // revenue
-                // get revenueChartOptions() {
-                //    
-                   
-                //     return {
-                //         series: [
-                //             {
-                //                 name: 'Income',
-                //                 data: data,
-                //             }
-                //         ],
-                //         chart: {
-                //             height: 325,
-                //             type: 'area',
-                //             fontFamily: 'Nunito, sans-serif',
-                //             zoom: {
-                //                 enabled: false,
-                //             },
-                //             toolbar: {
-                //                 show: false,
-                //             },
-                //         },
-                //         dataLabels: {
-                //             enabled: false,
-                //         },
-                //         stroke: {
-                //             show: true,
-                //             curve: 'smooth',
-                //             width: 2,
-                //             lineCap: 'square',
-                //         },
-                //         dropShadow: {
-                //             enabled: true,
-                //             opacity: 0.2,
-                //             blur: 10,
-                //             left: -7,
-                //             top: 22,
-                //         },
-                //         colors: isDark ? ['#2196f3', '#e7515a'] : ['#1b55e2', '#e7515a'],
-                //         markers: {
-                //             discrete: [
-                //                 {
-                //                     seriesIndex: 0,
-                //                     dataPointIndex: 6,
-                //                     fillColor: '#1b55e2',
-                //                     strokeColor: 'transparent',
-                //                     size: 7,
-                //                 }
-                //             ],
-                //         },
-                //         labels: labels,
-                //         xaxis: {
-                //             axisBorder: {
-                //                 show: false,
-                //             },
-                //             axisTicks: {
-                //                 show: false,
-                //             },
-                //             crosshairs: {
-                //                 show: false,
-                //             },
-                //             labels: {
-                //                 offsetX: isRtl ? 2 : 0,
-                //                 offsetY: 5,
-                //                 style: {
-                //                     fontSize: '12px',
-                //                     cssClass: 'apexcharts-xaxis-title',
-                //                 },
-                //             },
-                //         },
-                //         yaxis: {
-                //             tickAmount: 7,
-                //             labels: {
-                //                 formatter: (value) => {
-                //                     return value.toLocaleString(); 
-                //                 },
-                //                 offsetX: isRtl ? -30 : -10,
-                //                 offsetY: 0,
-                //                 style: {
-                //                     fontSize: '12px',
-                //                     cssClass: 'apexcharts-yaxis-title',
-                //                 },
-                //             },
-                //             opposite: isRtl ? true : false,
-                //         },
-                //         grid: {
-                //             borderColor: isDark ? '#191e3a' : '#e0e6ed',
-                //             strokeDashArray: 5,
-                //             xaxis: {
-                //                 lines: {
-                //                     show: true,
-                //                 },
-                //             },
-                //             yaxis: {
-                //                 lines: {
-                //                     show: false,
-                //                 },
-                //             },
-                //             padding: {
-                //                 top: 0,
-                //                 right: 0,
-                //                 bottom: 0,
-                //                 left: 0,
-                //             },
-                //         },
-                //         legend: {
-                //             position: 'top',
-                //             horizontalAlign: 'right',
-                //             fontSize: '16px',
-                //             markers: {
-                //                 width: 10,
-                //                 height: 10,
-                //                 offsetX: -2,
-                //             },
-                //             itemMargin: {
-                //                 horizontal: 10,
-                //                 vertical: 5,
-                //             },
-                //         },
-                //         tooltip: {
-                //             marker: {
-                //                 show: true,
-                //             },
-                //             x: {
-                //                 show: false,
-                //             },
-                //         },
-                //         fill: {
-                //             type: 'gradient',
-                //             gradient: {
-                //                 shadeIntensity: 1,
-                //                 inverseColors: !1,
-                //                 opacityFrom: isDark ? 0.19 : 0.28,
-                //                 opacityTo: 0.05,
-                //                 stops: isDark ? [100, 100] : [45, 100],
-                //             },
-                //         },
-                //     };
-                // },
+                            this.suspendeds = new ApexCharts(this.$refs.suspendeds, this.suspendedsOptions);
+                            this.$refs.suspendeds.innerHTML = '';
+                            this.suspendeds.render();
 
-                // sales by category
-                get salesByCategoryOptions() {
-                    return {
-                        series: [1, 0, 5],
-                        chart: {
-                            type: 'donut',
-                            height: 460,
-                            fontFamily: 'Nunito, sans-serif',
-                        },
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        stroke: {
-                            show: true,
-                            width: 25,
-                            colors: isDark ? '#0e1726' : '#fff',
-                        },
-                        colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
-                        legend: {
-                            position: 'bottom',
-                            horizontalAlign: 'center',
-                            fontSize: '14px',
-                            markers: {
-                                width: 10,
-                                height: 10,
-                                offsetX: -2,
+                            this.employees = new ApexCharts(this.$refs.employees, this.EmployeesOptions);
+                            this.$refs.employees.innerHTML = '';
+                            this.employees.render();
+
+                            this.allowance = new ApexCharts(this.$refs.allowance, this.AllowanceOptions);
+                            this.$refs.allowance.innerHTML = '';
+                            this.allowance.render();
+                        }, 300);
+        
+                        this.$watch('$store.app.theme', () => {
+                            this.refreshOptions();
+                        });
+        
+                        this.$watch('$store.app.rtlClass', () => {
+                            this.refreshOptions();
+                        });
+                    },
+        
+                    refreshOptions() {
+                        isDark = this.$store.app.theme === 'dark' || this.$store.app.isDarkMode ? true : false;
+                        isRtl = this.$store.app.rtlClass === 'rtl' ? true : false;
+                 
+                       
+                        this.suspendeds.updateOptions(this.suspendedsOptions);
+                        this.employees.updateOptions(this.EmployeesOptions);
+                        this.allowance.updateOptions(this.AllowanceOptions);
+                    },
+
+                  
+                       
+
+                    get suspendedsOptions() {
+                        const data = @json($totaltrucks);
+                        return {
+                            series: data,
+                            chart: {
+                                type: 'donut',
+                                height: 460,
+                                fontFamily: 'Nunito, sans-serif',
                             },
-                            height: 50,
-                            offsetY: 20,
-                        },
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    size: '65%',
-                                    background: 'transparent',
-                                    labels: {
-                                        show: true,
-                                        name: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            stroke: {
+                                show: true,
+                                width: 25,
+                                colors: isDark ? '#0e1726' : '#fff',
+                            },
+                            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+                            legend: {
+                                position: 'bottom',
+                                horizontalAlign: 'center',
+                                fontSize: '14px',
+                                markers: {
+                                    width: 10,
+                                    height: 10,
+                                    offsetX: -2,
+                                },
+                                height: 50,
+                                offsetY: 20,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '65%',
+                                        background: 'transparent',
+                                        labels: {
                                             show: true,
-                                            fontSize: '29px',
-                                            offsetY: -10,
-                                        },
-                                        value: {
-                                            show: true,
-                                            fontSize: '26px',
-                                            color: isDark ? '#bfc9d4' : undefined,
-                                            offsetY: 16,
-                                            formatter: (val) => {
-                                                return val;
+                                            name: {
+                                                show: true,
+                                                fontSize: '29px',
+                                                offsetY: -10,
                                             },
-                                        },
-                                        total: {
-                                            show: true,
-                                            label: 'Total',
-                                            color: '#888ea8',
-                                            fontSize: '29px',
-                                            formatter: (w) => {
-                                                return w.globals.seriesTotals.reduce(function (a, b) {
-                                                    return a + b;
-                                                }, 0);
+                                            value: {
+                                                show: true,
+                                                fontSize: '26px',
+                                                color: isDark ? '#bfc9d4' : undefined,
+                                                offsetY: 16,
+                                                formatter: (val) => {
+                                                    return val;
+                                                },
+                                            },
+                                            total: {
+                                                show: true,
+                                                label: 'Total',
+                                                color: '#888ea8',
+                                                fontSize: '29px',
+                                                formatter: (w) => {
+                                                    return w.globals.seriesTotals.reduce(function (a, b) {
+                                                        return a + b;
+                                                    }, 0);
+                                                },
                                             },
                                         },
                                     },
                                 },
                             },
-                        },
-                        labels: ['New Orders', 'Processing', 'To Deliver'],
-                        states: {
-                            hover: {
-                                filter: {
-                                    type: 'none',
-                                    value: 0.15,
+                            labels: ['In Warehouse', 'In Mechanic', 'In Use'],
+                            states: {
+                                hover: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                                active: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
                                 },
                             },
-                            active: {
-                                filter: {
-                                    type: 'none',
-                                    value: 0.15,
+                        };
+                    },
+
+                    get EmployeesOptions() {
+                        const datas = @json($totaldeliveries);
+                        return {
+                            series: datas,
+                            chart: {
+                                type: 'donut',
+                                height: 460,
+                                fontFamily: 'Nunito, sans-serif',
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            stroke: {
+                                show: true,
+                                width: 25,
+                                colors: isDark ? '#0e1726' : '#fff',
+                            },
+                            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+                            legend: {
+                                position: 'bottom',
+                                horizontalAlign: 'center',
+                                fontSize: '14px',
+                                markers: {
+                                    width: 10,
+                                    height: 10,
+                                    offsetX: -2,
+                                },
+                                height: 50,
+                                offsetY: 20,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '65%',
+                                        background: 'transparent',
+                                        labels: {
+                                            show: true,
+                                            name: {
+                                                show: true,
+                                                fontSize: '29px',
+                                                offsetY: -10,
+                                            },
+                                            value: {
+                                                show: true,
+                                                fontSize: '26px',
+                                                color: isDark ? '#bfc9d4' : undefined,
+                                                offsetY: 16,
+                                                formatter: (val) => {
+                                                    return val;
+                                                },
+                                            },
+                                            total: {
+                                                show: true,
+                                                label: 'Total',
+                                                color: '#888ea8',
+                                                fontSize: '29px',
+                                                formatter: (w) => {
+                                                    return w.globals.seriesTotals.reduce(function (a, b) {
+                                                        return a + b;
+                                                    }, 0);
+                                                },
+                                            },
+                                        },
+                                    },
                                 },
                             },
-                        },
-                    };
-                },
+                            labels: ['Ready', 'Pending', 'Deployed'],
+                            states: {
+                                hover: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                                active: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                            },
+                        };
+                    },
 
-            
-            }));
-        });
-    </script>
+                    get AllowanceOptions() {
+                        const datas = @json($totalallowance);
+                        return {
+                            series: datas,
+                            chart: {
+                                type: 'donut',
+                                height: 460,
+                                fontFamily: 'Nunito, sans-serif',
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            stroke: {
+                                show: true,
+                                width: 25,
+                                colors: isDark ? '#0e1726' : '#fff',
+                            },
+                            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+                            legend: {
+                                position: 'bottom',
+                                horizontalAlign: 'center',
+                                fontSize: '14px',
+                                markers: {
+                                    width: 10,
+                                    height: 10,
+                                    offsetX: -2,
+                                },
+                                height: 50,
+                                offsetY: 20,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '65%',
+                                        background: 'transparent',
+                                        labels: {
+                                            show: true,
+                                            name: {
+                                                show: true,
+                                                fontSize: '29px',
+                                                offsetY: -10,
+                                            },
+                                            value: {
+                                                show: true,
+                                                fontSize: '26px',
+                                                color: isDark ? '#bfc9d4' : undefined,
+                                                offsetY: 16,
+                                                formatter: (val) => {
+                                                    return val;
+                                                },
+                                            },
+                                            total: {
+                                                show: true,
+                                                label: 'Total',
+                                                color: '#888ea8',
+                                                fontSize: '29px',
+                                                formatter: (w) => {
+                                                    return w.globals.seriesTotals.reduce(function (a, b) {
+                                                        return a + b;
+                                                    }, 0);
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            labels: ['Ready', 'Pending'],
+                            states: {
+                                hover: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                                active: {
+                                    filter: {
+                                        type: 'none',
+                                        value: 0.15,
+                                    },
+                                },
+                            },
+                        };
+                    },
 
-    @endsection
+
+                }));
+            });
+</script>
+
+@endsection

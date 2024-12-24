@@ -105,9 +105,29 @@
 .order-tab {
     padding-left: 30px;
 }
+.accountant-revenue {
+    padding-right: 70px;
+}
 @media screen and (max-width: 500px) {
     .order-tab {
         padding-left: 0px;
     }
+    .order-top-part {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .order-top-part .dataTable-search {
+        width: 100%;
+    }
+    .order-top-part .dataTable-search input {
+        width: 100%;
+    }
+    .order-top-part .scan-btn {
+        margin-bottom: 10px;
+    }
+    .accountant-revenue {
+        padding-right: 20px;
+    }
 }
-

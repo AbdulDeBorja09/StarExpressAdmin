@@ -29,7 +29,7 @@
             @endphp
             <h1 style="font-size: 20px; text-transform:capitalize;" class="mt-2">{{$branchs->country}},
                 {{$branchs->branch}}</h1>
-            <div class="flex justify-between mt-3">
+            <div class="flex justify-between mt-3 order-top-part">
                 <div class="" x-data="modal">
                     <!-- button -->
                     <div class="flex items-center ">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CargoService;
+use App\Models\CargoTruck;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\Management;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use \App\Models\User;
 use \App\Models\TruckDriver;
 use \App\Models\Customer;
+use App\Models\Delivery;
+use App\Models\DeliveryAllowance;
 use App\Models\Expenses;
 use \App\Models\Income;
 use App\Models\Orders;
@@ -180,33 +183,54 @@ class AdminController extends Controller
 
     public function servicemanagerHome(): View
     {
-        // $currentDate = Carbon::now();
-        // $startDate = $currentDate->copy()->subMonths(12)->startOfMonth();
-        // $endDate = $currentDate->copy()->endOfMonth();
+        $hr = User::where('type', 'hr')->count();
+        $accountant = User::where('type', 'accountant')->count();
+        $servicemanager = User::where('type', 'servicemanager')->count();
+        $driver = TruckDriver::count();
+        $users = Customer::count();
+        $suspendedemployee = User::where('status', 'suspended')->count();
+        $suspendeduser =  Customer::where('status', 'suspended')->count();
 
-        // $monthlyTotals = DB::table('sales')
-        //     ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as total')
-        //     ->whereBetween('created_at', [$startDate, $endDate])
-        //     ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-        //     ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-        //     ->get();
 
-        // $months = [];
-        // $data = [];
 
-        // for ($i = 0; $i <= 12; $i++) {
-        //     $month = $startDate->copy()->addMonths($i);
-        //     $months[] = $month->format('M Y');
-        //     $data[] = 0;
-        // }
 
-        // foreach ($monthlyTotals as $monthly) {
-        //     $monthLabel = Carbon::create($monthly->year, $monthly->month, 1)->format('M Y');
-        //     $index = array_search($monthLabel, $months);
-        //     if ($index !== false) {
-        //         $data[$index] = $monthly->total;
-        //     }
-        // }
+        $warehouse = CargoTruck::where('status', 'In Warehouse')->count();
+        $use = CargoTruck::where('status', 'In User')->count();
+        $mechanic = CargoTruck::where('status', 'In Mechanic')->count();
+
+
+
+        $ready = Delivery::where('status', 'ready')->count();
+        $pending = Delivery::where('status', 'pending')->count();
+        $deployed = Delivery::where('status', 'deployed')->count();
+
+
+        $allowanceready = DeliveryAllowance::where('status', 'approved')->count();
+        $allowancepending = DeliveryAllowance::where('status', 'pending')->count();
+
+
+        $totaltruck = [
+            'warehouse' => $warehouse,
+            'use' => $use,
+            'mechanic' => $mechanic,
+        ];
+
+        $totaldelivery = [
+            'ready' => $ready,
+            'pending' => $pending,
+            'deployed' => $deployed,
+
+        ];
+
+
+        $allowance = [
+            'ready' => $allowanceready,
+            'pending' => $allowancepending,
+        ];
+
+        $totaltrucks = array_values($totaltruck);
+        $totaldeliveries = array_values($totaldelivery);
+        $totalallowance = array_values($allowance);
 
         $totalOrders = Orders::where('state', '!=', 'Delivered')->count();
 
@@ -214,8 +238,6 @@ class AdminController extends Controller
         $delivery = Orders::where('state', 'OutForDelivery')->count();
         $inwarehouse = Orders::where('location', Auth::user()->branch_id)->count();
 
-
-
-        return view('dashboard.servicemanager',  compact('totalOrders', 'newOrders', 'inwarehouse', 'delivery'));
+        return view('dashboard.servicemanager', compact('delivery', 'inwarehouse',  'totalOrders', 'newOrders', 'totaltrucks', 'totaldeliveries', 'totalallowance'));
     }
 }

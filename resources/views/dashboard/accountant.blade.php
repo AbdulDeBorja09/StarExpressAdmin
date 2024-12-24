@@ -175,32 +175,15 @@
                         </svg> --}}
                     </div>
                 </div>
-            </div>
+            </div> 
             <div class="mb-6 grid gap-6 xl:grid-cols-1" x-data="chart">
                 <div class="panel h-full ">
                     <div class="mb-5 flex items-center dark:text-white-light">
                         <h5 class="text-lg font-semibold">Revenue</h5>
-                        <div x-data="dropdown" @click.outside="open = false" class="dropdown ltr:ml-auto rtl:mr-auto">
-                            <a href="javascript:;" @click="toggle">
-                                <svg class="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
-                                    viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
-                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
-                                        stroke-width="1.5"></circle>
-                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
-                                </svg>
-                            </a>
-                            <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
-                                class="ltr:right-0 rtl:left-0">
-                                <li><a href="javascript:;" @click="toggle">Weekly</a></li>
-                                <li><a href="javascript:;" @click="toggle">Monthly</a></li>
-                                <li><a href="javascript:;" @click="toggle">Yearly</a></li>
-                            </ul>
-                        </div>
                     </div>
                     <p class="text-lg dark:text-white-light/90">Total Profit <span
                             class="ml-2 text-primary">${{number_format($totalRevenue, 2)}}</span></p>
-                    <div class="relative overflow-hidden" style="padding-right: 70px">
+                    <div class="relative overflow-hidden accountant-revenue">
                         <div x-ref="revenueChart" class="rounded-lg bg-white dark:bg-black">
                             <div
                                 class="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">

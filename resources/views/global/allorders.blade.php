@@ -21,11 +21,11 @@
     </ol>
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
-            <div class="flex mb-5">
+            <div class="order-top-part flex mb-5 ">
                 <div class="" x-data="modal">
                     <!-- button -->
                     <div class="flex items-center ">
-                        <button type="button" class="btn btn-outline-success" @click="toggle">SCAN QR</button>
+                        <button type="button" class="scan-btn btn btn-outline-success" @click="toggle">SCAN QR</button>
                     </div>
 
                     <!-- modal -->
@@ -57,7 +57,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text">
+                <div class="dataTable-search" ><input class="dataTable-input"
+                        placeholder="Search..." type="text">
                 </div>
             </div>
             <div class="table-responsive" class="">
