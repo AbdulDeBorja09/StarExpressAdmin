@@ -104,7 +104,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('admin.Services')}}" class="group">
+                    <a href="{{route('settings')}}" class="group">
                         <div class="flex items-center">
                             <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -623,6 +623,10 @@
                         <li>
                             <a href="{{route('servicelocations')}}"
                                 class="{{ Route::currentRouteName() == 'servicelocations' ? 'active' : '' }}">Locations</a>
+                        </li>
+                        <li>
+                            <a href="{{route('warehouse')}}"
+                                class="{{ Route::currentRouteName() == 'warehouse' ? 'active' : '' }}">Warehouse</a>
                         </li>
                     </ul>
                 </li>

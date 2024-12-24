@@ -643,4 +643,9 @@ class ServiceManagerController extends Controller
     {
         return view('servicemanager.addreport');
     }
+
+    public function warehouse()
+    {
+        return view('admin.settings');
+    }
 }

@@ -35,7 +35,7 @@
                             <div x-show="open" x-transition x-transition.duration.300
                                 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                                 <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                                    <h5 class="font-bold text-lg">Add Region</h5>
+                                    <h5 class="font-bold text-lg">Add Voucher</h5>
                                     <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"

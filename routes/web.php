@@ -47,6 +47,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:admin'])->group(function
     Route::get('/Logs/All', [LogsController::class, 'alllogs'])->name('admin.alllogs');
     Route::get('/Logs/Edit', [LogsController::class, 'editlogs'])->name('admin.editlogs');
     Route::get('/Logs/Delete', [LogsController::class, 'deletelogs'])->name('admin.deletelogs');
+    Route::get('/Management/Settings', [ManagementController::class, 'settings'])->name('settings');
 
     Route::post('/Branch/Add', [ManagementController::class, 'submitaddBranch'])->name('submitaddBranch');
     Route::post('/Branches/edit', [ManagementController::class, 'editbranch'])->name('editbranch');
@@ -105,6 +106,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
     Route::get('/Report/Pending', [ExpensesController::class, 'submittedreports'])->name('allreports');
     Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
+    Route::get('/Warehouse', [ServiceManagerController::class, 'warehouse'])->name('warehouse');
 
 
 

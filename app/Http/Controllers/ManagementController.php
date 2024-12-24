@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class ManagementController extends Controller
 {
 
-    
+
 
     public function Branches(): View
     {
@@ -125,4 +125,10 @@ class ManagementController extends Controller
         CargoService::where('id',  $request->id)->delete();
         return redirect()->route('admin.Services');
     }
+
+    public function settings() {
+        return view('admin.settings');
+    }
+
+   
 }
