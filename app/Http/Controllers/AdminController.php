@@ -192,13 +192,9 @@ class AdminController extends Controller
         $suspendeduser =  Customer::where('status', 'suspended')->count();
 
 
-
-
         $warehouse = CargoTruck::where('status', 'In Warehouse')->count();
         $use = CargoTruck::where('status', 'In User')->count();
         $mechanic = CargoTruck::where('status', 'In Mechanic')->count();
-
-
 
         $ready = Delivery::where('status', 'ready')->count();
         $pending = Delivery::where('status', 'pending')->count();

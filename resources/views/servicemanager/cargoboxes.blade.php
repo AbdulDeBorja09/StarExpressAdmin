@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
             @php
-            $firstBox = $services->first()->first(); 
+            $firstBox = $services->first()->first();
             @endphp
 
             <div class="flex justify-between">
@@ -39,7 +39,7 @@
             @foreach($services as $serviceId => $boxes)
             <div class="table-responsive mt-5">
                 @php
-                $firstServiceBox = $boxes->first(); 
+                $firstServiceBox = $boxes->first();
                 @endphp
                 <h1 class="sub-title">Service: {{ $firstServiceBox->service->originBranch->branch }} ({{
                     $firstServiceBox->service->originBranch->country }}) To {{
@@ -180,12 +180,12 @@
                     <input id="width" type="text" name="width" class="form-input flex-1" required>
 
                     <label for="height" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter Box
-                        Height
+                        Length
                     </label>
                     <input id="height" type="text" name="height" class="form-input flex-1" required>
 
                     <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter Box
-                        Length
+                        Height
                     </label>
                     <input id="price" type="text" name="length" class="form-input flex-1" required>
 

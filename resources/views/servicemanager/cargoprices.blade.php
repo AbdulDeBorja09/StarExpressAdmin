@@ -65,7 +65,7 @@
                                                 @foreach($service as $item)
                                                 <option value="{{ $item->id }}">
                                                     {{ $item->originBranch->branch }} To {{
-                                                    $item->destinationBranch->branch }}
+                                                    $item->destinationBranch->country }}
                                                 </option>
 
                                                 @endforeach

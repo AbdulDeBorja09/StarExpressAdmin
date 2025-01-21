@@ -28,7 +28,7 @@
                             @foreach($service as $item)
                             <option
                                 value="{{ $item->originBranch->id }}|{{ $item->destinationBranch->id }}|{{$item->id}}">
-                                {{ $item->originBranch->branch }} To {{ $item->destinationBranch->branch }}
+                                {{ $item->originBranch->branch }} To {{ $item->destinationBranch->country }}
                             </option>
 
                             @endforeach
@@ -45,12 +45,12 @@
                         <input id="width" type="text" name="width" class="form-input flex-1" required>
 
                         <label for="height" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter Box
-                            Height
+                            Length
                         </label>
                         <input id="height" type="text" name="height" class="form-input flex-1" required>
 
                         <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter Box
-                            Length
+                            Height
                         </label>
                         <input id="price" type="text" name="length" class="form-input flex-1" required>
 

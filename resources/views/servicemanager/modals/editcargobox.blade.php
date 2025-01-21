@@ -57,15 +57,13 @@
                                 required>
 
                             <label for="width" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter
-                                Box
-                                Height
+                                Box Length
                             </label>
                             <input id="width" type="text" name="width" class="form-input flex-1" value="{{$size2}}"
                                 required>
 
                             <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 " style="font-size:15px">Enter
-                                Box
-                                Length
+                                Box Height
                             </label>
                             <input id="price" type="text" name="length" class="form-input flex-1" value="{{$size3}}"
                                 required>
