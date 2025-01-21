@@ -23,7 +23,25 @@ class ManagementController extends Controller
             ->groupBy('country');
         return view('admin.displayBranches', compact('countries'));
     }
+    public function editbranch(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'country' => 'required|string|max:255',
+            'branch' => 'required|string|max:255',
 
+        ]);
+        try {
+            Branches::where('id', $request->id)->update([
+                'country' => $request->country,
+                'branch' => $request->branch,
+
+            ]);
+            return redirect()->route('admin.Branches');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
     public function deletebranch(Request $request)
     {
         $request->validate([
@@ -32,6 +50,7 @@ class ManagementController extends Controller
         Branches::where('id',  $request->id)->delete();
         return redirect()->route('admin.Branches');
     }
+
 
     public function submitaddBranch(Request $request)
     {
@@ -72,6 +91,7 @@ class ManagementController extends Controller
         $request->validate([
             'origin' => 'required|max:255',
             'destination' => 'required|max:255',
+            'currency' => 'required|max:255',
             'status' => 'required|max:255',
         ]);
         $services = CargoService::where('origin', $request->origin)->where('destination', $request->destination)->first();
@@ -83,6 +103,7 @@ class ManagementController extends Controller
                     CargoService::create([
                         'origin' => $request->origin,
                         'destination' => $request->destination,
+                        'currency' => $request->currency,
                         'status' => $request->status,
                     ]);
                     return redirect()->route('admin.Services');
@@ -100,6 +121,7 @@ class ManagementController extends Controller
             'id' => 'required',
             'origin' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
+            'currency' => 'required|max:255',
             'status' => 'required|max:255',
         ]);
         if ($request->origin === $request->destination) {
@@ -109,6 +131,7 @@ class ManagementController extends Controller
                 CargoService::where('id', $request->id)->update([
                     'origin' => $request->origin,
                     'destination' => $request->destination,
+                    'currency' => $request->currency,
                     'status' => $request->status,
                 ]);
                 return redirect()->route('admin.Services');
@@ -126,9 +149,8 @@ class ManagementController extends Controller
         return redirect()->route('admin.Services');
     }
 
-    public function settings() {
+    public function settings()
+    {
         return view('admin.settings');
     }
-
-   
 }

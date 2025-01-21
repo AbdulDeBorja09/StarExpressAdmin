@@ -11,6 +11,7 @@ class CargoService extends Model
     protected $fillable = [
         'origin',
         'destination',
+        'currency',
         'status',
     ];
 

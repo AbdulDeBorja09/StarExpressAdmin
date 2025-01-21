@@ -37,8 +37,21 @@ class ServiceManagerController extends Controller
     public function getAreas($serviceId)
     {
         $cargoBox = CargoService::find($serviceId);
-        $areas = CargoLocations::where('branch_id', $cargoBox->destination)->get();
-        return response()->json($areas);
+
+
+        $areas = CargoLocations::where('branch_id', $cargoBox->destination)
+            ->get()
+            ->groupBy('region');
+
+        $response = [];
+        foreach ($areas as $region => $locations) {
+            $response[] = [
+                'region' => $region,
+                'areas' => $locations
+            ];
+        }
+
+        return response()->json($response);
     }
 
     public function cargoboxes(): View

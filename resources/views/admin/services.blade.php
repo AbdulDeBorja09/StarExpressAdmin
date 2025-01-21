@@ -52,6 +52,64 @@
                         <option value="active">Active</option>
                     </select>
                 </div>
+
+                <div class="mt-5">
+                    <label for="currency">Currency</label>
+                    <select class="form-input flex-1" name="currency" id="currency">
+                        <option value="AUD">Australian dollar</option>
+                        <option value="EUR">Euro</option>
+                        <option value="HKD">Hong Kong Dollar</option>
+                        <option value="INR">Indian Rupee</option>
+                        <option value="IDR">Indonesian Rupiah</option>
+                        <option value="MOP">Macanese pataca</option>
+                        <option value="PHP">Philippine Peso</option>
+                        <option value="USD">United States Dollar</option>
+
+                        {{-- <option value="AFN">Afghan Afghani</option>
+                        <option value="AED">United Arab Emirates Dirham</option>
+                        <option value="AMD">Armenian Dram</option>
+                        <option value="AZN">Azerbaijani Manat</option>
+                        <option value="BDT">Bangladeshi Taka</option>
+                        <option value="BHD">Bahraini Dinar</option>
+                        <option value="BND">Brunei Dollar</option>
+                        <option value="BTN">Bhutanese Ngultrum</option>
+                        <option value="CNY">Chinese Yuan</option>
+                        <option value="HKD">Hong Kong Dollar</option>
+                        <option value="IDR">Indonesian Rupiah</option>
+                        <option value="ILS">Israeli New Shekel</option>
+                        <option value="IQD">Iraqi Dinar</option>
+                        <option value="IRR">Iranian Rial</option>
+                        <option value="JPY">Japanese Yen</option>
+                        <option value="JOD">Jordanian Dinar</option>
+                        <option value="KHR">Cambodian Riel</option>
+                        <option value="KGS">Kyrgyzstani Som</option>
+                        <option value="KPW">North Korean Won</option>
+                        <option value="KRW">South Korean Won</option>
+                        <option value="KWD">Kuwaiti Dinar</option>
+                        <option value="LAK">Lao Kip</option>
+                        <option value="LBP">Lebanese Pound</option>
+                        <option value="LKR">Sri Lankan Rupee</option>
+                        <option value="MNT">Mongolian Tögrög</option>
+                        <option value="MMK">Myanmar Kyat</option>
+                        <option value="MVR">Maldivian Rufiyaa</option>
+                        <option value="MYR">Malaysian Ringgit</option>
+                        <option value="NPR">Nepalese Rupee</option>
+                        <option value="OMR">Omani Rial</option>
+                        <option value="PKR">Pakistani Rupee</option>
+                        <option value="QAR">Qatari Riyal</option>
+                        <option value="SAR">Saudi Riyal</option>
+                        <option value="SGD">Singapore Dollar</option>
+                        <option value="SYP">Syrian Pound</option>
+                        <option value="THB">Thai Baht</option>
+                        <option value="TJS">Tajikistani Somoni</option>
+                        <option value="TMT">Turkmenistani Manat</option>
+                        <option value="TRY">Turkish Lira</option>
+                        <option value="TWD">New Taiwan Dollar</option>
+                        <option value="UZS">Uzbekistani Som</option>
+                        <option value="VND">Vietnamese Đồng</option>
+                        <option value="YER">Yemeni Rial</option> --}}
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary !mt-6">Submit</button>
             </form>
         </div>
@@ -63,6 +121,7 @@
                         <tr>
                             <th style="width:30%;">Origin</th>
                             <th style="width:30%;">Destination</th>
+                            <th style="width:30%;">Currency</th>
                             <th style="width:10%;">Status</th>
                             <th style="text-align:center;">Action</th>
                         </tr>
@@ -72,6 +131,7 @@
                         <tr>
                             <td>{{ $service->originBranch->country}}, {{$service->originBranch->branch}}</td>
                             <td>{{ $service->destinationBranch->country}}, {{ $service->destinationBranch->branch}}</td>
+                            <td>{{$service->currency}}</td>
                             <td>
                                 @if($service->status === "active")
                                 <span class="badge badge-outline-success">{{ $service->status }}</span>

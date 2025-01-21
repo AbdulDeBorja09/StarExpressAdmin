@@ -59,8 +59,8 @@
                                                 style="font-size:15px">Cargo
                                                 Service
                                             </label>
-                                            <select id="serviceDropdown" class="form-input flex-1" name="service_id"
-                                                required style="text-transform: capitalize">
+                                            <select id="serviceDropdown" class="serviceDropdown form-input flex-1"
+                                                name="service_id" required style="text-transform: capitalize">
                                                 <option value="">-- SELECT CARGO SERVICE --</option>
                                                 @foreach($service as $item)
                                                 <option value="{{ $item->id }}">
@@ -74,16 +74,16 @@
                                                 style="font-size:15px">Select Cargo
                                                 Box
                                             </label>
-                                            <select id="boxdropdown" class="form-input flex-1" name="box" required
-                                                style="text-transform: capitalize">
+                                            <select id="boxdropdown" class="boxdropdown form-input flex-1" name="box"
+                                                required style="text-transform: capitalize">
                                                 <option value="">-- SELECT CARGO BOX --</option>
 
                                             </select>
                                             <label for="areaDropdown" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px">Select Area
                                             </label>
-                                            <select id="areaDropdown" class="form-input flex-1" name="area" required
-                                                style="text-transform: capitalize">
+                                            <select id="areaDropdown" class="areaDropdown form-input flex-1" name="area"
+                                                required style="text-transform: capitalize">
                                                 <option value="">-- SELECT AREA --</option>
 
                                             </select>
@@ -245,15 +245,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // When the service dropdown changes
-        $('#serviceDropdown').change(function() {
+        $('.serviceDropdown').change(function() {
             var serviceId = $(this).val();
-            
-            // Clear and reset both dropdowns
-            $('#boxdropdown').empty().append('<option value="">-- SELECT REGION --</option>');
-            $('#areaDropdown').empty().append('<option value="">-- SELECT AREA --</option>');
+            $('.boxdropdown').empty().append('<option value="">-- SELECT BOX --</option>');
 
-            // If a service is selected, fetch branches (regions)
             if (serviceId) {
                 $.ajax({
                     url: '/branches/' + serviceId, 
@@ -261,8 +256,7 @@
                     dataType: 'json',
                     success: function(data) {
                         $.each(data, function(key, value) {
-                            // Populate the branches dropdown
-                            $('#boxdropdown').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $('.boxdropdown').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                     },
                     error: function(xhr) {
@@ -271,22 +265,24 @@
                 });
             }
         });
-
-        // When a branch (region) is selected
-        $('#serviceDropdown').change(function() {
+        
+        $('.serviceDropdown').change(function() {
             var branchId = $(this).val();
-            $('#areaDropdown').empty().append('<option value="">-- SELECT AREA --</option>');
+            $('.areaDropdown').empty().append('<option value="">-- SELECT AREA --</option>');
 
-            // If a branch is selected, fetch areas related to that branch
             if (branchId) {
                 $.ajax({
-                    url: '/areas/' + branchId, // Call the areas endpoint with the selected branch ID
+                    url: '/areas/' + branchId, 
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        $.each(data, function(key, value) {
-                            // Populate the areas dropdown
-                            $('#areaDropdown').append('<option value="' + value.region + '">' + value.region + '</option>');
+                        console.log(data); 
+                        $.each(data, function(index, item) {
+                            if (item.region) {
+                                $('.areaDropdown').append('<option value="' + item.region + '">' + item.region + '</option>');
+                            } else {
+                                console.error('Region is undefined for item:', item);
+                            }
                         });
                     },
                     error: function(xhr) {

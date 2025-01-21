@@ -75,6 +75,20 @@
                                     <option value="inactive">Inactive</option>
                                 </select>
                             </div>
+                            <div class="mt-5">
+                                <label for="currency">Currency</label>
+                                <select class="form-input flex-1" name="currency" id="currency">
+                                    <option value="AUD">Australian dollar</option>
+                                    <option value="EUR">Euro</option>
+                                    <option value="HKD">Hong Kong Dollar</option>
+                                    <option value="INR">Indian Rupee</option>
+                                    <option value="IDR">Indonesian Rupiah</option>
+                                    <option value="MOP">Macanese pataca</option>
+                                    <option value="PHP">Philippine Peso</option>
+                                    <option value="USD">United States Dollar</option>
+
+                                </select>
+                            </div>
                         </div>
                         <div class="flex justify-center items-center mt-8">
                             <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>

@@ -34,20 +34,20 @@
                         <div class="mt-0 items-center" style="text-transform: capitalize">
                             <input type="hidden" name="id" value="{{$branch ->id}}">
                             <div class="mt-5">
-                                <label for="origin" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                <label for="country" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                     style="font-size:15px">Country:
                                 </label>
-                                <input name="origin" id="origin" class="tcaps form-input flex-1" value="{{$country}}"
+                                <input name="country" id="country" class="tcaps form-input flex-1" value="{{$country}}"
                                     readonly>
                             </div>
                             <div class="mt-5">
-                                <label for="destination" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                <label for="branch" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                     style="font-size:15px">Branch:
                                 </label>
-                                <input name="destination" id="origin" class="tcaps form-input flex-1"
+                                <input name="branch" id="branch" class="tcaps form-input flex-1"
                                     value="{{$branch->branch}}">
-
                             </div>
+                          
                         </div>
                         <div class="flex justify-center items-center mt-8">
                             <button type="submit" class="btn btn-outline-success" style="width:50%">Save</button>
