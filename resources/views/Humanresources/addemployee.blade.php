@@ -20,7 +20,7 @@
                 Employee</a>
         </li>
     </ol>
-
+    @include('layout.components.error')
     <div class="mt-5">
         <div class="flex flex-col gap-2.5 xl:flex-row">
             <form action="{{route('submitaddEmployees')}}" method="POST" enctype="multipart/form-data"
@@ -125,16 +125,7 @@
                 </div>
                 <div class="mt-8">
                     <hr class="my-6 border-[#e0e6ed] dark:border-[#1b2e4b]">
-                    @if ($errors->any())
-                    <div class="panel">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li><i>* {{ $error }}</i></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-                    <div class="panel">
+                    <div class="p-5">
                         <button type="submit" class="btn btn-success w-full gap-2">
                             <svg width="24" height="24" viewbox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">

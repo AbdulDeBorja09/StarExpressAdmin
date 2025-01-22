@@ -435,14 +435,12 @@ class ServiceManagerController extends Controller
             'truck' => 'nullable|string',
             'driver' => 'nullable|string',
             'note' => 'nullable|string',
-            'status' => 'required|string',
             'order_ids' => 'nullable|array',
             'order_ids.*' => 'exists:orders,id',
+
         ]);
 
         $validated['order_ids'] = $validated['order_ids'] ?? [];
-
-        $user = Auth::user();
 
         try {
             $delivery = Delivery::find($request->id);
@@ -474,9 +472,9 @@ class ServiceManagerController extends Controller
                 $submittedOrder = $delivery->update([
                     'driver_id' => $request->driver,
                     'truck_id' => $request->truck,
+                    'date' => $request->date,
                     'items' => json_encode($newids),
                     'note' => $request->note,
-                    'status' => $request->status,
                 ]);
 
                 if ($submittedOrder) {
@@ -500,11 +498,6 @@ class ServiceManagerController extends Controller
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
-
-
-
-
 
     private function generateTripNumber()
     {
@@ -538,6 +531,56 @@ class ServiceManagerController extends Controller
 
         return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails', 'allowance'));
     }
+    public function deploydelivery(Request $request)
+    {
+        $delivery = Delivery::find($request->id);
+        if (is_null($delivery->items) || is_null($delivery->driver_id) || is_null($delivery->truck_id)) {
+            return redirect()->back()->withErrors(['error' => 'Delivery has missing information. Please complete all fields before deploying.']);
+        }
+        if ($delivery) {
+            try {
+                Delivery::where('driver_id', $delivery->driver_id)->where('status', 'deployed')->update([
+                    'status' => 'completed'
+                ]);
+
+                Delivery::where('id', $request->id)->update([
+                    'status' => 'deployed'
+                ]);
+                CargoTruck::where('id', $delivery->truck_id)->update([
+                    'status' => 'In Use'
+                ]);
+
+                $orderIds = json_decode($delivery->items, true);
+                $newStatusWithTimestamp = [
+                    'status' => "Out for delivery",
+                    'logs' => 'Set By: ' . Auth::user()->lname . ', ' . Auth::user()->fname,
+                    'timestamp' => now()->toDateTimeString(),
+                ];
+
+                foreach ($orderIds as $id) {
+                    $order = Orders::find($id);
+                    if ($order) {
+                        $existingStatuses = $order->status ? json_decode($order->status, true) : [];
+                        $existingStatuses[] = $newStatusWithTimestamp;
+                        $order->status = json_encode($existingStatuses);
+                        $order->state = 'OutForDelivery';
+                        $order->save();
+                    }
+                }
+
+
+                return redirect()->route('alldeliveries');
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            }
+        }
+    }
+    public function deletedelivery(Request $request)
+    {
+        Delivery::where('id', $request->id)->delete();
+        return redirect()->back()->with('success', 'Delivery deleted.');
+    }
+
     public function vouchers(Request $request)
     {
         $perPage = $request->input('perPage', 20);
@@ -611,46 +654,6 @@ class ServiceManagerController extends Controller
         return redirect()->back()->with('success', 'Voucher updated successfully.');
     }
 
-    public function deploydelivery(Request $request)
-    {
-        $delivery = Delivery::find($request->id);
-        if (is_null($delivery->items) || is_null($delivery->driver_id) || is_null($delivery->truck_id)) {
-            return redirect()->back()->withErrors(['error' => 'Delivery has missing information. Please complete all fields before deploying.']);
-        }
-        if ($delivery) {
-            try {
-                Delivery::where('id', $request->id)->update([
-                    'status' => 'deployed'
-                ]);
-                CargoTruck::where('id', $delivery->truck_id)->update([
-                    'status' => 'In Use'
-                ]);
-
-                $orderIds = json_decode($delivery->items, true);
-                $newStatusWithTimestamp = [
-                    'status' => "Out for delivery",
-                    'logs' => 'Set By: ' . Auth::user()->lname . ', ' . Auth::user()->fname,
-                    'timestamp' => now()->toDateTimeString(),
-                ];
-
-                foreach ($orderIds as $id) {
-                    $order = Orders::find($id);
-                    if ($order) {
-                        $existingStatuses = $order->status ? json_decode($order->status, true) : [];
-                        $existingStatuses[] = $newStatusWithTimestamp;
-                        $order->status = json_encode($existingStatuses);
-                        $order->state = 'OutForDelivery';
-                        $order->save();
-                    }
-                }
-
-
-                return redirect()->route('alldeliveries');
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-            }
-        }
-    }
 
     public function newreport()
     {

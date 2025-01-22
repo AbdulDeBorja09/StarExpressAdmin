@@ -110,7 +110,7 @@ class OrdersController extends Controller
         $order = Orders::find($id);
         $id = Auth::id();
         $user = User::where('id', $id)->first();
-        $value = "Processing Cargo";
+        $value = "Preparing For Delivery";
 
         if ($order) {
             if ($request->status === $value) {

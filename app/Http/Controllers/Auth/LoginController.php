@@ -63,7 +63,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->status === 'active') {
-                Session::put('avatar', $user->avatar);
+                Session::put('image', $user->image);
 
                 if ($user->type === 'accountant') {
                     return redirect()->route('accountant.home');

@@ -81,8 +81,10 @@ class HrController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imgname = 'Avatar_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imgname = 'User_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs('Profiles', $imgname, 'public');
         }
+
         if ($request->input('password') === $request->input('confirm-password')) {
             if (User::where('email', $request->input('email'))->exists()) {
                 return redirect()->back()->withErrors(['email' => 'The email address is already in use.']);
@@ -108,7 +110,7 @@ class HrController extends Controller
                                     'status' => $request->status,
                                     'email' => $request->input('email'),
                                     'password' => bcrypt($request->input('password')),
-                                    'avatar' => $imagePath,
+                                    'image' => $imagePath,
                                     'hired' => $hiredDate,
                                 ]);
                                 return redirect()->route('allEmployees');

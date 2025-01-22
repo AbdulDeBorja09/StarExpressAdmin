@@ -57,8 +57,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="dataTable-search" ><input class="dataTable-input"
-                        placeholder="Search..." type="text">
+                <div class="dataTable-search">
+                    <input class="dataTable-input" placeholder="Search Filter 1" type="text" id="filter1">
+                    <input class="dataTable-input" placeholder="Search Filter 2" type="text" id="filter2"
+                        style="margin-left: 10px">
                 </div>
             </div>
             <div class="table-responsive" class="">
@@ -359,27 +361,47 @@
     });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('select-all');
-        const childCheckboxes = document.querySelectorAll('.child-checkbox');
+    document.addEventListener("DOMContentLoaded", function () {
+        const filter1Input = document.getElementById('filter1');
+        const filter2Input = document.getElementById('filter2');
+        const tableRows = document.querySelectorAll('.table tbody tr');
 
-        selectAllCheckbox.addEventListener('change', function () {
-            childCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
+        function filterTable() {
+            const filter1 = filter1Input.value.toLowerCase();
+            const filter2 = filter2Input.value.toLowerCase();
 
-      
-        childCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                if (!this.checked) {
-                    selectAllCheckbox.checked = false;
-                } else if (Array.from(childCheckboxes).every(cb => cb.checked)) {
-                    selectAllCheckbox.checked = true;
+            tableRows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                let foundFilter1 = false;
+                let foundFilter2 = false;
+
+                for (let i = 0; i < cells.length; i++) {
+                    const cell = cells[i];
+                    const textValue = cell.textContent || cell.innerText;
+
+                    if (filter1 && textValue.toLowerCase().includes(filter1)) {
+                        foundFilter1 = true;
+                    }
+
+                    if (filter2 && textValue.toLowerCase().includes(filter2)) {
+                        foundFilter2 = true;
+                    }
+                }
+
+                if ((!filter1 || foundFilter1) && (!filter2 || foundFilter2)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
                 }
             });
-        });
+        }
+
+        filter1Input.addEventListener('keyup', filterTable);
+        filter2Input.addEventListener('keyup', filterTable);
     });
+</script>
+
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"></script>
 <script>

@@ -50,16 +50,10 @@
                                             <label for="length" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px; text-align:start">Select Date:
                                             </label>
-                                            <input type="date" name="date" class="form-input flex-1" required>
+                                            <input type="date" name="date" id="deliveryDate" class="form-input flex-1"
+                                                required>
+                                            <input type="hidden" name="status" id="" value="pending">
 
-                                            <label for="status" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
-                                                style="font-size:15px; text-align:start">Status
-                                            </label>
-                                            <select id="status" class="form-input flex-1" name="status" required
-                                                style="text-transform: capitalize">
-                                                <option value="pending">Pending</option>
-                                                <option value="pending">Ready</option>
-                                            </select>
                                             <label for="note" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
                                                 style="font-size:15px; text-align:start">Note:
                                             </label>
@@ -134,7 +128,7 @@
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
                                     </a>
-                                    <form action="" method="POST" id="delete-form-{{ $item->id }}" class="pl-3">
+                                    <form action="{{route('deletedelivery')}}" method="POST" id="delete-form-{{ $item->id }}" class="pl-3">
                                         @csrf
                                         <input type="hidden" name="id" value="{{$item->id}}}">
                                         <button type="button" x-tooltip="Delete"
@@ -180,7 +174,7 @@
                                                     document.getElementById(formId).submit(); 
                                                     swalWithBootstrapButtons.fire({
                                                         title: 'Deleted!',
-                                                        html: '<div class="text-center mt-3">Delivery Has Been Deleted.</div>', 
+                                                        html: '<div class="text-center mt-3">Delivery Trip Has Been Deleted.</div>', 
                                                         icon: 'success',
                                                         confirmButtonText: 'OK', 
                                                     });
@@ -188,7 +182,7 @@
                                                 } else if (result.dismiss === window.Swal.DismissReason.cancel) {
                                                     swalWithBootstrapButtons.fire({
                                                         title: 'Cancelled',
-                                                        html: '<div class="text-center mt-3">Your Delivery Is Safe.</div>', 
+                                                        html: '<div class="text-center mt-3">Your Delivery Trip Is Safe.</div>', 
                                                         icon: 'error',
                                                         confirmButtonText: 'OK', 
                                                     });
@@ -316,4 +310,28 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('deliveryForm');
+        const dateInput = document.getElementById('deliveryDate');
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0');
+        
+        const minDate = `${year}-${month}-${day}`;
+        dateInput.setAttribute('min', minDate);
+
+        form.addEventListener('submit', function (event) {
+            const selectedDate = new Date(dateInput.value);
+            const minDateObj = new Date(minDate);
+
+            // Check if the selected date is valid
+            if (selectedDate < minDateObj) {
+                event.preventDefault(); // Prevent form submission
+                alert('Please select a valid date. Past dates are not allowed.');
+            }
+        });
+    });
+</script>
 @endsection

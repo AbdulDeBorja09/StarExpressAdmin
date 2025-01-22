@@ -55,12 +55,13 @@
                             @endforeach
                         </select>
 
-                        <label for="date" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Date:</label>
-                        <input class="form-input flex-1 mb-2" id="date" type="text" readonly
-                            value="{{ \Carbon\Carbon::parse($delivery->date)->format('F j, Y') }}">
+                        <label for="deliveryDate" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2"
+                            style="font-size:15px">Date:</label>
+                        <input class="form-input flex-1 mb-2" name="date" id="deliveryDate" type="date"
+                            value="{{ $delivery->date }}">
 
                         <label for="status" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Status:</label>
-                        <input class="form-input flex-1 mb-2" id="date" type="text" readonly
+                        <input class="form-input flex-1 mb-2" name="status" id="status" type="text" readonly
                             value="{{ $delivery->status}}">
 
                         <label for="note" class="mb-2 w-1/3 ltr:mr-2 rtl:ml-2" style="font-size:15px">Note:</label>
@@ -87,7 +88,7 @@
                         <input type="hidden" name="id" value="{{$delivery->id}}">
                         <button type="submit" class="btn btn-success w-full gap-2 mt-4" @if($allowance)
                             @if($allowance->status !==
-                            'completed')
+                            'completed' || $delivery->status == 'deployed')
                             disabled
                             @endif
                             @else
@@ -404,6 +405,31 @@ orders.forEach(order => {
 });
 
 
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('deliveryForm');
+        const dateInput = document.getElementById('deliveryDate');
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0');
+        
+        const minDate = `${year}-${month}-${day}`;
+        dateInput.setAttribute('min', minDate);
+
+        form.addEventListener('submit', function (event) {
+            const selectedDate = new Date(dateInput.value);
+            const minDateObj = new Date(minDate);
+
+            // Check if the selected date is valid
+            if (selectedDate < minDateObj) {
+                event.preventDefault(); // Prevent form submission
+                alert('Please select a valid date. Past dates are not allowed.');
+            }
+        });
+    });
 </script>
 
 

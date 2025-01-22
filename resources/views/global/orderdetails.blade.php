@@ -217,22 +217,27 @@
                                         <div class="flex-1">Discount:</div>
                                         <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
                                     </div>
-                                    @if($details->payment === 'half')
+                                    @if($details->payment === 'Down Payment')
                                     <div class="flex items-center">
                                         <div class="flex-1">Grand total:</div>
                                         <div class="w-[37%]">{{$details->total}}</div>
                                     </div>
+                                    <div class="flex items-center">
+                                        <div class="flex-1">Down Payment:</div>
+                                        <div class="w-[37%]">{{$details->balance}}</div>
+                                    </div>
+
                                     <div class="flex items-center text-lg font-semibold">
-                                        <div class="flex-1">Total Balance</div>
-                                        <div class="w-[37%]">${{$details->balance}}</div>
+                                        <div class="flex-1">Total Balance: </div>
+                                        <div class="w-[37%]">{{$details->cargoService->currency}}$ {{$details->total -
+                                            $details->balance}}</div>
                                     </div>
                                     @else
                                     <div class="flex items-center text-lg font-semibold">
-                                        <div class="flex-1">Grand Total</div>
-                                        <div class="w-[37%]">${{$details->total}}</div>
+                                        <div class="flex-1">Grand total: </div>
+                                        <div class="w-[37%]">{{$details->cargoService->currency}}$ {{$details->total}}
+                                        </div>
                                     </div>
-
-
                                     @endif
                                 </div>
                             </div>
@@ -429,19 +434,25 @@
                                             <div class="flex-1">Discount:</div>
                                             <div class="w-[37%]">{{$details->discount ?? '0'}}</div>
                                         </div>
-                                        @if($details->payment === 'half')
+                                        @if($details->payment === 'Down Payment')
                                         <div class="flex items-center text-md ">
                                             <div class="flex-1">Grand Total</div>
                                             <div class="w-[37%]">{{$details->total}}</div>
                                         </div>
+                                        <div class="flex items-center text-md ">
+                                            <div class="flex-1">Down Payment</div>
+                                            <div class="w-[37%]">{{$details->balance}}</div>
+                                        </div>
                                         <div class="flex items-center text-lg font-semibold">
                                             <div class="flex-1">Total Balance:</div>
-                                            <div class="w-[37%]">{{$details->balance}}</div>
+                                            <div class="w-[37%]">{{$details->cargoService->currency}}$ {{$details->total
+                                                - $details->balance}}</div>
                                         </div>
                                         @else
                                         <div class="flex items-center text-lg font-semibold">
                                             <div class="flex-1">Grand Total</div>
-                                            <div class="w-[37%]">{{$details->total}}</div>
+                                            <div class="w-[37%]">{{$details->cargoService->currency}}$
+                                                {{$details->total}}</div>
                                         </div>
                                         @endif
                                     </div>
@@ -649,7 +660,8 @@
                                                     </option>
                                                     @endforeach
                                                     <option value="Cleared At Customs">Cleared At Customs</option>
-                                                    <option value="Processing Cargo">Preparing For Delivery</option>
+                                                    <option value="Preparing For Delivery">Preparing For Delivery
+                                                    </option>
                                                     <option value="Out For Delivery">Out For Delivery</option>
                                                     <option value="On The Way">On The Way</option>
                                                     <option value="Delivered">Delivered</option>
@@ -708,7 +720,7 @@
                                             </option>
                                             @endforeach
                                             <option value="Cleared At Customs">Cleared At Customs</option>
-                                            <option value="Processing Cargo">Preparing For Delivery</option>
+                                            <option value="Preparing For Delivery">Preparing For Delivery</option>
                                         </select>
                                         <button type="submit" class="btn btn-outline-success mt-3"
                                             style="width:100%">Add

@@ -134,8 +134,11 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::put('/orders/{order}/statuses/{index}/edit', [OrdersController::class, 'editStatus'])->name('statuses.edit');
 
     Route::post('/submit-orders', [ServiceManagerController::class, 'submitdelivery'])->name('submitdelivery');
-    Route::post('/create-delivery', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
+    Route::post('/Delivery/Create', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
     Route::post('/Delivery/Deploy', [ServiceManagerController::class, 'deploydelivery'])->name('deploydelivery');
+    Route::post('/Delivery/Delete', [ServiceManagerController::class, 'deletedelivery'])->name('deletedelivery');
+    
+
 
     Route::post('/Allowance/Create', [AllowanceController::class, 'createallowance'])->name('createallowance');
     Route::post('/Allowance/Edit', [AllowanceController::class, 'editallowance'])->name('editallowance');

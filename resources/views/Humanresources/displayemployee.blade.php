@@ -57,9 +57,8 @@
                     class="box-container relative overflow-hidden rounded-md bg-white text-center shadow dark:bg-[#1c232f]">
                     <div class="rounded-t-md bg-white/40 bg-cover bg-center p-6 pb-0"
                         style="background-image: url('{{ asset('images/notification-bg.png') }}');">
-                        @if ($item->avatar)
-                        <img src="{{ asset('storage/' . $item->avatar) }}"
-                            class="mx-auto max-h-40 w-4/5 object-contain">
+                        @if ($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" class="mx-auto max-h-40 w-4/5 object-contain">
                         @else
                         <img class="mx-auto max-h-40 w-4/5 object-contain" src="{{asset('../images/avatar.png')}}" />
                         @endif

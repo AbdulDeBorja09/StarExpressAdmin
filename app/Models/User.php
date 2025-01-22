@@ -35,7 +35,7 @@ class User extends Authenticatable
         'contact',
         'status',
         'hired',
-        'avatar',
+        'image',
         'active',
     ];
     public function messages()
