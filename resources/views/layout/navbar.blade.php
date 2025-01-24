@@ -362,6 +362,7 @@
                                 </svg>
                                 Inbox</a>
                         </li>
+
                         <li class="border-t border-white-light dark:border-white-light/10">
                             <a class="!py-3 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

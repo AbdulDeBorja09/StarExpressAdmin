@@ -128,7 +128,8 @@
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
                                     </a>
-                                    <form action="{{route('deletedelivery')}}" method="POST" id="delete-form-{{ $item->id }}" class="pl-3">
+                                    <form action="{{route('deletedelivery')}}" method="POST"
+                                        id="delete-form-{{ $item->id }}" class="pl-3">
                                         @csrf
                                         <input type="hidden" name="id" value="{{$item->id}}}">
                                         <button type="button" x-tooltip="Delete"
@@ -204,7 +205,7 @@
                 <div class="dataTable-bottom mt-5">
                     <div class="dataTable-info">
                         Showing {{ $delivery->firstItem() }} to {{ $delivery->lastItem() }} of {{ $delivery->total() }}
-                        Orders
+                        items
                     </div>
                     <div class="dataTable-dropdown"><label>
                             <select name="perPage" class="dataTable-selector" onchange="this.form.submit()">

@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
-
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use App\Exceptions\CustomHandler;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
+        $this->app->singleton(ExceptionHandler::class, CustomHandler::class);
     }
 }
