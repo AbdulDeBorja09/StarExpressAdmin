@@ -25,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
-        // $this->app->singleton(ExceptionHandler::class, CustomHandler::class);
+        $this->app->singleton(ExceptionHandler::class, CustomHandler::class);
     }
 }
