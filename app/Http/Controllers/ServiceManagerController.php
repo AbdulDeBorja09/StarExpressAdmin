@@ -509,27 +509,32 @@ class ServiceManagerController extends Controller
 
     public function DeliveryDetails($id)
     {
-        $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
-            ->where('state', 'ReadyForDelivery')
-            ->orderBy('created_at', 'desc')->get();
 
 
         $delivery = Delivery::with(['manager', 'driver'])->where('id', $id)->first();
-        $deliveryIds = [];
-        if ($delivery && $delivery->items) {
-            $items = json_decode($delivery->items, true);
-            if (!empty($items)) {
-                $deliveryIds = array_merge($deliveryIds, $items);
+        if ($delivery) {
+            $deliveryIds = [];
+            $orders = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
+                ->where('state', 'ReadyForDelivery')
+                ->orderBy('created_at', 'desc')->get();
+
+            if ($delivery && $delivery->items) {
+                $items = json_decode($delivery->items, true);
+                if (!empty($items)) {
+                    $deliveryIds = array_merge($deliveryIds, $items);
+                }
             }
+            $deliveryIds = array_unique($deliveryIds);
+            $orderDetails = Orders::whereIn('id', $deliveryIds)->get();
+            $driver = TruckDriver::get();
+            $truck = CargoTruck::get();
+            $allowance = DeliveryAllowance::where('delivery_id', $id)->first();
+
+
+            return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails', 'allowance'));
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Delivery not found']);
         }
-        $deliveryIds = array_unique($deliveryIds);
-        $orderDetails = Orders::whereIn('id', $deliveryIds)->get();
-        $driver = TruckDriver::get();
-        $truck = CargoTruck::get();
-        $allowance = DeliveryAllowance::where('delivery_id', $id)->first();
-
-
-        return view('servicemanager.deliverydetails', compact('orders', 'delivery', 'driver', 'truck', 'orderDetails', 'allowance'));
     }
     public function deploydelivery(Request $request)
     {
