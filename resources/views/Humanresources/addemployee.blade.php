@@ -28,9 +28,9 @@
                 @csrf
                 <div class="flex flex-wrap justify-between px-4">
                     <div class="mb-6 w-full lg:w-1/2">
-                        <div class="flex shrink-0 items-center w-25 text-black dark:text-white">
+                        {{-- <div class="flex shrink-0 items-center w-25 text-black dark:text-white">
                             <img src="{{asset('/images/avatar.png')}}" alt="image" style="width: 25%">
-                        </div>
+                        </div> --}}
                         <div class="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <input id="ctnFile" type="file" name="image"
                                 class="form-input file:py-2 file:px-4 file:border-0 file:font-semibold p-0 file:bg-primary/90 ltr:file:mr-5 rtl:file:ml-5 file:text-white file:hover:bg-primary" />
@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="mt-4 flex items-center">
-                                <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Emaill</label>
+                                <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Email</label>
                                 <input id="acno" type="text" name="email" value="{{old('email')}}"
                                     class="form-input flex-1" placeholder="Enter Email Address">
                             </div>

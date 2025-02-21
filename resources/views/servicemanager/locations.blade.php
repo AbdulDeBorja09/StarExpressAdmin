@@ -70,7 +70,7 @@
                                     <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
                                         :class="open && '!block'">
                                         <div class="flex items-center justify-center min-h-screen px-4"
-                                            @click.self="open = false">
+                                           >
                                             <div x-show="open" x-transition x-transition.duration.300
                                                 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                                                 <div
@@ -156,7 +156,7 @@
 
             <!-- modal -->
             <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto" :class="open && '!block'">
-                <div class="flex items-center justify-center min-h-screen px-4" @click.self="open = false">
+                <div class="flex items-center justify-center min-h-screen px-4">
                     <div x-show="open" x-transition x-transition.duration.300
                         class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                         <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">

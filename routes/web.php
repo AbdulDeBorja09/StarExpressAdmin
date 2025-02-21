@@ -102,6 +102,8 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/branches/{serviceId}', [ServiceManagerController::class, 'getBranches']);
     Route::get('/areas/{locationID}', [ServiceManagerController::class, 'getAreas']);
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
+    Route::get('/Delivery/history', [ServiceManagerController::class, 'deliveryhistory'])->name('deliveryhistory');
+
     Route::get('/Delivery/Packages/{id}', [ServiceManagerController::class, 'DeliveryDetails'])->name('DeliveryDetails');
     Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
 
@@ -109,7 +111,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
     Route::get('/Warehouse', [WarehouseController::class, 'warehouse'])->name('warehouse');
 
-    
+
     Route::post('/Warehouse/Setlimit', [WarehouseController::class, 'savelimit'])->name('savelimit');
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');
     Route::post('/Cargo_locations/add_region', [ServiceManagerController::class, 'addregion'])->name('addregion');
@@ -130,6 +132,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::post('/Cargo_Price/edit', [ServiceManagerController::class, 'editcargoprice'])->name('editcargoprice');
 
     Route::post('/Details/statusedit', [OrdersController::class, 'updateStatus'])->name('updateStatus');
+    Route::post('/Details/Batchstatusedit', [OrdersController::class, 'MultipleupdateStatus'])->name('MultipleupdateStatus');
     Route::put('/statuses/{index}', [OrdersController::class, 'editstatus'])->name('statuses.update');
     Route::put('/orders/{order}/statuses/{index}/edit', [OrdersController::class, 'editStatus'])->name('statuses.edit');
 
@@ -137,7 +140,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::post('/Delivery/Create', [ServiceManagerController::class, 'createdelivery'])->name('createdelivery');
     Route::post('/Delivery/Deploy', [ServiceManagerController::class, 'deploydelivery'])->name('deploydelivery');
     Route::post('/Delivery/Delete', [ServiceManagerController::class, 'deletedelivery'])->name('deletedelivery');
-    
+
 
 
     Route::post('/Allowance/Create', [AllowanceController::class, 'createallowance'])->name('createallowance');
@@ -201,10 +204,9 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|acc
 });
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
-    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
-});
+
+Route::get('/chat', [ChatController::class, 'chatpage']);
+Route::post('/Chat/Send', [ChatController::class, 'sendmsg'])->name('send.message');
 
 
 

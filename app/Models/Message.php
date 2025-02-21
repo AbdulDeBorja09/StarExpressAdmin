@@ -8,16 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     use HasFactory;
+    protected $table = 'admin_messages';
+    protected $fillable = ['conversation_id', 'from_user_id', 'to_user_id', 'text'];
 
-    protected $fillable = ['conversation_id', 'user_id', 'message'];
-
-    // Relationship with the user who sent the message
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Relationship with the conversation the message belongs to
     public function conversation()
     {
         return $this->belongsTo(Conversation::class);

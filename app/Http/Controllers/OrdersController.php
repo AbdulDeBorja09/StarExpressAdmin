@@ -56,8 +56,9 @@ class OrdersController extends Controller
         }
 
         $orders = $query->paginate($perPage);
+        $branches = Branches::all();
 
-        return view('global.allorders', compact('orders', 'perPage', 'currentPage'));
+        return view('global.allorders', compact('orders', 'perPage', 'currentPage', 'branches'));
     }
 
     public function allorders(Request $request)
@@ -136,6 +137,55 @@ class OrdersController extends Controller
         } else {
             return redirect()->back()->with('error', 'Order not found.');
         }
+    }
+    public function MultipleupdateStatus(Request $request)
+    {
+
+        $request->validate([
+            'status' => 'required|string',
+            'ids' => 'required',
+
+        ]);
+
+
+        $status = implode(' ', [$request->status ?? '']);
+        $userId = Auth::id();
+        $user = User::where('id', $userId)->first();
+        $value = "Preparing For Delivery";
+
+        $ids = json_decode($request->ids, true);
+        foreach ($ids as $orderId) {
+            $order = Orders::find($orderId);
+
+            try {
+                if ($order) {
+
+                    if ($request->status === $value) {
+                        $order->update([
+                            'state' => "ReadyForDelivery",
+                        ]);
+                    } else {
+                        $order->update([
+                            'state' => "Processing",
+                        ]);
+                    }
+                    $newStatusWithTimestamp = [
+                        'status' => $status,
+                        'logs' => 'Set By: ' . $user->lname . ', ' . $user->fname,
+                        'timestamp' => now()->toDateTimeString()
+                    ];
+
+                    $existingStatuses = $order->status ? json_decode($order->status, true) : [];
+                    $existingStatuses[] = $newStatusWithTimestamp;
+                    $order->status = json_encode($existingStatuses);
+                    $order->save();
+                }
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->back()->with('success', 'Order statuses updated successfully!');
     }
 
     public function editStatus(Request $request, $orderId, $index)

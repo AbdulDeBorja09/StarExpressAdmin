@@ -88,7 +88,7 @@
                         <input type="hidden" name="id" value="{{$delivery->id}}">
                         <button type="submit" class="btn btn-success w-full gap-2 mt-4" @if($allowance)
                             @if($allowance->status !==
-                            'completed' || $delivery->status == 'deployed')
+                            'completed' || $delivery->status == 'deployed' || $delivery->status == 'completed')
                             disabled
                             @endif
                             @else
@@ -202,16 +202,19 @@
                     }
                     @endphp
 
+                    @if ($delivery->status == 'pending' )
 
                     <div class="order-item order mt-2 items-md-center rounded-md border border-white-light bg-white px-6 py-3.5 text-center dark:border-dark dark:bg-[#1b2e4b] md:flex-row ltr:md:text-left rtl:md:text-right"
-                        data-id="{{ $order->id }}" data-sender-name="{{ $order->sender_name }}"
-                        data-sender-address="{{ $order->sender_address }}" data-items="{{ $itemsData }}"
+                        data-id="{{ $order->id }}" data-sender-name="{{ $order->receiver_name }}"
+                        data-reference-number="{{ $order->reference_number }}"
+                        data-sender-address="{{ $order->receiver_address }}" data-items="{{ $itemsData }}"
                         ondragstart="drag(event)" ondragstart="this.classList.add('dragging')"
                         ondragend="this.classList.remove('dragging')" draggable="true">
                         {{-- <h1> <strong>ID:</strong> {{ $order->id}}</h1> --}}
                         <h1> <strong>Reference Number: </strong> {{ $order->reference_number}}</h1>
-                        <h1> <strong>Sender Name: </strong> {{ $order->sender_name}}</h1>
-                        <h1> <strong>Address:</strong><br>{{ $order->sender_address }}</h1>
+                        <h1> <strong>Receiver Name: </strong> {{ $order->receiver_name}}</h1>
+                        <h1> <strong>Receiver Number: </strong> {{ $order->receiver_number}}</h1>
+                        <h1> <strong>Delivery Address:</strong><br>{{ $order->receiver_address }}</h1>
                         @php
                         $items = json_decode($order->items, true);
                         @endphp
@@ -226,28 +229,9 @@
                             @endforeach
                         </div>
                         @endif
-
-                        <input type="hidden" name="reference_number" id="reference_number"
-                            value="{{ $order->reference_number }}" />
-                        <input type="hidden" name="sender_name" id="sender_name" value="{{ $order->sender_name }}" />
-                        <input type="hidden" name="sender_number" id="sender_number"
-                            value="{{ $order->sender_number }}" />
-                        <input type="hidden" name="sender_address" id="sender_address"
-                            value="{{ $order->sender_address}}" />
-                        <input type="hidden" name="receiver_name" id="receiver_name"
-                            value="{{ $order->receiver_name }}" />
-                        <input type="hidden" name="receiver_number" id="receiver_number"
-                            value="{{ $order->receiver_number}}" />
-                        <input type="hidden" name="receiver_address" id="receiver_address"
-                            value="{{ $order->receiver_address }}" />
-                        <input type="hidden" name="alternate_name" id="alternate_name"
-                            value="{{ $order->alternate_name }}" />
-                        <input type="hidden" name="alternate_number" id="alternate_number"
-                            value="{{ $order->alternate_number }}" />
-                        <input type="hidden" name="gov_id" id="gov_id" value="{{ $order->gov_id }}" />
-                        <input type="hidden" name="note" id="note" value="{{ $order->note }}" />
-                        <input type="hidden" name="items" id="items" value='{{ json_encode($order->items) }}' />
                     </div>
+                    @endif
+
                     @endforeach
                 </div>
 
@@ -295,6 +279,9 @@
     const orders = document.querySelectorAll('.order-item');
 
     orders.forEach(order => {
+
+       
+        const referencenumber = order.getAttribute('data-reference-number').toLowerCase();
         const senderName = order.getAttribute('data-sender-name').toLowerCase();
         const senderAddress = order.getAttribute('data-sender-address').toLowerCase();
         const itemsData = order.getAttribute('data-items').toLowerCase();
@@ -303,7 +290,7 @@
             order.style.display = '';
             return; 
         }
-        if (senderName.includes(searchValue) || senderAddress.includes(searchValue) || itemsData.includes(searchValue)) {
+        if (senderName.includes(searchValue) || senderAddress.includes(searchValue) || itemsData.includes(searchValue) || referencenumber.includes(searchValue)) {
             order.style.display = '';
         } else {
             order.style.display = 'none';

@@ -19,38 +19,173 @@
                 Orders</a>
         </li>
     </ol>
+    @include('layout.components.error')
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-1 mt-5">
         <div class="panel">
             <div class="order-top-part flex mb-5 ">
-                <div class="" x-data="modal">
-                    <!-- button -->
-                    <div class="flex items-center ">
-                        <button type="button" class="scan-btn btn btn-outline-success" @click="toggle">SCAN QR</button>
-                    </div>
 
-                    <!-- modal -->
-                    <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto" :class="open && '!block'">
-                        <div class="flex items-center justify-center min-h-screen px-4" @click.self="open = false">
-                            <div x-show="open" x-transition x-transition.duration.300
-                                class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
-                                <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                                    <h5 class="font-bold text-lg">Scan QR Code</h5>
-                                    <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="p-5">
-                                    <div class="subtitle" style="text-align: center">
-                                        <h2 id="result">No qr code scanned yet</h2>
-                                        <p id="error" style="display: none;">Error! Unable to access the camera.</p>
+                <div class="dropdown inline-flex" x-data="dropdown" @click.outside="open = false">
+                    <button type="button"
+                        class="btn btn-outline-primary ltr:rounded-r-none rtl:rounded-l-none dropdown-toggle before:border-[5px] before:border-l-transparent before:border-r-transparent before:border-t-inherit before:border-b-0 before:inline-block hover:before:border-t-white-light"
+                        @click="toggle">
+                        <span class="sr-only">Toggle dropdown</span>
+                    </button>
+                    <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
+                        class="ltr:right-0 rtl:left-0 top-full whitespace-nowrap">
+                        <li class="" x-data="modal">
+
+
+                            <a href="javascript:;" @click="toggle">Create Batch</a>
+
+                            <!-- modal -->
+                            <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
+                                :class="open && '!block'">
+                                <div class="flex items-center justify-center min-h-screen px-4">
+                                    <div x-show="open" x-transition x-transition.duration.300
+                                        class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                        <div
+                                            class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                            <h5 class="font-bold text-lg">Create Batch</h5>
+                                            <button type="button" class="text-white-dark hover:text-dark"
+                                                @click="toggle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-6 w-6">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <section class="p-5">
+                                            main
+                                        </section>
                                     </div>
-                                    <div class="main">
-                                        <video id="video" autoplay></video>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="" x-data="modal">
+
+
+                            <a href="javascript:;" @click="toggle">Set Status</a>
+
+                            <!-- modal -->
+                            <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
+                                :class="open && '!block'">
+                                <div class="flex items-start justify-center min-h-screen px-4" style="margin-top: 50px">
+
+                                    <div x-show="open" x-transition x-transition.duration.300
+                                        class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                        <div
+                                            class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                            <h5 class="font-bold text-lg">Set Status</h5>
+                                            <button type="button" class="text-white-dark hover:text-dark"
+                                                @click="toggle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="h-6 w-6">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <section class="p-5">
+
+                                            <form action="{{ route('MultipleupdateStatus')}}" method="POST"
+                                                id="status-form">
+                                                @csrf
+                                                <label for="status" class="mb-2 mt-2 w-1/3 ltr:mr-2 rtl:ml-2 "
+                                                    style="font-size:15px">Select Status:
+                                                </label>
+                                                <select id="status" name="status" class="form-input flex-1"
+                                                    style="text-transform: capitalize">
+                                                    <option value="To Deliver Cargo Box">To Deliver Cargo Box</option>
+                                                    <option value="To Pickup Cargo Box">To Pickup Cargo Box</option>
+                                                    @foreach ($branches as $item)
+                                                    <option value="In Transit To {{$item->branch}}, {{$item->country}}">
+                                                        In
+                                                        Transit To
+                                                        {{$item->branch}}, {{$item->country}}</option>
+                                                    @endforeach
+                                                    @foreach ($branches as $item)
+                                                    <option value="In Warehouse {{$item->branch}}, {{$item->country}}">
+                                                        In
+                                                        Warehouse
+                                                        {{$item->branch}}, {{$item->country}}</option>
+                                                    @endforeach
+                                                    <option value="Cargo Is Loaded In The Container">Cargo Is Loaded In
+                                                        The
+                                                        Container</option>
+
+                                                    @php
+
+                                                    $uniqueCountries = $branches->unique('country');
+                                                    @endphp
+                                                    @foreach ($uniqueCountries as $item)
+                                                    <option value="Cargo Has Departed From {{$item->country}}">
+                                                        Cargo has departed from {{$item->country}}
+                                                    </option>
+                                                    @endforeach
+
+                                                    @foreach ($uniqueCountries as $item)
+                                                    <option value="Cargo Has Arrived At {{$item->country}}">
+                                                        Cargo Has Arrived At {{$item->country}}
+                                                    </option>
+                                                    @endforeach
+                                                    <option value="Cleared At Customs">Cleared At Customs</option>
+                                                    <option value="Preparing For Delivery">Preparing For Delivery
+                                                    </option>
+                                                </select>
+                                                <br>
+                                                <input type="hidden" id="order_ids" name="ids" value="">
+                                                <button type="submit" class="btn btn-outline-success mt-5"
+                                                    style="width:100%">Add
+                                                    Status</button>
+                                            </form>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        {{-- <li><a href="javascript:;" @click="toggle">Something else here</a></li>
+                        <li><a href="javascript:;" @click="toggle">Separated link</a></li> --}}
+                    </ul>
+                    <div class="" x-data="modal">
+                        <!-- button -->
+                        <div class="flex items-center ">
+
+                            <button type="button" class="btn btn-outline-primary ltr:rounded-l-none rtl:rounded-r-none"
+                                @click="toggle">SCAN QR</button>
+                        </div>
+
+                        <!-- modal -->
+                        <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
+                            :class="open && '!block'">
+                            <div class="flex items-center justify-center min-h-screen px-4">
+                                <div x-show="open" x-transition x-transition.duration.300
+                                    class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
+                                    <div
+                                        class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                        <h5 class="font-bold text-lg">Scan QR Code</h5>
+                                        <button type="button" class="text-white-dark hover:text-dark" @click="toggle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="p-5">
+                                        <div class="subtitle" style="text-align: center">
+                                            <h2 id="result">No qr code scanned yet</h2>
+                                            <p id="error" style="display: none;">Error! Unable to access the camera.</p>
+                                        </div>
+                                        <div class="main">
+                                            <video id="video" autoplay></video>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +221,6 @@
                             <th>Total</th>
                             <th>Balance</th>
                             <th>Latest Status</th>
-                            <th style="text-align: center">Order Status</th>
                             @endif
                             @if(Route::currentRouteName() == 'deliverdorders')
                             <th>Delivered Date</th>
@@ -105,7 +239,9 @@
                             <td style="text-align: center;"><input type="checkbox"
                                     class="form-checkbox child-checkbox" />
                             </td>
-                            <td style="text-align: center;width: 60px">{{ $loop->iteration }}</td>
+
+                            <td style="text-align: center;width: 60px">{{ $loop->iteration }}<input type="hidden"
+                                    value="{{ $order->id }}"></td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>{{ $order->reference_number }}</td>
                             <td>{{$order->sender_name}}</td>
@@ -330,119 +466,127 @@
         border: 1px solid black;
     }
 </style>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const searchInput = document.querySelector('.dataTable-input');
-        const tableRows = document.querySelectorAll('.table tbody tr');
 
-        searchInput.addEventListener('keyup', function() {
-            const filter = searchInput.value.toLowerCase();
-
-            tableRows.forEach(row => {
-                const cells = row.getElementsByTagName('td');
-                let found = false;
-                for (let i = 1; i < cells.length; i++) { 
-                    const cell = cells[i];
-                    if (cell) {
-                        const textValue = cell.textContent || cell.innerText;
-                        if (textValue.toLowerCase().indexOf(filter) > -1) {
-                            found = true;
-                            break; 
-                        }
-                    }
-                }
-                if (found) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-    });
-</script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const filter1Input = document.getElementById('filter1');
-        const filter2Input = document.getElementById('filter2');
-        const tableRows = document.querySelectorAll('.table tbody tr');
+    const filter1Input = document.getElementById('filter1');
+    const filter2Input = document.getElementById('filter2');
+    const selectAllCheckbox = document.getElementById('select-all');
+    const tableRows = document.querySelectorAll('.table tbody tr');
+    const orderIdsInput = document.getElementById('order_ids');
+    const statusForm = document.getElementById('status-form');
 
-        function filterTable() {
-            const filter1 = filter1Input.value.toLowerCase();
-            const filter2 = filter2Input.value.toLowerCase();
+    // Collect selected order IDs
+    function collectOrderIds() {
+        const checkedOrderIds = Array.from(tableRows)
+            .filter(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                return checkbox && checkbox.checked && row.style.display !== "none"; 
+            })
+            .map(row => {
+                const hiddenInput = row.querySelector('input[type="hidden"]');
+                return hiddenInput ? hiddenInput.value : null;
+            })
+            .filter(orderId => orderId !== null); 
 
-            tableRows.forEach(row => {
-                const cells = row.getElementsByTagName('td');
-                let foundFilter1 = false;
-                let foundFilter2 = false;
+        return checkedOrderIds;
+    }
 
-                for (let i = 0; i < cells.length; i++) {
-                    const cell = cells[i];
-                    const textValue = cell.textContent || cell.innerText;
+   
+    statusForm.addEventListener('submit', function (e) {
+        const orderIds = collectOrderIds();
+        orderIds.join(',');
+        orderIdsInput.value = JSON.stringify(orderIds); 
+        console.log(orderIdsInput.value); 
+    });
 
-                    if (filter1 && textValue.toLowerCase().includes(filter1)) {
-                        foundFilter1 = true;
-                    }
+    function filterTable() {
+        const filter1 = filter1Input.value.toLowerCase();
+        const filter2 = filter2Input.value.toLowerCase();
 
-                    if (filter2 && textValue.toLowerCase().includes(filter2)) {
-                        foundFilter2 = true;
-                    }
+        tableRows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            let foundFilter1 = false;
+            let foundFilter2 = false;
+
+            for (let i = 0; i < cells.length; i++) {
+                const cell = cells[i];
+                const textValue = cell.textContent || cell.innerText;
+
+                if (filter1 && textValue.toLowerCase().includes(filter1)) {
+                    foundFilter1 = true;
                 }
 
-                if ((!filter1 || foundFilter1) && (!filter2 || foundFilter2)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
+                if (filter2 && textValue.toLowerCase().includes(filter2)) {
+                    foundFilter2 = true;
                 }
+            }
+
+            if ((!filter1 || foundFilter1) && (!filter2 || foundFilter2)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        updateSelectAllState();
+        updateCheckedCount();
+        collectOrderIds();
+    }
+
+    function updateSelectAllState() {
+        const visibleRows = Array.from(tableRows).filter(row => row.style.display !== "none");
+        const visibleCheckboxes = visibleRows.map(row => row.querySelector('input[type="checkbox"]'));
+        const allChecked = visibleCheckboxes.every(checkbox => checkbox.checked);
+        const noneChecked = visibleCheckboxes.every(checkbox => !checkbox.checked);
+
+        selectAllCheckbox.checked = allChecked && visibleCheckboxes.length > 0;
+        selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
+    }
+
+    function toggleSelectAll() {
+        const visibleRows = Array.from(tableRows).filter(row => row.style.display !== "none");
+        const isChecked = selectAllCheckbox.checked;
+
+        visibleRows.forEach(row => {
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = isChecked;
+            }
+        });
+
+        updateCheckedCount();
+        collectOrderIds(); 
+    }
+
+    function updateCheckedCount() {
+        const checkedBoxes = Array.from(tableRows)
+            .filter(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                return checkbox && checkbox.checked && row.style.display !== "none"; 
+            });
+
+    }
+
+    filter1Input.addEventListener('keyup', filterTable);
+    filter2Input.addEventListener('keyup', filterTable);
+    selectAllCheckbox.addEventListener('change', toggleSelectAll);
+
+    tableRows.forEach(row => {
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                updateSelectAllState();
+                updateCheckedCount();
+                collectOrderIds(); 
             });
         }
-
-        filter1Input.addEventListener('keyup', filterTable);
-        filter2Input.addEventListener('keyup', filterTable);
-    });
-</script>
-
-
-</script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"></script>
-<script>
-    const video = document.getElementById('video');
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const result = document.getElementById('result');
-    const error = document.getElementById('error');
-
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(stream => {
-            video.srcObject = stream;
-            video.setAttribute("playsinline", true); 
-            video.play();
-            requestAnimationFrame(scan);
-        })
-        .catch(err => {
-            console.error("Error accessing the camera: ", err);
-            error.style.display = 'block'; 
     });
 
-    function scan() {
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.height = video.videoHeight;
-            canvas.width = video.videoWidth;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, canvas.width, canvas.height);
+    updateCheckedCount();
+});
+</script>
 
-            if (code) {
-                result.innerText = `Scanned: ${code.data}`;
-                video.pause(); 
-                const scannedRef = code.data;
-                window.location.href = `/details/${scannedRef}`;
-            } else {
-                requestAnimationFrame(scan); 
-            }
-        } else {
-            requestAnimationFrame(scan); 
-        }
-    }
 </script>
 
 @endsection

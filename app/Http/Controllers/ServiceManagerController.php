@@ -427,6 +427,14 @@ class ServiceManagerController extends Controller
         $delivery = Delivery::with(['manager', 'driver', 'truck'])->whereIn('status', ['ready', 'pending', 'deployed'])->paginate($perPage);
         return view('servicemanager.deliveries', compact('perPage', 'currentPage', 'delivery'));
     }
+    public function deliveryhistory(Request $request)
+    {
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $delivery = Delivery::with(['manager', 'driver', 'truck'])->where('status', 'completed')->paginate($perPage);
+        return view('servicemanager.deliveries', compact('perPage', 'currentPage', 'delivery'));
+    }
 
     public function submitdelivery(Request $request)
     {

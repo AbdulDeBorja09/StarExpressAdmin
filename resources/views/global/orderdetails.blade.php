@@ -275,7 +275,8 @@
                                                     Clothing:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Clothing'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Clothing']) ? $list[$index]['Clothing']
+                                                    : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -283,7 +284,8 @@
                                                     Utensils:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Utensils'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Utensils']) ? $list[$index]['Utensils']
+                                                    : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -291,7 +293,9 @@
                                                     Consumables:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Consumables'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Consumables']) ?
+                                                    $list[$index]['Consumables']
+                                                    : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -299,7 +303,8 @@
                                                     Footware:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Footware'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Footware']) ? $list[$index]['Footware']
+                                                    : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -307,7 +312,8 @@
                                                     Toiletries:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Toiletries'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Toiletries']) ? $list[$index]['Toiletries']
+                                                    : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -315,7 +321,7 @@
                                                     Toys:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Toys'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Toys']) ? $list[$index]['Toys'] : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -323,7 +329,8 @@
                                                     Canned Goods:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['CannedGoods'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['CannedGoods']) ?
+                                                    $list[$index]['CannedGoods'] : '0' }}x
                                                 </td>
                                             </tr>
                                             <tr>
@@ -331,7 +338,8 @@
                                                     Electronics:
                                                 </td>
                                                 <td>
-                                                    {{ $list[$index]['Electronics'] ?? 0 }}x
+                                                    {{ !empty($list[$index]['Electronics']) ?
+                                                    $list[$index]['Electronics'] : '0' }}x
                                                 </td>
                                             </tr>
 
@@ -519,8 +527,7 @@
                                             <!-- modal -->
                                             <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
                                                 :class="open && '!block'">
-                                                <div class="flex items-center justify-center min-h-screen px-4"
-                                                    @click.self="open = false">
+                                                <div class="flex items-center justify-center min-h-screen px-4">
                                                     <div x-show="open" x-transition x-transition.duration.300
                                                         class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                                                         <div
@@ -617,7 +624,7 @@
                                                 {{ \Carbon\Carbon::parse($statusEntry['timestamp'])->diffForHumans() }}
                                             </p>
                                             @if($details->approved === 1)
-                                            @if(Auth::user()->type === 'servicemanger' || Auth::user()->type ===
+                                            @if(Auth::user()->type === 'servicemanager' || Auth::user()->type ===
                                             'admin')
                                             <button type="button" class="edit-btn my-2"
                                                 style="text-decoration: underline"
@@ -676,7 +683,7 @@
                                     </div>
                                     @endforeach
                                 </div>
-                                @if(Auth::user()->type === 'servicemanger' || Auth::user()->type === 'admin')
+                                @if(Auth::user()->type === 'servicemanager' || Auth::user()->type === 'admin')
                                 @if($details->approved === 1)
                                 <div>
                                     {{-- @if ($details->state === "pending" || $details->state === "Processing") --}}

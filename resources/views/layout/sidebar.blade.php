@@ -566,8 +566,8 @@
                         <li>
                             <a href="{{route('alldeliveries')}}"
                                 class="{{ Route::currentRouteName() == 'alldeliveries' ? 'active' : '' }}">Deliveries</a>
-                            <a href="{{route('alldeliveries')}}"
-                                class="{{ Route::currentRouteName() == 'alldeliveries' ? 'active' : '' }}">History</a>
+                            <a href="{{route('deliveryhistory')}}"
+                                class="{{ Route::currentRouteName() == 'deliveryhistory' ? 'active' : '' }}">History</a>
                         </li>
                     </ul>
                 </li>
@@ -969,7 +969,8 @@
                                     fill="currentColor"></path>
                             </svg>
                             <span
-                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">History</span>
+                                class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Suspension
+                                History</span>
                         </div>
                         <div class="rtl:rotate-180" :class="{'!rotate-90' : activeDropdown === 'suspensionhistory'}">
                             <svg width="16" height="16" viewbox="0 0 24 24" fill="none"

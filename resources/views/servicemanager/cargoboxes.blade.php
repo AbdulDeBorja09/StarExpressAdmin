@@ -203,9 +203,7 @@
                 </div>
             </form>
         </div>
-        <div class="panel">
 
-        </div>
     </div>
     @endif
 </div>

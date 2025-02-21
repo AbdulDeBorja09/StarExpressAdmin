@@ -95,7 +95,7 @@
                         </div>
 
                         <div class="mt-4 flex items-center">
-                            <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Emaill</label>
+                            <label for="acno" class="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">Email</label>
                             <input id="acno" type="text" name="email" value="{{$item->email}}" class="form-input flex-1"
                                 placeholder="Enter Email Address" readonly>
                         </div>

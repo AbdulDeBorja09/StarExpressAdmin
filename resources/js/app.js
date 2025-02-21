@@ -1,4 +1,6 @@
 import Pusher from "pusher-js";
+import $ from "jquery";
+window.$ = window.jQuery = $;
 
 Pusher.logToConsole = false;
 const pusher = new Pusher("3ba047d26d60c31ed932", {

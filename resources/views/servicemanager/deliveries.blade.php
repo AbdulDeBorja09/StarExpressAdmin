@@ -25,10 +25,11 @@
             <div class="flex  mb-5" style="justify-content: space-between">
 
                 <div x-data="modal">
+                    @if (Route::currentRouteName() == 'alldeliveries' )
                     <button type="button" class="btn btn-outline-info" @click="toggle">Add Delivery Trip</button>
-
+                    @endif
                     <div class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto" :class="open && '!block'">
-                        <div class="flex items-center justify-center min-h-screen px-4" @click.self="open = false">
+                        <div class="flex items-center justify-center min-h-screen px-4">
                             <div x-show="open" x-transition x-transition.duration.300
                                 class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8">
                                 <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
@@ -111,6 +112,8 @@
                                 <span class="badge badge-outline-success">Ready</span>
                                 @elseif($item->status === 'deployed')
                                 <span class="badge bg-success">Deployed</span>
+                                @elseif($item->status === 'completed')
+                                <span class="badge bg-success">Completed</span>
                                 @else
                                 <span class="badge badge-outline-danger">Error</span>
                                 @endif
@@ -128,6 +131,7 @@
                                                 stroke="currentColor" stroke-width="1.5"></path>
                                         </svg>
                                     </a>
+                                    @if (Route::currentRouteName() == 'alldeliveries' )
                                     <form action="{{route('deletedelivery')}}" method="POST"
                                         id="delete-form-{{ $item->id }}" class="pl-3">
                                         @csrf
@@ -153,45 +157,48 @@
                                         </button>
                                         <script>
                                             async function showAlert(event, formId) {
-                                            event.preventDefault(); 
-                                            const swalWithBootstrapButtons = window.Swal.mixin({
-                                                confirmButtonClass: 'btn btn-secondary',
-                                                cancelButtonClass: 'btn btn-dark ltr:mr-3 rtl:ml-3',
-                                                buttonsStyling: false,
-                                            });
-                                            swalWithBootstrapButtons
-                                            .fire({
-                                                title: 'Are you sure?',
-                                                html: `<div class="mt-3"> You won't be able to revert this! </div>`,
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonText: 'Yes, delete it!',
-                                                cancelButtonText: 'No, cancel!',
-                                                reverseButtons: true,
-                                                padding: '2em',
-                                            })
-                                            .then((result) => {
-                                                if (result.value) {
-                                                    document.getElementById(formId).submit(); 
-                                                    swalWithBootstrapButtons.fire({
-                                                        title: 'Deleted!',
-                                                        html: '<div class="text-center mt-3">Delivery Trip Has Been Deleted.</div>', 
-                                                        icon: 'success',
-                                                        confirmButtonText: 'OK', 
-                                                    });
-                                                
-                                                } else if (result.dismiss === window.Swal.DismissReason.cancel) {
-                                                    swalWithBootstrapButtons.fire({
-                                                        title: 'Cancelled',
-                                                        html: '<div class="text-center mt-3">Your Delivery Trip Is Safe.</div>', 
-                                                        icon: 'error',
-                                                        confirmButtonText: 'OK', 
-                                                    });
-                                                }
-                                            });
-                                        }
+                                        event.preventDefault(); 
+                                        const swalWithBootstrapButtons = window.Swal.mixin({
+                                            confirmButtonClass: 'btn btn-secondary',
+                                            cancelButtonClass: 'btn btn-dark ltr:mr-3 rtl:ml-3',
+                                            buttonsStyling: false,
+                                        });
+                                        swalWithBootstrapButtons
+                                        .fire({
+                                            title: 'Are you sure?',
+                                            html: `<div class="mt-3"> You won't be able to revert this! </div>`,
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Yes, delete it!',
+                                            cancelButtonText: 'No, cancel!',
+                                            reverseButtons: true,
+                                            padding: '2em',
+                                        })
+                                        .then((result) => {
+                                            if (result.value) {
+                                                document.getElementById(formId).submit(); 
+                                                swalWithBootstrapButtons.fire({
+                                                    title: 'Deleted!',
+                                                    html: '<div class="text-center mt-3">Delivery Trip Has Been Deleted.</div>', 
+                                                    icon: 'success',
+                                                    confirmButtonText: 'OK', 
+                                                });
+                                            
+                                            } else if (result.dismiss === window.Swal.DismissReason.cancel) {
+                                                swalWithBootstrapButtons.fire({
+                                                    title: 'Cancelled',
+                                                    html: '<div class="text-center mt-3">Your Delivery Trip Is Safe.</div>', 
+                                                    icon: 'error',
+                                                    confirmButtonText: 'OK', 
+                                                });
+                                            }
+                                        });
+                                    }
                                         </script>
                                     </form>
+
+                                    @endif
+
                                 </div>
                             </td>
                         </tr>

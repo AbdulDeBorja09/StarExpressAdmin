@@ -169,7 +169,8 @@ class HrController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imgname = 'Avatar_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imgname = 'User_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs('Profiles', $imgname, 'public');
         }
         if ($request->input('password') === $request->input('confirm-password')) {
             if (TruckDriver::where('email', $request->input('email'))->exists()) {
@@ -453,6 +454,9 @@ class HrController extends Controller
             'type' => 'required|string',
             'email' => 'required|email|max:255',
         ]);
+
+
+
         try {
             Truckdriver::where('id', $request->id)->update([
                 'name' => $request->fname . ' ' . $request->mname . ' ' . $request->lname,
@@ -481,7 +485,13 @@ class HrController extends Controller
             'branch_id' => 'required|exists:branches,id',
             'type' => 'required|string',
             'email' => 'required|email|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imgname = 'User_' . time() . '_' . $request->file('image')->getClientOriginalName();
+            $imagePath = $request->file('image')->storeAs('Profiles', $imgname, 'public');
+        }
         try {
             User::where('id', $request->id)->update([
                 'fname' => $request->fname,
@@ -493,6 +503,7 @@ class HrController extends Controller
                 'branch_id' => $request->branch_id,
                 'type' => $request->type,
                 'email' => $request->email,
+                'image' => $imagePath,
             ]);
             return redirect()->route('allEmployees');
         } catch (\Exception $e) {

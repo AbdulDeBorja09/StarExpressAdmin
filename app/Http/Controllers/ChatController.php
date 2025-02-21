@@ -8,67 +8,39 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Conversation;
 
 class ChatController extends Controller
 {
 
+    public function chatpage2()
+    {
+        return view('chat.chat');
+    }
     public function chatpage()
     {
-        $userId = Auth::id();
+        $messages = Message::latest()->take(20)->where('from_user_id', Auth::user()->id)
+            ->orWhere('to_user_id', Auth::user()->id)->get()->reverse();
 
-        // Retrieve users for the chat, excluding the authenticated user
-        $users = User::where('id', '!=', $userId)->get();
-        $messages = Message::all();
-
-        $me = Auth::user();
-        return view('chat.chat', [
-            'users' => $users,
-            'userId' => $userId,
-            'me' => $me,
-            'messages' =>  $messages,
-        ]);
+        return view('chat.chat', compact('messages'));
     }
-
-    /**
-     * Retrieve messages for the selected user.
-     *
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getMessages($userId)
+    public function fetchMessages($conversationId)
     {
-        // Fetch messages between the authenticated user and the selected user
-        $messages = Message::where(function ($query) use ($userId) {
-            $query->where('sender_id', Auth::id())
-                ->where('receiver_id', $userId);
-        })->orWhere(function ($query) use ($userId) {
-            $query->where('sender_id', $userId)
-                ->where('receiver_id', Auth::id());
-        })->get();
-
+        $conversation = Conversation::findOrFail($conversationId);
+        $messages = $conversation->messages;
         return response()->json($messages);
     }
-
-    /**
-     * Send a new message.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function sendMessage(Request $request)
+    public function sendmsg(Request $request)
     {
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'content' => 'required|string|max:255',
-        ]);
-
-        // Create a new message
         $message = Message::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $request->receiver_id,
-            'content' => $request->content,
+            'conversation_id' => 1,
+            'from_user_id' => Auth::id(),
+            'to_user_id' => 2,
+            'text' => $request->message,
         ]);
 
-        return response()->json($message, 201);
+        return response()->json([
+            'message' => $message,
+        ]);
     }
 }
