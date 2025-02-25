@@ -649,7 +649,12 @@
                     <ul x-show="activeDropdown === 'truck'" x-collapse="" class="sub-menu text-gray-500"
                         style="height: 0px; overflow: hidden; display: none;" hidden="">
                         <li>
-                            <a href="{{route('trucklist')}}">Truck List</a>
+                            <a class="{{ Route::currentRouteName() == 'trucklist' ? 'active' : '' }}"
+                                href="{{route('trucklist')}}">Truck List</a>
+                        </li>
+                        <li>
+                            <a class="{{ Route::currentRouteName() == 'ViewTruckReport' ? 'active' : '' }}"
+                                href="{{route('ViewTruckReport')}}">Truck Reports</a>
                         </li>
 
                     </ul>
@@ -995,7 +1000,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu nav-item">
+                {{-- <li class="menu nav-item">
                     <button type="button" class="nav-link group" :class="{'active' : activeDropdown === 'appeal'}"
                         @click="activeDropdown === 'appeal' ? activeDropdown = null : activeDropdown = 'appeal'">
                         <div class="flex items-center">
@@ -1038,7 +1043,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="menu nav-item">
                     <button type="button" class="nav-link group" :class="{'active' : activeDropdown === 'loginlogs'}"
                         @click="activeDropdown === 'loginlogs' ? activeDropdown = null : activeDropdown = 'loginlogs'">

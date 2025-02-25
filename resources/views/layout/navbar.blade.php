@@ -164,7 +164,7 @@
                     </a>
                 </div>
 
-                <div class="dropdown" x-data="dropdown" @click.outside="open = false">
+                {{-- <div class="dropdown" x-data="dropdown" @click.outside="open = false">
                     <a href="javascript:;"
                         class="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60"
                         @click="toggle">
@@ -302,7 +302,7 @@
                     </ul>
 
 
-                </div>
+                </div> --}}
                 <div class="dropdown flex-shrink-0" x-data="dropdown" @click.outside="open = false">
                     <a href="javascript:;" class="group relative" @click="toggle()">
                         <span>
@@ -336,7 +336,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="" class="dark:hover:text-white" @click="toggle">
                                 <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18" height="18"
                                     viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -361,7 +361,7 @@
                                     </path>
                                 </svg>
                                 Inbox</a>
-                        </li>
+                        </li> --}}
 
                         <li class="border-t border-white-light dark:border-white-light/10">
                             <a class="!py-3 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();

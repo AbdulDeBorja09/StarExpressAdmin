@@ -16,5 +16,6 @@ class Suspendeds extends Model
         'user_type',
         'reason',
     ];
+ 
     use HasFactory;
 }

@@ -109,9 +109,12 @@ class TruckController extends Controller
         }
     }
 
-    public function TruckReports()
+    public function ViewTruckReport(Request $request)
     {
-        $reports = TruckReports::all();
-        return view('servicemanager.truckreport', compact('reports'));
+        $perPage = $request->input('perPage', 20);
+        $currentPage = $request->input('page', 1);
+
+        $reports = TruckReports::with(['driver'])->paginate($perPage);
+        return view('servicemanager.truckreport', compact('reports', 'perPage', 'currentPage'));
     }
 }
