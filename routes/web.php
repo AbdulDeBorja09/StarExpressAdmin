@@ -103,14 +103,11 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/areas/{locationID}', [ServiceManagerController::class, 'getAreas']);
     Route::get('/Deliveries', [ServiceManagerController::class, 'alldeliveries'])->name('alldeliveries');
     Route::get('/Delivery/history', [ServiceManagerController::class, 'deliveryhistory'])->name('deliveryhistory');
-
     Route::get('/Delivery/Packages/{id}', [ServiceManagerController::class, 'DeliveryDetails'])->name('DeliveryDetails');
     Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
-
     Route::get('/Report/Pending', [ExpensesController::class, 'submittedreports'])->name('allreports');
-
     Route::get('/Warehouse', [WarehouseController::class, 'warehouse'])->name('warehouse');
-
+    Route::get('/Truck/Reports', [TruckController::class, 'TruckReports'])->name('TruckReports');
 
     Route::post('/Warehouse/Setlimit', [WarehouseController::class, 'savelimit'])->name('savelimit');
     Route::post('/Cargo_locations/add_area', [ServiceManagerController::class, 'addlocations'])->name('addlocations');

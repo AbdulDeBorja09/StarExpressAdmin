@@ -13,6 +13,7 @@ use App\Models\CargoTruck;
 use App\Models\Orders;
 use App\Models\Delivery;
 use App\Models\TruckDriver;
+use App\Models\TruckReports;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -106,5 +107,11 @@ class TruckController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function TruckReports()
+    {
+        $reports = TruckReports::all();
+        return view('servicemanager.truckreport', compact('reports'));
     }
 }
