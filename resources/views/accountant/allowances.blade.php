@@ -64,8 +64,7 @@
                             <td style="text-align: center">{{$item->allowance}}</td>
                             <td style="text-align: center">
                                 @if($item->status === 'pending')
-                                <span class="badge badge-outline-warning">Waitin
-                                    g For Approval</span>
+                                <span class="badge badge-outline-warning">Waiting For Approval</span>
                                 @elseif($item->status === 'approved')
                                 <span class="badge badge-outline-success">Approved</span>
                                 @elseif($item->status === 'rejected')
