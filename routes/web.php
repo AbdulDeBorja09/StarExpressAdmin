@@ -16,6 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\WarehouseController;
 use app\Models\CargoService;
 
@@ -205,7 +206,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|acc
 
 Route::get('/chat', [ChatController::class, 'chatpage']);
 Route::post('/Chat/Send', [ChatController::class, 'sendmsg'])->name('send.message');
-
+Route::post('/Maintenance/Toggle', [MaintenanceController::class, 'toggle'])->name('ToggleMaintenance');
 
 
 Route::middleware('auth')->get('/notifications', [NotificationController::class, 'getNotifications']);

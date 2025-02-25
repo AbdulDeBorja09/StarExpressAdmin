@@ -9,6 +9,7 @@ use App\Models\CargoService;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ManagementController extends Controller
 {
@@ -151,6 +152,7 @@ class ManagementController extends Controller
 
     public function settings()
     {
-        return view('admin.settings');
+        $status = DB::table('maintenance')->first();
+        return view('admin.settings', compact('status'));
     }
 }
