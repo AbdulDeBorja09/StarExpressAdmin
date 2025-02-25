@@ -27,6 +27,7 @@ class Orders extends Model
         'gov_id',
         'packing_list',
         'payment',
+        'payment_status',
         'method',
         'voucher',
         'discount',

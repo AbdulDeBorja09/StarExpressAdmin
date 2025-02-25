@@ -309,7 +309,8 @@
                                 class="{{ Route::currentRouteName() == 'cargoincome' ? 'active' : '' }}">Cargo
                                 Income</a>
                             <a href="{{route('reportincome')}}"
-                                class="{{ Route::currentRouteName() == 'allincome' ? 'active' : '' }}">Report Income</a>
+                                class="{{ Route::currentRouteName() == 'reportincome' ? 'active' : '' }}">Report
+                                Income</a>
                         </li>
                     </ul>
                 </li>
@@ -426,7 +427,7 @@
                     </button>
                     <ul x-show="activeDropdown === 'accountantreports'" x-collapse="" class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{route('newreport')}}"
+                            <a href="{{route('newreport')}}" createnewreport
                                 class="{{ Route::currentRouteName() == 'newreport' ? 'active' : '' }}">Create
                                 Report</a>
                             <a href="{{route('submittedreports')}}"

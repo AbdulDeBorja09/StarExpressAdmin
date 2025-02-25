@@ -43,13 +43,19 @@ class OrdersController extends Controller
             'user_id' => Auth::user()->id,
         ]);
     }
+
     private function fetchOrders(Request $request, ?string $state)
     {
         $perPage = $request->input('perPage', 20);
         $currentPage = $request->input('page', 1);
 
-        $query = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])
-            ->orderBy('created_at', 'desc');
+
+        if (Auth::user()->type === 'admin') {
+            $query = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->orderBy('created_at', 'desc');
+        } else {
+            $query = Orders::with(['cargoService.originBranch', 'cargoService.destinationBranch'])->where('location', Auth::user()->branch_id)
+                ->orderBy('created_at', 'desc');
+        }
 
         if ($state) {
             $query->where('state', $state);
@@ -233,29 +239,42 @@ class OrdersController extends Controller
     public function markaspaid(Request $request)
     {
         try {
-            $info = Orders::find($request->id);
-            $oldData = Orders::find($request->id)->toArray();
-            if (!$info) {
+
+            $order = Orders::find($request->id);
+            if (!$order) {
                 return redirect()->back()->with('error', 'Order not found.');
             }
-            $orderUpdated = $info->update(['balance' => 0.00]);
 
-            if (!$orderUpdated) {
+            $order->update([
+                'payment_status' => 'paid',
+            ]);
+
+            if (!$order->wasChanged('payment_status')) {
                 return redirect()->back()->with('error', 'Failed to mark the order as paid.');
             }
-            Income::create([
-                'branch_id' => Auth::user()->branch_id,
-                'service_id' => $info->service_id,
-                'category' => 'Cargo Income',
-                'reference' => $request->reference,
-                'method' => $request->method,
-                'plan' => 'Balance Payment',
-                'amount' => $request->amount,
-                'submitted_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
-                'received_by' => Auth::user()->lname . ', ' . Auth::user()->fname,
+            $oldData = $order->toArray();
+            $income = Income::create([
+                'branch_id'     => Auth::user()->branch_id,
+                'service_id'    => $order->service_id,
+                'category'      => 'Cargo Income',
+                'reference'     => $request->reference,
+                'method'        => $request->method,
+                'plan'          => 'Balance Payment',
+                'amount'        => $request->amount,
+                'submitted_by'  => Auth::user()->lname . ', ' . Auth::user()->fname,
+                'received_by'   => Auth::user()->lname . ', ' . Auth::user()->fname,
+                'confirm'       => '0'
             ]);
-            $newData = Orders::find($request->id)->toArray();
-            $this->logs('Edit', 'Mark Order Paid', $request->id, $oldData, $newData);
+
+            if (!$income) {
+                return redirect()->back()->with('error', 'Failed to create income record.');
+            }
+
+            $newData = $order->fresh()->toArray();
+            $logResult = $this->logs('Edit', 'Mark Order Paid', $request->id, $oldData, $newData);
+            if ($logResult === false) {
+                return redirect()->back()->with('error', 'Failed to log the changes.');
+            }
             return redirect()->back()->with('success', 'Order marked as paid.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());

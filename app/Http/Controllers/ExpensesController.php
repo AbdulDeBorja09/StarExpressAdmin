@@ -51,7 +51,7 @@ class ExpensesController extends Controller
             'user_id' => Auth::user()->id,
         ]);
     }
-    
+
     public function expensestable()
     {
         return view('servicemanager.report');
@@ -148,7 +148,11 @@ class ExpensesController extends Controller
     public function getIncome(Request $request, $category = null)
     {
         $perPage = $request->input('perPage', 20);
-        $query = Income::with(['service', 'branch'])->where('confirm', 1);
+        if (Auth::user()->type === 'accountant') {
+            $query = Income::with(['service', 'branch'])->where('branch_id', Auth::user()->branch_id)->where('confirm', 1);
+        } else {
+            $query = Income::with(['service', 'branch'])->where('confirm', 1);
+        }
 
         if ($category) {
             $query->where('category', $category);
@@ -162,7 +166,12 @@ class ExpensesController extends Controller
     public function getExpenses(Request $request, $category = null)
     {
         $perPage = $request->input('perPage', 20);
-        $query = Expenses::with(['manager', 'branch'])->where('confirm', 1);
+
+        if (Auth::user()->type === 'accountant') {
+            $query = Expenses::with(['manager', 'branch'])->where('branch_id', Auth::user()->branch_id)->where('confirm', 1);
+        } else {
+            $query = Expenses::with(['manager', 'branch'])->where('branch_id', Auth::user()->branch_id)->where('confirm', 1);
+        }
 
         if ($category) {
             $query->where('category', $category);
@@ -210,13 +219,24 @@ class ExpensesController extends Controller
 
 
         if (Auth::user()->type === 'accountant' || Auth::user()->type === 'admin') {
-            $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->whereIn('confirm', [1, 0])->where('confirm', 0)
-                ->get()
-                ->toArray();
 
-            $incomes = Income::select('*', DB::raw("'Income' as type"))->whereIn('confirm', [1, 0])->where('confirm', 0)
-                ->get()
-                ->toArray();
+            if (Auth::user()->type === 'accountant') {
+                $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->whereIn('confirm', [1, 0])->where('branch_id', Auth::user()->branch_id)->where('confirm', 0)
+                    ->get()
+                    ->toArray();
+
+                $incomes = Income::select('*', DB::raw("'Income' as type"))->whereIn('confirm', [1, 0])->where('branch_id', Auth::user()->branch_id)->where('confirm', 0)
+                    ->get()
+                    ->toArray();
+            } else {
+                $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->whereIn('confirm', [1, 0])->where('confirm', 0)
+                    ->get()
+                    ->toArray();
+
+                $incomes = Income::select('*', DB::raw("'Income' as type"))->whereIn('confirm', [1, 0])->where('confirm', 0)
+                    ->get()
+                    ->toArray();
+            }
         } else {
             $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->where('submitted_by', Auth::user()->lname . ', ' . Auth::user()->fname)->whereIn('confirm', [1, 0])
                 ->get()
@@ -243,6 +263,7 @@ class ExpensesController extends Controller
 
         return view('servicemanager.allreports', compact('data', 'perPage', 'currentPage'));
     }
+    
     public function reporthistory(Request $request)
     {
         $perPage = $request->input('perPage', 20);
@@ -250,13 +271,24 @@ class ExpensesController extends Controller
 
 
         if (Auth::user()->type === 'accountant' || Auth::user()->type === 'admin') {
-            $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->whereIn('confirm', [1, 2])
-                ->get()
-                ->toArray();
 
-            $incomes = Income::select('*', DB::raw("'Income' as type"))->whereIn('confirm', [1, 2])
-                ->get()
-                ->toArray();
+            if (Auth::user()->type === 'accountant') {
+                $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->where('branch_id', Auth::user()->branch_id)->whereIn('confirm', [1, 2])
+                    ->get()
+                    ->toArray();
+
+                $incomes = Income::select('*', DB::raw("'Income' as type"))->where('branch_id', Auth::user()->branch_id)->whereIn('confirm', [1, 2])
+                    ->get()
+                    ->toArray();
+            } else {
+                $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->whereIn('confirm', [1, 2])
+                    ->get()
+                    ->toArray();
+
+                $incomes = Income::select('*', DB::raw("'Income' as type"))->whereIn('confirm', [1, 2])
+                    ->get()
+                    ->toArray();
+            }
         } else {
             $expenses = Expenses::select('*', DB::raw("'Expense' as type"))->where('submitted_by', Auth::user()->lname . ', ' . Auth::user()->fname)->whereIn('confirm', [1, 2])
                 ->get()

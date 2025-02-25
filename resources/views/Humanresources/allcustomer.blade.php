@@ -47,7 +47,7 @@
                             $years = $createdAt->diff($now)->y;
                             $months = $createdAt->diff($now)->m;
                             $days = $createdAt->diff($now)->d;
-                            @endphp
+                            @endphp 
                             <td style="width: 50px; text-align:center;">{{ $loop->iteration }}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$item->email}}</td>

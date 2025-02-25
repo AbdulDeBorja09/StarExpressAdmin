@@ -221,6 +221,7 @@
                             <th>Total</th>
                             <th>Balance</th>
                             <th>Latest Status</th>
+                            <th>Approval Status</th>
                             @endif
                             @if(Route::currentRouteName() == 'deliverdorders')
                             <th>Delivered Date</th>
@@ -269,7 +270,15 @@
 
                             <td>{{ $order->payment_status }}</td>
                             <td>{{ $order->total }}</td>
-                            <td>{{ $order->balance }}</td>
+                            <td>
+                                @if ( $order->payment === 'Down Payment')
+                                {{ $order->total - $order->balance }}
+                                @else
+                                {{ $order->balance }}
+                                @endif
+
+
+                            </td>
                             <td>{{ $latestStatus }}</td>
                             @if(Route::currentRouteName() == 'allorders')
                             <td style="text-align: center">@if ($order->approved === 0)

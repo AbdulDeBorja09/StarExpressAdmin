@@ -108,7 +108,7 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin'])-
     Route::get('/Vouchers', [ServiceManagerController::class, 'vouchers'])->name('vouchers');
 
     Route::get('/Report/Pending', [ExpensesController::class, 'submittedreports'])->name('allreports');
-    Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
+
     Route::get('/Warehouse', [WarehouseController::class, 'warehouse'])->name('warehouse');
 
 
@@ -200,7 +200,8 @@ Route::middleware(['auth', 'set.timezone', 'user-access:servicemanager|admin|acc
     Route::get('/Reports/Allowance', [AllowanceController::class, 'allowancerequest'])->name('allowancerequest');
     Route::get('/Allowance/History', [AllowanceController::class, 'allowancehistory'])->name('allowancehistory');
     Route::get('/Report/Details/{type}/{id}', [ExpensesController::class, 'viewreportdetails'])->name('viewreportdetails');
-    Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
+    Route::get('/Report/History', [ExpensesController::class, 'reporthistory'])->name('reporthistory');
+    // Route::get('/Report/New', [ServiceManagerController::class, 'newreport'])->name('newreport');
 });
 
 

@@ -670,7 +670,7 @@ class ServiceManagerController extends Controller
 
     public function newreport()
     {
-        return view('accountant.addreport');
+        return view('servicemanager.addreport');
     }
 
     public function warehouse()
