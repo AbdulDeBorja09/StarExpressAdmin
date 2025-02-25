@@ -263,7 +263,7 @@ class OrdersController extends Controller
                 'amount'        => $request->amount,
                 'submitted_by'  => Auth::user()->lname . ', ' . Auth::user()->fname,
                 'received_by'   => Auth::user()->lname . ', ' . Auth::user()->fname,
-                'confirm'       => '0'
+                'confirm'       => '1'
             ]);
 
             if (!$income) {
